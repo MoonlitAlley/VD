@@ -13,10 +13,67 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="头文件\CMD">
+      <UniqueIdentifier>{78e80ad8-5072-45e3-bbce-4fae9f570a46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\DISK">
+      <UniqueIdentifier>{05ebebc3-5fa8-4839-8e2b-ae96638395f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\CMD">
+      <UniqueIdentifier>{fb5bc529-df47-4649-a428-59a5ed49662d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\DISK">
+      <UniqueIdentifier>{a7e2845f-47dd-4866-982a-a7dd35df38a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\COMMON">
+      <UniqueIdentifier>{f5cd73f3-239e-4a03-81a1-4dc695a0a672}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\COMMON">
+      <UniqueIdentifier>{a7466a12-c412-427b-962d-b954001c1099}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CommandFactory.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="VirtualDiskSystem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CdCmd.h">
+      <Filter>头文件\CMD</Filter>
+    </ClInclude>
+    <ClInclude Include="Command.h">
+      <Filter>头文件\CMD</Filter>
+    </ClInclude>
+    <ClInclude Include="MdCmd.h">
+      <Filter>头文件\CMD</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdParameters.h">
+      <Filter>头文件\COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>头文件\COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="MyString.h">
+      <Filter>头文件\COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="Path.h">
+      <Filter>头文件\COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="CellNode.h">
+      <Filter>头文件\DISK</Filter>
+    </ClInclude>
+    <ClInclude Include="VirtualDisk.h">
+      <Filter>头文件\DISK</Filter>
+    </ClInclude>
+    <ClInclude Include="DirCmd.h">
+      <Filter>头文件\CMD</Filter>
+    </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ClsCmd.h">
+      <Filter>头文件\CMD</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -25,6 +82,45 @@
     </ClCompile>
     <ClCompile Include="VD.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandFactory.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="VirtualDiskSystem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CdCmd.cpp">
+      <Filter>源文件\CMD</Filter>
+    </ClCompile>
+    <ClCompile Include="Command.cpp">
+      <Filter>源文件\CMD</Filter>
+    </ClCompile>
+    <ClCompile Include="MdCmd.cpp">
+      <Filter>源文件\CMD</Filter>
+    </ClCompile>
+    <ClCompile Include="DirCmd.cpp">
+      <Filter>源文件\CMD</Filter>
+    </ClCompile>
+    <ClCompile Include="CellNode.cpp">
+      <Filter>源文件\DISK</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdParameters.cpp">
+      <Filter>源文件\COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="Common.cpp">
+      <Filter>源文件\COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="MyString.cpp">
+      <Filter>源文件\COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="Path.cpp">
+      <Filter>源文件\COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="VirtualDisk.cpp">
+      <Filter>源文件\DISK</Filter>
+    </ClCompile>
+    <ClCompile Include="ClsCmd.cpp">
+      <Filter>源文件\CMD</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
