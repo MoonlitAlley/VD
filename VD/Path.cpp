@@ -1,5 +1,6 @@
 #include "Path.h"
 #include "MyString.h"
+#include "Common.h"
 Path::Path()
 {
 }
@@ -95,6 +96,19 @@ string Path::str()
 vector<string> Path::split() const
 {
 	return pathItems.empty() ? vector<string>{"."} : pathItems;
+}
+
+string Path::FileName() const
+{
+	if (pathItems.empty())
+	{
+		return "";
+	}
+	if (!Tools::IsLegalFileName(pathItems.back()))
+	{
+		return "";
+	}
+	return pathItems.back();
 }
 
 string Path::StartNode() const

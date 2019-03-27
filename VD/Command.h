@@ -11,7 +11,6 @@ public:
 	CmdParameters cmdParaCollection;
 public:
 	virtual bool Execute(VirtualDisk* virtualdisk);
-
-private:
-	VirtualDisk* virtualdisk;
+protected:
+	VirtualDisk* m_VirtualDisk;
 };

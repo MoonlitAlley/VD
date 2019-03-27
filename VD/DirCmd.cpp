@@ -104,56 +104,6 @@ void DirCmd::RecursionPrintItem(const Path & path)
 			CheckDirWithFiles(node->GetParent(), node->GetCellName());
 		}
 	}
-
-#pragma region 丢弃方法，使用谓词函数来完成
-
-	////使用谓词函数来判断当前节点的情况，进行循环输出
-	//PathFormat FormatCheck(path);
-	////是否是使用通配符的路径信息
-	//FormatCheck.wildcard = [&]() 
-	//{
-	//	CellNode* prelink = m_VirtualDisk->GetNodeByPath(path.Parent());
-	//	CheckDirWithFiles(prelink, path.split().back());
-	//};
-	////如果路径所指向的节点不存在，则不进行输出，直接返回
-	//FormatCheck.noexist = [&]()
-	//{
-	//	m_VirtualDisk->LogMsgToConsole("该位置可能出错：void DirCmd::RecursionPrintItem(const Path & path)  FormatCheck.noexist ");
-	//	return;
-	//};
-	////路径信息是指向文件夹的符号链接 输出目标文件夹下的所有文件（文件夹）信息，若用户输入相关参数，则只显示对应信息
-	//FormatCheck.linkdir = [&]()
-	//{
-	//	//没有找到符号链接的目标文件---------此时暂不处理失效的符号链接
-	//	if (!m_VirtualDisk->LookingForTaget(FormatCheck.node()))
-	//	{
-	//		return;
-	//	}
-	//	CheckDirWithFiles(FormatCheck.node(), "*");
-	//};
-	////路径信息是指向文件的符号链接  --仅显示当前指向的文件的这一条信息
-	//FormatCheck.linknormal = [&]() 
-	//{
-	//	if (!m_VirtualDisk->LookingForTaget(FormatCheck.node()))
-	//	{
-	//		return;
-	//	}
-	//		CheckDirWithFiles(FormatCheck.node()->GetParent(), FormatCheck.node()->GetCellName());
-	//};
-	////路径信息是指向文件的   找到其父节点，输出其信息 --仅显示当前指向的文件的这一条信息
-	//FormatCheck.normal = [&]()
-	//{
-	//	CheckDirWithFiles(FormatCheck.node()->GetParent(), FormatCheck.node()->GetCellName());
-	//};
-	////路径信息是指向文件夹的，输出目标文件夹下的所有信息
-	//FormatCheck.dir = [&]() {
-	//	CheckDirWithFiles(FormatCheck.node(), "*");
-	//};
-
-	////执行该谓词函数，来调用下方的CheckDirWithFiles进行单条信息输出
-	//FormatCheck.check(m_VirtualDisk);
-
-#pragma endregion
 }
 
 void DirCmd::PrintItem(const Path & path)
@@ -196,6 +146,7 @@ void DirCmd::PrintItem(const Path & path)
 		}
 		else if (node->GetNodeType() & LINK && node->GetNodeType() & FILE_CUSTOM)
 		{
+			//路径信息是指向文件的符号链接  --仅显示当前指向的文件的这一条信息
 			if (!m_VirtualDisk->LookingForTaget(node))
 			{
 				m_VirtualDisk->LogMsgToConsole("系统找不到指定的路径");
@@ -205,71 +156,15 @@ void DirCmd::PrintItem(const Path & path)
 		}
 		else if (node->GetNodeType()&FOLD)
 		{
+			//路径信息是指向文件夹的，输出目标文件夹下的所有信息
 			CheckDirWithFiles(node, "*");
 		}
 		else if (node->GetNodeType()&FILE_CUSTOM)
 		{
+			//路径信息是指向文件的   找到其父节点，输出其信息 --仅显示当前指向的文件的这一条信息
 			CheckDirWithFiles(node->GetParent(), node->GetCellName());
 		}
 	}
-
-#pragma region 丢弃方法，使用谓词函数
-
-	//PathFormat pathFormat(path);
-	//pathFormat.wildcard = [&]()
-	//{
-	//	CellNode* parent = m_VirtualDisk->GetNodeByPath(path.Parent());
-	//	if (parent)
-	//	{
-	//		CheckDirWithFiles(parent, path.split().back);
-	//	}
-	//	else
-	//	{
-	//		m_VirtualDisk->LogMsgToConsole("系统找不到指定的路径");
-	//	}
-	//};
-
-	//pathFormat.noexist = [&]()
-	//{
-	//	CellNode* parent = m_VirtualDisk->GetNodeByPath(path.Parent());
-	//	if (parent)
-	//	{
-	//		CheckDirWithFiles(parent, path.split().back);
-	//	}
-	//	else
-	//	{
-	//		m_VirtualDisk->LogMsgToConsole("系统找不到指定的路径");
-	//	}
-	//};
-	//pathFormat.linkdir = [&]()
-	//{
-	//	if (!m_VirtualDisk->LookingForTaget(pathFormat.node()))
-	//	{
-	//		m_VirtualDisk->LogMsgToConsole("系统找不到指定的路径");
-	//		return;
-	//	}
-	//	CheckDirWithFiles(pathFormat.node(), "*");
-	//};
-	//pathFormat.linknormal = [&]()
-	//{
-	//	if (!m_VirtualDisk->LookingForTaget(pathFormat.node()))
-	//	{
-	//		m_VirtualDisk->LogMsgToConsole("系统找不到指定的路径");
-	//		return;
-	//	}
-	//	CheckDirWithFiles(pathFormat.node()->GetParent(),pathFormat.node()->GetCellName());
-	//};
-	//pathFormat.normal = [&]()
-	//{
-	//	CheckDirWithFiles(pathFormat.node()->GetParent(), pathFormat.node()->GetCellName());
-	//};
-	//pathFormat.dir = [&]()
-	//{
-	//	CheckDirWithFiles(pathFormat.node(), "*");
-	//};
-	//pathFormat.check(m_VirtualDisk);
-
-#pragma endregion
 }
 
 void DirCmd::CheckDirWithFiles(CellNode * node, const string & filesname)
@@ -453,26 +348,6 @@ void DirCmd::CountSummary(const list<CellNode*>& nodes, size_t & files, size_t &
 				sizes += (int)tempNode->Content().size();
 			}
 		}
-
-//		PathFormat pathFormat(tempNode->GetNodePath());
-//		pathFormat.linkdir = [&]()
-//		{
-//			dirs++;
-//		};
-//		pathFormat.linknormal = [&]()
-//		{
-//			files++;
-//		};
-//		pathFormat.normal = [&]()
-//		{
-//			files++;
-//			sizes += (int)tempNode->Content().size();
-//		};
-//		pathFormat.dir = [&]()
-//		{
-//			dirs++;
-//		};
-//		pathFormat.check(m_VirtualDisk);
 	}
 }
 

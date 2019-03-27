@@ -16,6 +16,7 @@ public:
 	bool AddSubNode(CellNode* node);
 	bool RemoveSubNode(CellNode* node, bool release);
 
+	void RemoveFromPreSubList(bool release);
 	list<CellNode*> FilterSubNode(string whildcard);
 
 	CellNode* GetNode(const Path &path);

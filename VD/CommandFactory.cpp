@@ -5,6 +5,7 @@
 #include"CdCmd.h"
 #include "DirCmd.h"
 #include "ClsCmd.h"
+#include "DelCmd.h"
 CommandFactory::CommandFactory()
 {
 }
@@ -34,6 +35,10 @@ Command * CommandFactory::CreatCommand(string cmd)
 		break;
 	case clsCmd:
 		command = new ClsCmd();
+		break;
+	case delCmd:
+		command = new DelCmd();
+		command->cmdParaCollection.m_definedOptions.insert("/s");
 		break;
 	default:
 		//命令不存在 - 将临时保存的用户输入命令输出

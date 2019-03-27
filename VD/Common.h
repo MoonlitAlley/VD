@@ -13,13 +13,9 @@ namespace Tools
 	bool IsWildcardMatch(const string& wildcard, const string &str);
 
 	bool IsLegalPathName(const string & pathName);
-}
-//class Tool
-//{
-//public:
-//	bool IsLegalPathName(const string & pathName);
-//};
 
+	bool IsLegalFileName(const string& filename);
+}
 
 
 class OutputMsg

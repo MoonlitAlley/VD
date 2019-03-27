@@ -158,11 +158,14 @@
     <ClInclude Include="Command.h" />
     <ClInclude Include="CommandFactory.h" />
     <ClInclude Include="Common.h" />
+    <ClInclude Include="DelCmd.h" />
     <ClInclude Include="DirCmd.h" />
     <ClInclude Include="MdCmd.h" />
     <ClInclude Include="MyString.h" />
     <ClInclude Include="Path.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="RdCmd.h" />
+    <ClInclude Include="TouchCmd.h" />
     <ClInclude Include="VirtualDisk.h" />
     <ClInclude Include="VirtualDiskSystem.h" />
   </ItemGroup>
@@ -174,6 +177,7 @@
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandFactory.cpp" />
     <ClCompile Include="Common.cpp" />
+    <ClCompile Include="DelCmd.cpp" />
     <ClCompile Include="DirCmd.cpp" />
     <ClCompile Include="MdCmd.cpp" />
     <ClCompile Include="MyString.cpp" />
@@ -184,6 +188,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="RdCmd.cpp" />
+    <ClCompile Include="TouchCmd.cpp" />
     <ClCompile Include="VD.cpp" />
     <ClCompile Include="VirtualDisk.cpp" />
     <ClCompile Include="VirtualDiskSystem.cpp" />

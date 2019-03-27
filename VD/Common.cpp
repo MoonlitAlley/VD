@@ -53,3 +53,21 @@ bool Tools::IsLegalPathName(const string & pathName)
 	}
 	return true;
 }
+
+bool Tools::IsLegalFileName(const string & filename)
+{
+	if (!IsLegalPathName(filename))
+	{
+		return false;
+	}
+	if (filename == ".")
+	{
+		return false;
+	}
+	if (filename == "..")
+	{
+		return false;
+	}
+
+	return true;
+}

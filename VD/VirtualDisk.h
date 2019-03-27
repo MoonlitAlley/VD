@@ -45,6 +45,6 @@ public:
 	//得到当前工作路径的字符表示
 	string GetWorkingPathString();
 
-
+	bool IfNodeBeUsing(CellNode* node);
 
 };

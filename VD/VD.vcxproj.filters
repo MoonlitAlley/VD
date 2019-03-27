@@ -75,6 +75,15 @@
     <ClInclude Include="ClsCmd.h">
       <Filter>头文件\CMD</Filter>
     </ClInclude>
+    <ClInclude Include="TouchCmd.h">
+      <Filter>头文件\CMD</Filter>
+    </ClInclude>
+    <ClInclude Include="DelCmd.h">
+      <Filter>头文件\CMD</Filter>
+    </ClInclude>
+    <ClInclude Include="RdCmd.h">
+      <Filter>头文件\CMD</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -121,6 +130,15 @@
     </ClCompile>
     <ClCompile Include="ClsCmd.cpp">
       <Filter>源文件\CMD</Filter>
+    </ClCompile>
+    <ClCompile Include="TouchCmd.cpp">
+      <Filter>源文件\CMD</Filter>
+    </ClCompile>
+    <ClCompile Include="DelCmd.cpp">
+      <Filter>源文件\CMD</Filter>
+    </ClCompile>
+    <ClCompile Include="RdCmd.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

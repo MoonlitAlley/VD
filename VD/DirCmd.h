@@ -18,7 +18,6 @@ public:
 	void CountSummary(const list<CellNode*> &nodes, size_t& files, size_t & dirs, size_t & sizes);
 
 private:
-	VirtualDisk* m_VirtualDisk;
 	list<CellNode*> totalNode;
 	list<CellNode*> oneFoldNode;
 

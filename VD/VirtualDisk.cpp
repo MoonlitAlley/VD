@@ -144,3 +144,17 @@ string VirtualDisk::GetWorkingPathString()
 	}
 	return ret.str();
 }
+
+bool VirtualDisk::IfNodeBeUsing(CellNode * node)
+{
+	CellNode* cur = workingNode;
+	while (cur)
+	{
+		if (cur == node)
+		{
+			return true;
+		}
+		cur = cur->GetParent();
+	}
+	return false;
+}

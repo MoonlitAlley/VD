@@ -57,6 +57,15 @@ bool CellNode::RemoveSubNode(CellNode * node, bool release)
 	return false;
 }
 
+void CellNode::RemoveFromPreSubList(bool release)
+{
+	if (preLink == NULL)
+	{
+		return;
+	}
+	preLink->RemoveSubNode(this, release);
+}
+
 list<CellNode*> CellNode::FilterSubNode(string whildcard)
 {
 	list<CellNode*> res;
