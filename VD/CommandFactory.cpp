@@ -6,6 +6,8 @@
 #include "DirCmd.h"
 #include "ClsCmd.h"
 #include "DelCmd.h"
+#include "RdCmd.h"
+#include "TouchCmd.h"
 CommandFactory::CommandFactory()
 {
 }
@@ -25,6 +27,9 @@ Command * CommandFactory::CreatCommand(string cmd)
 	case mdCmd:
 		command = new MdCmd();
 		break;
+	case touchCmd:
+		command = new TouchCmd();
+		break;
 	case cdCmd:
 		command = new CdCmd();
 		break;
@@ -38,6 +43,10 @@ Command * CommandFactory::CreatCommand(string cmd)
 		break;
 	case delCmd:
 		command = new DelCmd();
+		command->cmdParaCollection.m_definedOptions.insert("/s");
+		break;
+	case rdCmd:
+		command = new RdCmd();
 		command->cmdParaCollection.m_definedOptions.insert("/s");
 		break;
 	default:

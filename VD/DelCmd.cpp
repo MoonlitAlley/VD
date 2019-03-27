@@ -2,7 +2,7 @@
 #include "Path.h"
 #include "Common.h"
 #include "VirtualDisk.h"
-
+#include "MyString.h"
 bool DelCmd::Execute(VirtualDisk * virtualdisk)
 {
 	m_VirtualDisk = virtualdisk;
@@ -114,15 +114,16 @@ void DelCmd::RemoveFoldLinkFile(CellNode * fold, CellNode * deep, const string &
 			//如果用户有循环删除的参数，则删除时提醒当前操作对象
 			if (cmdParaCollection.m_parsedOptions.find("/s") != cmdParaCollection.m_parsedOptions.end())
 			{
-				
+				m_VirtualDisk->LogMsgToConsole(StrProcess::sstr("删除文件 - %s", (*itera)->GetNodePath().str().c_str()));
 				//删除这个节点
 			}
-			
+			//无法确定删除改点之后是否会影响整个list
+			(*itera)->RemoveFromPreSubList(true);
 			//删除掉这个节点
 		}
 	}
 
-	//判断是否循环处理
+	//判断是否循环处理子节点
 	if (cmdParaCollection.m_parsedOptions.find("/s") != cmdParaCollection.m_parsedOptions.end())
 	{
 		list<CellNode*> children = deep->FilterSubNode("*");

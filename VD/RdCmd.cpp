@@ -17,6 +17,7 @@ bool RdCmd::Execute(VirtualDisk * virtualdisk)
 		string wildcard;
 
 		//Path tempPath(pathItems[i]);
+
 		//首先过滤不存在的项目
 		CellNode* tempNode = m_VirtualDisk->GetNodeByPath(pathItems[i]);
 		if (!tempNode)
@@ -27,6 +28,7 @@ bool RdCmd::Execute(VirtualDisk * virtualdisk)
 		else if (m_VirtualDisk->IfNodeBeUsing(tempNode))
 		{
 			//文件正在使用
+			m_VirtualDisk->LogMsgToConsole("目标文件包含工作路径");
 			continue;
 		}
 		else
