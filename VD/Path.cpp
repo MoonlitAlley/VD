@@ -28,6 +28,15 @@ Path & Path::append(string pathStr)
 
 	for (size_t i = 0; i < items.size(); i++)
 	{
+		if (i == 0)
+		{
+			//如果用户输入为C盘开始的地址
+			if (items[0] == "c:"||items[0] =="C:")
+			{
+				startNode = '/';
+				continue;
+			}
+		}
 		if (items[i] == ".")
 		{
 

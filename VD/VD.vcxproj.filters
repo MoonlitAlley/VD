@@ -173,5 +173,8 @@
     <ClCompile Include="LoadCmd.cpp">
       <Filter>源文件\CMD</Filter>
     </ClCompile>
+    <ClCompile Include="MoveCmd.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

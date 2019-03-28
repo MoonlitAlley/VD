@@ -189,6 +189,7 @@
     <ClCompile Include="LoadCmd.cpp" />
     <ClCompile Include="MdCmd.cpp" />
     <ClCompile Include="MklinkCmd.cpp" />
+    <ClCompile Include="MoveCmd.cpp" />
     <ClCompile Include="MyString.cpp" />
     <ClCompile Include="Path.cpp" />
     <ClCompile Include="pch.cpp">

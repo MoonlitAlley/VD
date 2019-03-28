@@ -40,21 +40,16 @@ public:
 
 	//一个双目运算符重载应该在类外，所以要声明为友元函数
 	friend istream& operator>>(istream& input, CellNode& self);
-
 	friend ostream& operator<<(ostream& output, CellNode& self);
 
 
 private:
 	list<CellNode*> subCellNodeList;
 
-
 	vector<char> content;
-
-
 	//自己的父目录
 	CellNode* preLink;
 	string cellName;
 	FileNodeType nodeType;
-
 	time_t lastModifyTime;
 };
