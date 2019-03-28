@@ -3,6 +3,8 @@
 #include "Common.h"
 #include "VirtualDisk.h"
 #include "MyString.h"
+
+
 bool DelCmd::Execute(VirtualDisk * virtualdisk)
 {
 	m_VirtualDisk = virtualdisk;
@@ -103,6 +105,19 @@ void DelCmd::RemoveFoldLinkFile(CellNode * fold, CellNode * deep, const string &
 		{
 			//询问用户是否删除当前路径下的本项内容
 			//向Virtual Disk请求操作
+			string answer = m_VirtualDisk->AskForUserInput(StrProcess::sstr("%s, 是否确认(Y/N)?", fold->GetNodePath().str().c_str()));
+
+			string result;
+
+			transform(answer.begin(), answer.end(), answer.begin(), tolower);
+			if (answer == "y" || answer == "yes")
+			{
+				break;
+			}
+			else if (answer == "n" || answer == "no")
+			{
+				return;
+			}
 		}
 	}
 

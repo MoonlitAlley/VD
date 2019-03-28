@@ -16,5 +16,6 @@ private:
 	void SetCmdPathCount();
 public:
 	CommandFactory();
+	~CommandFactory();
 	Command* CreatCommand(string cmd);
 };

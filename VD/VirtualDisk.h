@@ -31,6 +31,7 @@ public:
 
 
 	void LogMsgToConsole(string msg);
+	string AskForUserInput(const string& output);
 
 	//得到根节点
 	CellNode* GetRootNode();

@@ -90,7 +90,6 @@ string Path::str()
 	{
 		return "./" + StrProcess::join(pathItems, "/");
 	}
-	return string();
 }
 
 vector<string> Path::split() const

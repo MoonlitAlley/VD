@@ -25,10 +25,16 @@ bool TouchCmd::Execute(VirtualDisk * virtualdisk)
 
 			//创建节点，修改时间在构造函数中实现
 			//设置父节点在添加函数中实现
+
+			//virtualdisk->LogMsgToConsole("该位置可能出错，当文件名为空时也会创建：bool TouchCmd::Execute(VirtualDisk * virtualdisk) ");
+			if (path.FileName().empty())
+			{
+				virtualdisk->LogMsgToConsole("该位置可能出错，当文件名为空时也会创建,所以添加此判断 ：bool TouchCmd::Execute(VirtualDisk * virtualdisk) ");
+				return false;
+			}
+
 			CellNode* fileNode = new CellNode();
 			//该位置可能出错
-			virtualdisk->LogMsgToConsole("该位置可能出错，当文件名为空时也会创建：bool TouchCmd::Execute(VirtualDisk * virtualdisk) ");
-
 			fileNode->SetCellName(path.FileName());
 			fileNode->SetNodeType(FileNodeType::FILE_CUSTOM);
 			prelink->AddSubNode(fileNode);

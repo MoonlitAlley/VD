@@ -1,5 +1,6 @@
 #include "RdCmd.h"
 #include "VirtualDisk.h"
+
 bool RdCmd::Execute(VirtualDisk * virtualdisk)
 {
 	m_VirtualDisk = virtualdisk;
@@ -15,8 +16,6 @@ bool RdCmd::Execute(VirtualDisk * virtualdisk)
 	{
 		CellNode* node = NULL;
 		string wildcard;
-
-		//Path tempPath(pathItems[i]);
 
 		//首先过滤不存在的项目
 		CellNode* tempNode = m_VirtualDisk->GetNodeByPath(pathItems[i]);

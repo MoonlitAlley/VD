@@ -22,7 +22,7 @@ public:
 	CellNode* GetNode(const Path &path);
 	CellNode* GetParent();
 
-	vector<char> Content();
+	vector<char>& Content();
 
 	void SetNodeType(FileNodeType type);
 	FileNodeType GetNodeType();
@@ -37,6 +37,12 @@ public:
 	Path GetNodePath();
 	bool IsRootNode();
 	string Target();
+
+	//一个双目运算符重载应该在类外，所以要声明为友元函数
+	friend istream& operator>>(istream& input, CellNode& self);
+
+	friend ostream& operator<<(ostream& output, CellNode& self);
+
 
 private:
 	list<CellNode*> subCellNodeList;

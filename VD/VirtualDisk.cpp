@@ -46,7 +46,9 @@ CellNode * VirtualDisk::LookingTarget(CellNode * node)
 	}
 	if(node->GetNodeType() & LINK)
 	{
-		Path targetPath = string(node->Content().begin(), node->Content().end());
+		vector<char> temp = node->Content();
+		string tempStrPath = string(temp.begin(), temp.end());
+		Path targetPath(tempStrPath);
 		CellNode* target = GetNodeByPath(targetPath);
 		if (!target)
 		{
@@ -84,9 +86,19 @@ CellNode * VirtualDisk::LookingForTaget(CellNode * node)
 	return target;
 }
 
+
+
 void VirtualDisk::LogMsgToConsole(string msg)
 {
 	cout << msg << endl;
+}
+
+string VirtualDisk::AskForUserInput(const string & output)
+{
+	cout << output << ":";
+	string answer;
+	cin >> answer;
+	return answer;
 }
 
 

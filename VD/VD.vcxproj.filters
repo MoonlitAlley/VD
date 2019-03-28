@@ -84,6 +84,24 @@
     <ClInclude Include="RdCmd.h">
       <Filter>头文件\CMD</Filter>
     </ClInclude>
+    <ClInclude Include="MklinkCmd.h">
+      <Filter>头文件\CMD</Filter>
+    </ClInclude>
+    <ClInclude Include="RenCmd.h">
+      <Filter>头文件\CMD</Filter>
+    </ClInclude>
+    <ClInclude Include="CopyCmd.h">
+      <Filter>头文件\CMD</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveCmd.h">
+      <Filter>头文件\CMD</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveCmd.h">
+      <Filter>头文件\CMD</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadCmd.h">
+      <Filter>头文件\CMD</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -137,8 +155,23 @@
     <ClCompile Include="DelCmd.cpp">
       <Filter>源文件\CMD</Filter>
     </ClCompile>
+    <ClCompile Include="MklinkCmd.cpp">
+      <Filter>源文件\CMD</Filter>
+    </ClCompile>
     <ClCompile Include="RdCmd.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\CMD</Filter>
+    </ClCompile>
+    <ClCompile Include="RenCmd.cpp">
+      <Filter>源文件\CMD</Filter>
+    </ClCompile>
+    <ClCompile Include="CopyCmd.cpp">
+      <Filter>源文件\CMD</Filter>
+    </ClCompile>
+    <ClCompile Include="SaveCmd.cpp">
+      <Filter>源文件\CMD</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadCmd.cpp">
+      <Filter>源文件\CMD</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

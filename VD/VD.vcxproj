@@ -158,13 +158,19 @@
     <ClInclude Include="Command.h" />
     <ClInclude Include="CommandFactory.h" />
     <ClInclude Include="Common.h" />
+    <ClInclude Include="CopyCmd.h" />
     <ClInclude Include="DelCmd.h" />
     <ClInclude Include="DirCmd.h" />
+    <ClInclude Include="LoadCmd.h" />
     <ClInclude Include="MdCmd.h" />
+    <ClInclude Include="MklinkCmd.h" />
+    <ClInclude Include="MoveCmd.h" />
     <ClInclude Include="MyString.h" />
     <ClInclude Include="Path.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="RdCmd.h" />
+    <ClInclude Include="RenCmd.h" />
+    <ClInclude Include="SaveCmd.h" />
     <ClInclude Include="TouchCmd.h" />
     <ClInclude Include="VirtualDisk.h" />
     <ClInclude Include="VirtualDiskSystem.h" />
@@ -177,9 +183,12 @@
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandFactory.cpp" />
     <ClCompile Include="Common.cpp" />
+    <ClCompile Include="CopyCmd.cpp" />
     <ClCompile Include="DelCmd.cpp" />
     <ClCompile Include="DirCmd.cpp" />
+    <ClCompile Include="LoadCmd.cpp" />
     <ClCompile Include="MdCmd.cpp" />
+    <ClCompile Include="MklinkCmd.cpp" />
     <ClCompile Include="MyString.cpp" />
     <ClCompile Include="Path.cpp" />
     <ClCompile Include="pch.cpp">
@@ -189,6 +198,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="RdCmd.cpp" />
+    <ClCompile Include="RenCmd.cpp" />
+    <ClCompile Include="SaveCmd.cpp" />
     <ClCompile Include="TouchCmd.cpp" />
     <ClCompile Include="VD.cpp" />
     <ClCompile Include="VirtualDisk.cpp" />

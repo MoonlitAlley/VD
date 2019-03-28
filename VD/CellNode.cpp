@@ -78,7 +78,7 @@ CellNode * CellNode::GetParent()
 	return preLink;
 }
 
-vector<char> CellNode::Content()
+vector<char>& CellNode::Content()
 {
 	return content;
 }
@@ -182,4 +182,121 @@ string CellNode::Target()
 string CellNode::GetCellName()
 {
 	return cellName;
+}
+
+
+ostream & operator<<(ostream & output, CellNode & self)
+{
+	//在每一条有效数据前设置关卡
+
+	//修改时间信息
+	int guard = 0;
+	output.write((char*)&guard, sizeof(guard));
+	output.write((char*)&self.lastModifyTime, sizeof(time_t));
+
+	//节点类型信息
+	guard = 0;
+	output.write((char*)&guard, sizeof(guard));
+	output.write((char*)&self.nodeType, sizeof(FileNodeType));
+
+	//文件内容信息
+	guard = 0;
+	size_t count = self.content.size();
+	output.write((char*)&guard, sizeof(guard));
+	output.write((char*)&count, sizeof(size_t));
+	if (self.content.size() > 0)
+	{
+		//将节点内容写入到文件中，写入大小为内容总大小
+		output.write(&self.content.front(), self.content.size());
+	}
+
+	//节点名称信息
+	guard = 0;
+	count = self.GetCellName().size();
+	output.write((char*)&guard, sizeof(guard));
+	output.write((char*)&count, sizeof(size_t));
+	output.write(&self.cellName.front(), count);
+
+
+	//子节点信息
+	guard = 0;
+	count = self.subCellNodeList.size();
+	output.write((char*)&guard, sizeof(guard));
+	output.write((char*)&count, sizeof(size_t));
+
+	for (auto itera = self.subCellNodeList.begin(); itera != self.subCellNodeList.end(); itera++)
+	{
+		CellNode* node = *itera;
+		output << *node;
+	}
+	//循环输出
+	return output;
+}
+
+istream & operator>>(istream & input, CellNode & self)
+{
+	// TODO: 在此处插入 return 语句
+
+	//修改时间信息
+	int guard;
+	input.read((char*)&guard, sizeof(guard));
+	if (guard == 0)
+	{
+		input.read((char*)&self.lastModifyTime, sizeof(time_t));
+	}
+
+
+	//节点类型信息
+	input.read((char*)&guard, sizeof(guard));
+	if (guard == 0)
+	{
+		input.read((char*)&self.nodeType, sizeof(FileNodeType));
+	}
+	
+	size_t count =0;
+	//读取节点内容信息
+	input.read((char*)&guard, sizeof(guard));
+	if (guard == 0)
+	{
+		input.read((char*)&count, sizeof(size_t));
+	}
+	if (count > 0)
+	{
+		self.content.resize(count);
+		input.read(&self.content.front(), count);
+	}
+
+
+	//节点名称信息
+	count = 0;
+	input.read((char*)&guard, sizeof(guard));
+	if (guard == 0)
+	{
+		input.read((char*)&count, sizeof(size_t));
+	}
+	if (count > 0)
+	{
+		self.cellName.resize(count);
+		input.read(&self.cellName.front(), count);
+	}
+
+	//子节点信息
+	count = 0;
+	input.read((char*)&guard, sizeof(guard));
+	if (guard == 0)
+	{
+		input.read((char*)&count, sizeof(size_t));
+	}
+	for (size_t i = 0; i < count; i++)
+	{
+		CellNode* node = new CellNode();
+		input >> *node;
+		if (node->cellName.empty())
+		{
+			return input;
+		}
+		self.AddSubNode(node);
+	}
+	//循环读取
+	return input;
 }
