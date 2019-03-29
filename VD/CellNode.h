@@ -33,6 +33,7 @@ public:
 
 	void UpdateLastModifyTime();
 	time_t GetlastModifyTime();
+	void SetLastModifyTime(time_t value);
 
 	Path GetNodePath();
 	bool IsRootNode();

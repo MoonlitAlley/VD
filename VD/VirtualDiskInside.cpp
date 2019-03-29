@@ -76,8 +76,6 @@ CellNode * VirtualDiskInside::LookingTarget(CellNode * node)
 //该位置寻路可能出错,判断方式不知是否正确，
 CellNode * VirtualDiskInside::LookingForTaget(CellNode * node)
 {
-	cout << "使用一次可能出错的寻路 ：CellNode * VirtualDisk::LookingForTaget(CellNode * node)" << endl;
-
 	CellNode* target = LookingTarget(node);
 	while (target && (target->GetNodeType() & LINK))
 	{

@@ -35,6 +35,7 @@ private:
 			{
 				return false;
 			}
+			return true;
 		}
 	};
 	//记录已经处理过的节点信息，防止循环输出

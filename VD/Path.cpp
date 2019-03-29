@@ -106,6 +106,20 @@ vector<string> Path::split() const
 	return pathItems.empty() ? vector<string>{"."} : pathItems;
 }
 
+string Path::Title()
+{
+	string filename = FileName();
+	size_t lastdot = filename.find_last_of('.');
+	if (lastdot == string::npos)
+	{
+		return filename;
+	}
+	else
+	{
+		return filename.substr(0, lastdot);
+	}
+}
+
 string Path::FileName() const
 {
 	if (pathItems.empty())

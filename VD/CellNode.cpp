@@ -92,6 +92,10 @@ CellNode * CellNode::GetNode(const Path & path)
 
 	for (size_t i = 0; i < items.size(); i++)
 	{
+		if (!curNode)
+		{
+			return NULL;
+		}
 		if (items[i] == ".")
 			continue;
 		if (items[i] == "..")
@@ -146,6 +150,11 @@ void CellNode::UpdateLastModifyTime()
 time_t CellNode::GetlastModifyTime()
 {
 	return lastModifyTime;
+}
+
+void CellNode::SetLastModifyTime(time_t value)
+{
+	lastModifyTime = value;
 }
 
 Path CellNode::GetNodePath()

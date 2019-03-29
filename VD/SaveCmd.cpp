@@ -18,8 +18,6 @@ bool SaveCmd::Execute(VirtualDiskInside * virtualdisk)
 		m_VirtualDisk->LogMsgToConsole("不是真实路径");
 		return false;
 	}
-
-
 	//以二进制格式打开文件
 	fstream fout;
 	fout.open(dstPath.str(), ios::binary | ios::out);

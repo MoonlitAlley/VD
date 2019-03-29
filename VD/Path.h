@@ -20,6 +20,8 @@ public:
 	string str();
 	vector<string> split() const;
 
+	//若为文件名，返回‘.’之前的字符
+	string Title();
 	//返回路径中的最后一个节点
 	string FileName() const;
 	string StartNode() const;

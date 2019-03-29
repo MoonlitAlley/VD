@@ -16,6 +16,7 @@
 #include "MklinkCmd.h"
 #include "RenCmd.h"
 #include "MoveCmd.h"
+#include "CopyCmd.h"
 
 #include "SaveCmd.h"
 #include "LoadCmd.h"
@@ -80,7 +81,9 @@ Command * CommandFactory::CreatCommand(string cmd)
 	case moveCmd:
 		command = new MoveCmd();
 		break;
-
+	case copyCmd:
+		command = new CopyCmd();
+		break;
 	case mklinkCmd:
 		command = new MklinkCmd();
 		command->cmdParaCollection.m_definedOptions.insert("/d");
