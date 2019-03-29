@@ -31,7 +31,43 @@ void VirtualDiskSystem::RunSystem()
 	initCmd = "md /\"b in\"/st";
 	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
 
+	initCmd = "touch /\"b in\"/1.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "touch /\"b in\"/11.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "touch /\"b in\"/2.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
 
+
+
+	initCmd = "mklink /d sym /\"bin\"";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "mklink /d sym1 sym";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+
+
+	initCmd = "md baa";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+
+	initCmd = "touch /baa/1.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "touch /baa/11.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "touch /baa/2.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+
+	initCmd = "touch /1.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "touch /11.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "touch /2.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+
+
+	initCmd = "mklink  s.txt /1.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "mklink y.txt s.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
 
 	std::cout << "Program initialization completed!\n";
 	while (1)
