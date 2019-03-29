@@ -2,14 +2,14 @@
 #include <iostream>
 VirtualDiskSystem::VirtualDiskSystem()
 {
-	virtualDisk = new VirtualDisk();
+	virtualDiskInside = new VirtualDiskInside();
 }
 
 
 bool VirtualDiskSystem::InitSystem()
 {
 	//执行文件系统的初始化工作
-	if (!virtualDisk->InitFileSystem())
+	if (!virtualDiskInside->InitFileSystem())
 	{
 		return false;
 	}
@@ -26,10 +26,10 @@ void VirtualDiskSystem::RunSystem()
 
 	//初始化系统的命令
 	string initCmd = "md /\"bin\"";
-	virtualDisk->Execute(commandFactory.CreatCommand(initCmd));
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
 
 	initCmd = "md /\"b in\"/st";
-	virtualDisk->Execute(commandFactory.CreatCommand(initCmd));
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
 
 
 
@@ -41,7 +41,7 @@ void VirtualDiskSystem::RunSystem()
 		{
 			//string workingPathString = virtualDisk.GetWorkingPathString();
 
-			std::cout << virtualDisk->GetWorkingPathString() << "> ";
+			std::cout << virtualDiskInside->GetWorkingPathString() << "> ";
 			flag = false;
 		}
 
@@ -66,7 +66,7 @@ void VirtualDiskSystem::RunSystem()
 			if (command != NULL)
 			{
 				//命令创建成功，开始执行
-				virtualDisk->Execute(command);
+				virtualDiskInside->Execute(command);
 			}
 			else
 			{

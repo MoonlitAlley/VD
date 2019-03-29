@@ -2,8 +2,8 @@
 
 #include "DirCmd.h"
 #include "MyString.h"
-#include "VirtualDisk.h"
-bool DirCmd::Execute(VirtualDisk * virtualdisk)
+#include "VirtualDiskInside.h"
+bool DirCmd::Execute(VirtualDiskInside * virtualdisk)
 {
 	m_VirtualDisk = virtualdisk;
 

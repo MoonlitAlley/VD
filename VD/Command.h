@@ -4,13 +4,13 @@
 #include "CellNode.h"
 using namespace std;
 
-class VirtualDisk;
+class VirtualDiskInside;
 class Command
 {
 public:
 	CmdParameters cmdParaCollection;
 public:
-	virtual bool Execute(VirtualDisk* virtualdisk);
+	virtual bool Execute(VirtualDiskInside* virtualdiskInside);
 protected:
-	VirtualDisk* m_VirtualDisk;
+	VirtualDiskInside* m_VirtualDisk;
 };

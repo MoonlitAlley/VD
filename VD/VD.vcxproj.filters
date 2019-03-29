@@ -63,9 +63,6 @@
     <ClInclude Include="CellNode.h">
       <Filter>头文件\DISK</Filter>
     </ClInclude>
-    <ClInclude Include="VirtualDisk.h">
-      <Filter>头文件\DISK</Filter>
-    </ClInclude>
     <ClInclude Include="DirCmd.h">
       <Filter>头文件\CMD</Filter>
     </ClInclude>
@@ -101,6 +98,9 @@
     </ClInclude>
     <ClInclude Include="LoadCmd.h">
       <Filter>头文件\CMD</Filter>
+    </ClInclude>
+    <ClInclude Include="VirtualDiskInside.h">
+      <Filter>头文件\DISK</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -143,9 +143,6 @@
     <ClCompile Include="Path.cpp">
       <Filter>源文件\COMMON</Filter>
     </ClCompile>
-    <ClCompile Include="VirtualDisk.cpp">
-      <Filter>源文件\DISK</Filter>
-    </ClCompile>
     <ClCompile Include="ClsCmd.cpp">
       <Filter>源文件\CMD</Filter>
     </ClCompile>
@@ -173,8 +170,11 @@
     <ClCompile Include="LoadCmd.cpp">
       <Filter>源文件\CMD</Filter>
     </ClCompile>
+    <ClCompile Include="VirtualDiskInside.cpp">
+      <Filter>源文件\DISK</Filter>
+    </ClCompile>
     <ClCompile Include="MoveCmd.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\CMD</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -5,5 +5,5 @@
 class ClsCmd : public  Command
 {
 public:
-	bool Execute(VirtualDisk* virtualdisk);
+	bool Execute(VirtualDiskInside* virtualdiskInside);
 };

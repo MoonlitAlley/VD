@@ -1,6 +1,6 @@
 #include "Command.h"
 
-bool Command::Execute(VirtualDisk * virtualdisk)
+bool Command::Execute(VirtualDiskInside * virtualdisk)
 {
 	return false;
 }

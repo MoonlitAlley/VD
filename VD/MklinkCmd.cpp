@@ -1,7 +1,7 @@
 #include "MklinkCmd.h"
-#include "VirtualDisk.h"
+#include "VirtualDiskInside.h"
 #include "Path.h"
-bool MklinkCmd::Execute(VirtualDisk * virtualdisk)
+bool MklinkCmd::Execute(VirtualDiskInside * virtualdisk)
 {
 	m_VirtualDisk = virtualdisk;
 	//在pathItems中保存着两个items，分别存有一个路径

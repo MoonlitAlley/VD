@@ -1,9 +1,9 @@
 
 #include "MdCmd.h"
-#include "VirtualDisk.h"
+#include "VirtualDiskInside.h"
 #include "Common.h"
 //该位置判断可能出错
-bool MdCmd::Execute(VirtualDisk* virtualdisk)
+bool MdCmd::Execute(VirtualDiskInside* virtualdisk)
 {
 	vector<string> pathItems = cmdParaCollection.m_pathItems;
 	for (size_t i = 0; i < pathItems.size(); i++)

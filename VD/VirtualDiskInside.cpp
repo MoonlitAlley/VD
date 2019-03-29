@@ -1,16 +1,16 @@
-#include "VirtualDisk.h"
+#include "VirtualDiskInside.h"
 #include <iostream>
-VirtualDisk::VirtualDisk()
+VirtualDiskInside::VirtualDiskInside()
 {
 	
 }
 
-VirtualDisk::~VirtualDisk()
+VirtualDiskInside::~VirtualDiskInside()
 {
 	delete rootNode;
 }
 
-bool VirtualDisk::InitFileSystem()
+bool VirtualDiskInside::InitFileSystem()
 {
 	rootNode = new CellNode();
 	rootNode->SetCellName("/");
@@ -19,12 +19,12 @@ bool VirtualDisk::InitFileSystem()
 	return true;
 }
 
-void VirtualDisk::Execute(Command * cmd)
+void VirtualDiskInside::Execute(Command * cmd)
 {
 	cmd->Execute(this);
 }
 
-CellNode * VirtualDisk::GetNodeByPath(const Path & path)
+CellNode * VirtualDiskInside::GetNodeByPath(const Path & path)
 {
 	if (path.IsAbsolute())
 	{
@@ -38,7 +38,7 @@ CellNode * VirtualDisk::GetNodeByPath(const Path & path)
 
 
 
-CellNode * VirtualDisk::LookingTarget(CellNode * node)
+CellNode * VirtualDiskInside::LookingTarget(CellNode * node)
 {
 	if (!node)
 	{
@@ -74,7 +74,7 @@ CellNode * VirtualDisk::LookingTarget(CellNode * node)
 }
 
 //该位置寻路可能出错,判断方式不知是否正确，
-CellNode * VirtualDisk::LookingForTaget(CellNode * node)
+CellNode * VirtualDiskInside::LookingForTaget(CellNode * node)
 {
 	cout << "使用一次可能出错的寻路 ：CellNode * VirtualDisk::LookingForTaget(CellNode * node)" << endl;
 
@@ -88,12 +88,12 @@ CellNode * VirtualDisk::LookingForTaget(CellNode * node)
 
 
 
-void VirtualDisk::LogMsgToConsole(string msg)
+void VirtualDiskInside::LogMsgToConsole(string msg)
 {
 	cout << msg << endl;
 }
 
-string VirtualDisk::AskForUserInput(const string & output)
+string VirtualDiskInside::AskForUserInput(const string & output)
 {
 	cout << output << ":";
 	string answer;
@@ -103,27 +103,27 @@ string VirtualDisk::AskForUserInput(const string & output)
 
 
 
-CellNode * VirtualDisk::GetRootNode()
+CellNode * VirtualDiskInside::GetRootNode()
 {
 	return rootNode;
 }
-void VirtualDisk::SetRootNode(CellNode* rootNodeSet)
+void VirtualDiskInside::SetRootNode(CellNode* rootNodeSet)
 {
 	rootNode = rootNodeSet;
 }
 
-CellNode * VirtualDisk::GetWorkingNode()
+CellNode * VirtualDiskInside::GetWorkingNode()
 {
 	return workingNode;
 }
 
-void VirtualDisk::SetWorkingNode(CellNode * node)
+void VirtualDiskInside::SetWorkingNode(CellNode * node)
 {
 	workingNode = node;
 }
 
 
-Path VirtualDisk::GetWorkingPath()
+Path VirtualDiskInside::GetWorkingPath()
 {
 	CellNode* cur = workingNode;
 	while (cur)
@@ -140,7 +140,7 @@ Path VirtualDisk::GetWorkingPath()
 }
 
 
-string VirtualDisk::GetWorkingPathString()
+string VirtualDiskInside::GetWorkingPathString()
 {
 	workingPath.clear();
 	CellNode* cur = workingNode;
@@ -157,7 +157,7 @@ string VirtualDisk::GetWorkingPathString()
 	return ret.str();
 }
 
-bool VirtualDisk::IfNodeBeUsing(CellNode * node)
+bool VirtualDiskInside::IfNodeBeUsing(CellNode * node)
 {
 	CellNode* cur = workingNode;
 	while (cur)

@@ -15,6 +15,7 @@
 
 #include "MklinkCmd.h"
 #include "RenCmd.h"
+#include "MoveCmd.h"
 
 #include "SaveCmd.h"
 #include "LoadCmd.h"
@@ -76,7 +77,9 @@ Command * CommandFactory::CreatCommand(string cmd)
 	case renCmd:
 		command = new RenCmd();
 		break;
-
+	case moveCmd:
+		command = new MoveCmd();
+		break;
 
 	case mklinkCmd:
 		command = new MklinkCmd();
@@ -144,9 +147,13 @@ void CommandFactory::SetCmdPathCount()
 	{
 		command->cmdParaCollection.SetPathCount(1, -1);
 	}
-	if (commandType == copyCmd || commandType == moveCmd || commandType == renCmd || commandType == mklinkCmd)
+	if (commandType == copyCmd  || commandType == renCmd || commandType == mklinkCmd)
 	{
 		command->cmdParaCollection.SetPathCount(2, 2);
+	}
+	if (commandType == moveCmd)
+	{
+		command->cmdParaCollection.SetPathCount(1, 2);
 	}
 }
 

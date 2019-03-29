@@ -1,11 +1,11 @@
 #include "DelCmd.h"
 #include "Path.h"
 #include "Common.h"
-#include "VirtualDisk.h"
+#include "VirtualDiskInside.h"
 #include "MyString.h"
 
 
-bool DelCmd::Execute(VirtualDisk * virtualdisk)
+bool DelCmd::Execute(VirtualDiskInside * virtualdisk)
 {
 	m_VirtualDisk = virtualdisk;
 	vector<string> pathItems = cmdParaCollection.m_pathItems;

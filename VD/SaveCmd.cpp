@@ -1,9 +1,9 @@
 #include "SaveCmd.h"
 #include "Path.h"
-#include "VirtualDisk.h"
+#include "VirtualDiskInside.h"
 #include<fstream>
 
-bool SaveCmd::Execute(VirtualDisk * virtualdisk)
+bool SaveCmd::Execute(VirtualDiskInside * virtualdisk)
 {
 	m_VirtualDisk = virtualdisk;
 

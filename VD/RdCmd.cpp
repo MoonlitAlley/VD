@@ -1,7 +1,7 @@
 #include "RdCmd.h"
-#include "VirtualDisk.h"
+#include "VirtualDiskInside.h"
 
-bool RdCmd::Execute(VirtualDisk * virtualdisk)
+bool RdCmd::Execute(VirtualDiskInside * virtualdisk)
 {
 	m_VirtualDisk = virtualdisk;
 	vector<string> pathItems = cmdParaCollection.m_pathItems;

@@ -1,7 +1,7 @@
 #include "LoadCmd.h"
 #include <fstream>
-#include "VirtualDisk.h"
-bool LoadCmd::Execute(VirtualDisk * virtualdisk)
+#include "VirtualDiskInside.h"
+bool LoadCmd::Execute(VirtualDiskInside * virtualdisk)
 {
 	m_VirtualDisk = virtualdisk;
 

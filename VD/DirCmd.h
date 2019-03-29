@@ -5,7 +5,7 @@
 class DirCmd : public Command
 {
 public:
-	bool Execute(VirtualDisk* virtualdisk);
+	bool Execute(VirtualDiskInside* virtualdiskInside);
 
 	//该命令需要显示文件数、文件夹数、文件大小、总大小、修改时间、文件类型
 	void RecursionPrintItem(const Path& path);

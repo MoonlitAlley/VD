@@ -1,6 +1,6 @@
 #include "TouchCmd.h"
-#include "VirtualDisk.h"
-bool TouchCmd::Execute(VirtualDisk * virtualdisk)
+#include "VirtualDiskInside.h"
+bool TouchCmd::Execute(VirtualDiskInside * virtualdisk)
 {
 	vector<string> pathItems = cmdParaCollection.m_pathItems;
 

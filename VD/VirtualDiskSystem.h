@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CommandFactory.h"
-#include "VirtualDisk.h"
+#include "VirtualDiskInside.h"
 
 //命令的最大长度
 #define MAX_CMD_CHAR 100
@@ -12,7 +12,7 @@ private:
 	char cmd[MAX_CMD_CHAR];
 	Command* command;
 	CommandFactory commandFactory;
-	VirtualDisk* virtualDisk;
+	VirtualDiskInside* virtualDiskInside;
 
 public:
 	VirtualDiskSystem();

@@ -1,9 +1,9 @@
 #include "CdCmd.h"
-#include "VirtualDisk.h"
+#include "VirtualDiskInside.h"
 
 
 
-bool CdCmd::Execute(VirtualDisk * virtualdisk)
+bool CdCmd::Execute(VirtualDiskInside * virtualdiskInside)
 {
 	//从命令参数中取出路径
 	vector<string> pathItem = cmdParaCollection.m_pathItems;
@@ -17,7 +17,7 @@ bool CdCmd::Execute(VirtualDisk * virtualdisk)
 	if (pathItem.empty())
 	{
 		//打印当前路径****************************
-		virtualdisk->LogMsgToConsole(virtualdisk->GetWorkingPath().str());
+		virtualdiskInside->LogMsgToConsole(virtualdiskInside->GetWorkingPath().str());
 		return false;
 		//不处理
 	}
@@ -25,22 +25,22 @@ bool CdCmd::Execute(VirtualDisk * virtualdisk)
 	{
 		Path path(pathItem[0]);
 		//根据路径去寻找相应的节点
-		CellNode* node = virtualdisk->GetNodeByPath(path);
-		node = virtualdisk->LookingForTaget(node);
+		CellNode* node = virtualdiskInside->GetNodeByPath(path);
+		node = virtualdiskInside->LookingForTaget(node);
 		if (!node)
 		{
-			virtualdisk->LogMsgToConsole("路径不存在或为文件名");
+			virtualdiskInside->LogMsgToConsole("路径不存在或为文件名");
 			return false;
 		}
 		else if (node->GetNodeType()& FOLD)
 		{
-			virtualdisk->SetWorkingNode(node);
+			virtualdiskInside->SetWorkingNode(node);
 			return true;
 		}
 		else
 		{
 			//路径不存在或为文件名
-			virtualdisk->LogMsgToConsole("路径不存在或为文件名");
+			virtualdiskInside->LogMsgToConsole("路径不存在或为文件名");
 			return false;
 		}
 	}

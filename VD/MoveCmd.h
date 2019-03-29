@@ -4,7 +4,7 @@
 class MoveCmd : public Command
 {
 public:
-	bool Execute(VirtualDisk* virtualdisk);
+	bool Execute(VirtualDiskInside* virtualdiskInside);
 private:
 	void MoveNode(CellNode* from, Path& to);
 	bool conflict = false;

@@ -2,7 +2,7 @@
 
 #include "Command.h"
 
-class VirtualDisk
+class VirtualDiskInside
 {
 public:
 
@@ -17,8 +17,8 @@ private:
 
 
 public:
-	VirtualDisk();
-	~VirtualDisk();
+	VirtualDiskInside();
+	~VirtualDiskInside();
 
 	bool InitFileSystem();
 

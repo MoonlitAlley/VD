@@ -5,5 +5,5 @@
 class MklinkCmd : public Command
 {
 public:
-	bool Execute(VirtualDisk* virtualdisk);
+	bool Execute(VirtualDiskInside* virtualdiskInside);
 };

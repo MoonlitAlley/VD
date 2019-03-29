@@ -1,6 +1,6 @@
 #include "CopyCmd.h"
 #include <io.h>
-bool CopyCmd::Execute(VirtualDisk * virtualdisk)
+bool CopyCmd::Execute(VirtualDiskInside * virtualdisk)
 {
 
 	m_VirtualDisk = virtualdisk;
@@ -26,7 +26,7 @@ bool CopyCmd::Execute(VirtualDisk * virtualdisk)
 	Path dstPath(pathItems[1]);
 
 	vector<Path> allsrcPath;
-	a= pickupAllfile(pathItems[0], *m_VirtualDisk);
+	//a= pickupAllfile(pathItems[0], *m_VirtualDisk);
 
 
 	//首先找到所有的待操作文件，放到路径链表中
@@ -107,26 +107,9 @@ bool CopyCmd::Execute(VirtualDisk * virtualdisk)
 		Path& src(allsrcPath[i]);
 		if (Tools::isWildcard(dstPath.split().back()))
 		{
-			string name = 
+			string name;
 		}
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

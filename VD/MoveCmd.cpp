@@ -1,8 +1,8 @@
 #include "MoveCmd.h"
 #include "Path.h"
-#include "VirtualDisk.h"
+#include "VirtualDiskInside.h"
 #include "MyString.h"
-bool MoveCmd::Execute(VirtualDisk * virtualdisk)
+bool MoveCmd::Execute(VirtualDiskInside * virtualdisk)
 {
 	m_VirtualDisk = virtualdisk;
 	
@@ -20,12 +20,12 @@ bool MoveCmd::Execute(VirtualDisk * virtualdisk)
 
 	if (from.IsReal() || to.IsReal())
 	{
-		//不支持真实路径
+		m_VirtualDisk->LogMsgToConsole("不支持真实路径");
 		return false;
 	}
 	if (!Tools::IsLegalPathName(to.split().back()))
 	{
-		//目录名不正确
+		m_VirtualDisk->LogMsgToConsole("目录名不正确");
 		return false;
 	}
 
@@ -35,7 +35,7 @@ bool MoveCmd::Execute(VirtualDisk * virtualdisk)
 	{
 		//含有通配符
 		CellNode* prelink = m_VirtualDisk->GetNodeByPath(from.Parent());
-		srcNodeList = prelink->FilterSubNode(from.FileName());
+		srcNodeList = prelink->FilterSubNode(from.split().back());
 
 	}
 	else
@@ -43,12 +43,12 @@ bool MoveCmd::Execute(VirtualDisk * virtualdisk)
 		CellNode* node = m_VirtualDisk->GetNodeByPath(from);
 		if (!node)
 		{
-			//文件不存在
+			m_VirtualDisk->LogMsgToConsole("文件不存在");
 			return false;
 		}
 		if (m_VirtualDisk->IfNodeBeUsing(node))
 		{
-			//路径是工作路径
+			m_VirtualDisk->LogMsgToConsole("拒绝访问，父级目录正在被使用");
 			return false;
 		}
 		srcNodeList.push_back(node);
@@ -57,12 +57,13 @@ bool MoveCmd::Execute(VirtualDisk * virtualdisk)
 
 	if (srcNodeList.empty())
 	{
+		
 		//没有需要操作的文件
 		return false;
 	}
 	if (!m_VirtualDisk->GetNodeByPath(to) || m_VirtualDisk->GetNodeByPath(to)->GetNodeType()&FileNodeType::FILE_CUSTOM)
 	{
-		//目标节点不能是文件节点 或者不存在
+		m_VirtualDisk->LogMsgToConsole("目标节点不能是文件节点 或者不存在");
 		return false;
 	}
 
@@ -72,6 +73,9 @@ bool MoveCmd::Execute(VirtualDisk * virtualdisk)
 	{
 		conflict = true;
 	}
+
+	needAsk = !(cmdParaCollection.m_parsedOptions.find("/y") != cmdParaCollection.m_parsedOptions.end());
+
 
 	for (auto itera = srcNodeList.begin(); itera != srcNodeList.end(); itera++)
 	{
@@ -95,6 +99,7 @@ void MoveCmd::MoveNode(CellNode* from, Path& to)
 		CellNode* node = m_VirtualDisk->LookingForTaget(dstNode);
 		if (!node)
 		{
+			m_VirtualDisk->LogMsgToConsole("找不到路径");
 			//找不到路径
 			return;
 		}
@@ -108,18 +113,40 @@ void MoveCmd::MoveNode(CellNode* from, Path& to)
 		{
 			if (cur == from)
 			{
-				//拒绝访问，父级目录正在被使用
+				m_VirtualDisk->LogMsgToConsole("拒绝访问，父级目录正在被使用");
 				return;
 			}
 			cur = cur->GetParent();
 		}
 		//移动该节点
-
 		if (conflict && needAsk)
 		{
 			while (true)
 			{
-				//移动文件
+				//询问是否移动
+				string answer = m_VirtualDisk->AskForUserInput(StrProcess::sstr("覆盖 %s 吗? (Yes/No/All):", to.str().c_str()));
+				string result;
+
+				transform(answer.begin(), answer.end(), answer.begin(), tolower);
+				if (answer == "y" || answer == "yes")
+				{
+					//移动
+					from->RemoveFromPreSubList(false);
+					dstNode->AddSubNode(from);
+					break;
+				}
+				else if (answer == "n" || answer == "no")
+				{
+					return;
+				}
+				else if (answer == "all")
+				{
+					needAsk = false;
+					//移动文件
+					from->RemoveFromPreSubList(false);
+					dstNode->AddSubNode(from);
+					break;
+				}
 			}
 		}
 		else
@@ -128,9 +155,5 @@ void MoveCmd::MoveNode(CellNode* from, Path& to)
 			from->RemoveFromPreSubList(false);
 			dstNode->AddSubNode(from);
 		}
-
-
-
-
 	}
 }

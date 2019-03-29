@@ -1,6 +1,6 @@
 #include "RenCmd.h"
-#include "VirtualDisk.h"
-bool RenCmd::Execute(VirtualDisk * virtualdisk)
+#include "VirtualDiskInside.h"
+bool RenCmd::Execute(VirtualDiskInside * virtualdisk)
 {
 	m_VirtualDisk = virtualdisk;
 	//类似于Mklink的路径存取方法
