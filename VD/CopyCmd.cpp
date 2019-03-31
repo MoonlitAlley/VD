@@ -40,6 +40,8 @@
 bool CopyCmd::Execute(VirtualDiskInside * virtualdisk)
 {
 	m_VirtualDisk = virtualdisk;
+	needAsk = !(cmdParaCollection.m_parsedOptions.find("/y") != cmdParaCollection.m_parsedOptions.end());
+
 	vector<string> pathItems = cmdParaCollection.m_pathItems;
 	Path srcPath(pathItems[0]);
 	Path dstPath(pathItems[1]);
@@ -229,11 +231,13 @@ void CopyCmd::Copy(Path & src, Path & dst, bool first)
 			system(cmd.c_str());
 		}
 		else
-		{	//V-R
+		{
+			
+			//V-R
 			_finddata_t findData;
 			intptr_t handle = _findfirst(dst.str().c_str(), &findData);
 
-			if (handle = -1)
+			if (handle == -1)
 			{
 				//没有相同的文件
 				CopyNodeToReal(src, dst);
@@ -250,13 +254,40 @@ void CopyCmd::Copy(Path & src, Path & dst, bool first)
 			}
 			else
 			{
-				/*if (first)
+				if (findData.name == src.FileName())
 				{
+					if (needAsk)
+					{
+						//用户输入命令；
+						//目标节点存在且需要询问
+						while (true)
+						{
+							string answer = m_VirtualDisk->AskForUserInput(StrProcess::sstr("覆盖 %s 吗? (Yes/No/All):", dst.str().c_str()));
+							transform(answer.begin(), answer.end(), answer.begin(), tolower);
+							if (answer == "y" || answer == "yes")
+							{
+								break;
+							}
+							else if (answer == "n" || answer == "no")
+							{
+								return;
+							}
+							else if (answer == "all")
+							{
+								needAsk = false;
+								break;
+							}
+						}
+					}
+					
+				}
+				if (first)
+				{
+					//如果文件存在则 清空其内容；   ？？？？？为什么无效？
 					FILE* fout = fopen(dst.str().c_str(), "wb");
 					fclose(fout);
-				}*/
+				}
 				CopyNodeToReal(src, dst);
-
 			}
 		}
 	}
@@ -282,7 +313,6 @@ void CopyCmd::Copy(Path & src, Path & dst, bool first)
 			node->SetCellName(dst.FileName());
 			node->SetNodeType(FileNodeType::FILE_CUSTOM);
 			nodeprelink->AddSubNode(node);
-
 
 			if (!node)
 			{
@@ -341,6 +371,32 @@ void CopyCmd::Copy(Path & src, Path & dst, bool first)
 			}
 			else
 			{
+				if (dst.FileName() == src.FileName())
+				{
+					if (needAsk)
+					{
+						//用户输入命令；
+						//目标节点存在且需要询问
+						while (true)
+						{
+							string answer = m_VirtualDisk->AskForUserInput(StrProcess::sstr("覆盖 %s 吗? (Yes/No/All):", dst.str().c_str()));
+							transform(answer.begin(), answer.end(), answer.begin(), tolower);
+							if (answer == "y" || answer == "yes")
+							{
+								break;
+							}
+							else if (answer == "n" || answer == "no")
+							{
+								return;
+							}
+							else if (answer == "all")
+							{
+								needAsk = false;
+								break;
+							}
+						}
+					}
+				}
 				if (first)
 				{
 					tempNode->Content().clear();
@@ -383,7 +439,10 @@ void CopyCmd::CopyNodeToReal(Path&src, Path& dst)
 		return;
 	}
 	//将源节点中的数据内容以字符为单位写入到真实文件中去
-	fwrite(&nodesrc->Content().front(), 1, nodesrc->Content().size(), fout);
+	if (nodesrc->Content().size() > 0)
+	{
+		fwrite(&nodesrc->Content().front(), 1, nodesrc->Content().size(), fout);
+	}
 	fclose(fout);
 }
 

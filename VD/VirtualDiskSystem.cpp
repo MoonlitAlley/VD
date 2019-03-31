@@ -14,16 +14,6 @@ bool VirtualDiskSystem::InitSystem()
 		return false;
 	}
 
-	//std::cout << "Program initialization completed!\n";
-	RunSystem();
-	return true;
-
-}
-
-void VirtualDiskSystem::RunSystem()
-{
-	bool flag = true;
-
 	//初始化系统的命令
 	string initCmd = "md /\"bin\"";
 	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
@@ -68,6 +58,17 @@ void VirtualDiskSystem::RunSystem()
 	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
 	initCmd = "mklink y.txt s.txt";
 	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	//std::cout << "Program initialization completed!\n";
+	RunSystem();
+	return true;
+
+}
+
+void VirtualDiskSystem::RunSystem()
+{
+	bool flag = true;
+
+	
 
 	std::cout << "Program initialization completed!\n";
 	while (1)
@@ -108,7 +109,6 @@ void VirtualDiskSystem::RunSystem()
 			{
 				cout << "\n命令创建失败，请重新输入（多次失败请检查系统）：" << endl;
 			}
-
 
 			for (int i = 0; i < MAX_CMD_CHAR; i++)
 			{

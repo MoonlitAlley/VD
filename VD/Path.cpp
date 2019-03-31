@@ -93,7 +93,7 @@ string Path::str()
 	}
 	else if (IsAbsolute())
 	{
-		return "/" + StrProcess::join(pathItems, "/");
+		return "C:/" + StrProcess::join(pathItems, "/");
 	}
 	else
 	{

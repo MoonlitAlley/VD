@@ -248,7 +248,7 @@ string DirCmd::MakeOneOutput(CellNode * node, const string & name)
 
 	string res = buff;
 
-	if ((node->GetNodeType()& FILE_CUSTOM) && (!node->GetNodeType()& LINK))
+	if ((node->GetNodeType()& FILE_CUSTOM) && !(node->GetNodeType()& LINK))
 	{
 		res += NumberToString(node->Content().size(), 14);
 	}

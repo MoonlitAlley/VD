@@ -1,0 +1,3185 @@
+#include "CdCmd.h"
+#include "VirtualDiskInside.h"
+
+
+
+bool CdCmd::Execute(VirtualDiskInside * virtualdiskInside)
+{
+	//´ÓÃüÁî²ÎÊıÖĞÈ¡³öÂ·¾¶
+	vector<string> pathItem = cmdParaCollection.m_pathItems;
+
+	//¸ÃÃüÁî×î¶àÖ§³ÖÒ»ÌõÂ·¾¶
+	if (pathItem.size() > 1)
+	{
+		return false;
+	}
+	//¸ÃÃüÁîÖ§³Ö¿ÕÂ·¾¶£¬Èç¹ûÂ·¾¶Îª¿Õ£¬ÔòÏÔÊ¾µ±Ç°Â·¾¶
+	if (pathItem.empty())
+	{
+		//´òÓ¡µ±Ç°Â·¾¶****************************
+		virtualdiskInside->LogMsgToConsole(virtualdiskInside->GetWorkingPath().str());
+		return false;
+		//²»´¦Àí
+	}
+	else
+	{
+		Path path(pathItem[0]);
+		//¸ù¾İÂ·¾¶È¥Ñ°ÕÒÏàÓ¦µÄ½Úµã
+		CellNode* node = virtualdiskInside->GetNodeByPath(path);
+		node = virtualdiskInside->LookingForTaget(node);
+		if (!node)
+		{
+			virtualdiskInside->LogMsgToConsole("Â·¾¶²»´æÔÚ»òÎªÎÄ¼şÃû");
+			return false;
+		}
+		else if (node->GetNodeType()& FOLD)
+		{
+			virtualdiskInside->SetWorkingNode(node);
+			return true;
+		}
+		else
+		{
+			//Â·¾¶²»´æÔÚ»òÎªÎÄ¼şÃû
+			virtualdiskInside->LogMsgToConsole("Â·¾¶²»´æÔÚ»òÎªÎÄ¼şÃû");
+			return false;
+		}
+	}
+}
+
+#pragma region ¶ªÆú·½·¨
+//
+//bool CdCmd::Execute(VirtualDisk * virtualdisk)
+//{
+//	//´ÓÃüÁî²ÎÊıÖĞÈ¡³öÂ·¾¶
+//	vector<string> pathItem = cmdParaCollection.m_pathItems;
+//
+//	//¸ÃÃüÁî×î¶àÖ§³ÖÒ»ÌõÂ·¾¶
+//	if (pathItem.size() > 1)
+//	{
+//		return false;
+//	}
+//	//¸ÃÃüÁîÖ§³Ö¿ÕÂ·¾¶£¬Èç¹ûÂ·¾¶Îª¿Õ£¬ÔòÏÔÊ¾µ±Ç°Â·¾¶
+//	if (pathItem.empty())
+//	{
+//		//´òÓ¡µ±Ç°Â·¾¶****************************
+//		virtualdisk->LogMsgToConsole(virtualdisk->GetWorkingPath().str());
+//		return false;
+//		//²»´¦Àí
+//	}
+//	else
+//	{
+//		Path path(pathItem[0]);
+//		//¸ù¾İÂ·¾¶È¥Ñ°ÕÒÏàÓ¦µÄ½Úµã
+//		//CellNode* node = virtualdisk->GetNodeByPath(path);
+//		vector<string> items = path.split();
+//		CellNode* curNode = virtualdisk->GetNodeByPath(path.StartNode());
+//		for (size_t i = 0; i < items.size(); i++)
+//		{
+//			if (curNode == NULL)
+//			{
+//
+//				return false;
+//			}
+//
+//			//¸ù¾İµ±Ç°½ÚµãÃû³ÆÈ¥Ñ°ÕÒÏàÓ¦µÄ½Úµã
+//			CellNode* child = curNode->GetNode(items[i]);
+//
+//			if (!child)
+//			{
+//				virtualdisk->LogMsgToConsole("Â·¾¶²»´æÔÚ»òÎªÎÄ¼şÃû");
+//				return false;
+//			}
+//
+//			if (child->GetNodeType() == FOLD || child->GetNodeType() == LINK || child->GetNodeType() == DISK)
+//			{
+//				//Èç¹ûchildµÄÀàĞÍÎªÎÄ¼ş¼Ğ£¬ÔòcurNode = child ; ÈôÀàĞÍÎªlink£¬ÔòcurNode µÈÓÚ childµÄtarget
+//				curNode = virtualdisk->LookingForTaget(child);
+//				if (curNode->GetNodeType() == FILE_CUSTOM)
+//				{
+//					virtualdisk->LogMsgToConsole("Â·¾¶²»´æÔÚ»òÎªÎÄ¼şÃû");
+//					return false;
+//				}
+//				continue;
+//			}
+//			else
+//			{
+//				//Â·¾¶²»´æÔÚ»òÎªÎÄ¼şÃû
+//				virtualdisk->LogMsgToConsole("Â·¾¶²»´æÔÚ»òÎªÎÄ¼şÃû");
+//				return false;
+//			}
+//		}
+//
+//		if (curNode == NULL)
+//		{
+//			virtualdisk->LogMsgToConsole("ÕÒ²»µ½Â·¾¶»òÕßÎÄ¼ş");
+//			return false;
+//		}
+//		else if (curNode->GetNodeType() == FOLD || curNode->GetNodeType() == DISK)
+//		{
+//			virtualdisk->SetWorkingNode(curNode);
+//			return true;
+//		}
+//		else
+//		{
+//			virtualdisk->LogMsgToConsole("Â·¾¶Ö»Ö§³ÖÎÄ¼ş¼ĞÃû");
+//			return false;
+//		}
+//	}
+//
+//}
+
+#pragma endregion#include "CellNode.h"
+
+CellNode::CellNode()
+{
+	nodeType = FOLD;
+	preLink = NULL;
+	UpdateLastModifyTime();
+}
+
+//ÔÚµ±Ç°½ÚµãÉ¾³ıÊ±£¬É¾³ıÆäÁ´±íÖĞµÄÃ¿¸ö½Úµã
+CellNode::~CellNode()
+{
+	list<CellNode*>::iterator itera = subCellNodeList.begin();
+	for (itera; itera != subCellNodeList.end(); itera++)
+	{
+		delete *itera;
+	}
+	subCellNodeList.clear();
+}
+
+//Ïòµ±Ç°½ÚµãµÄ×Ó½ÚµãÁ´±íÖĞ²åÈëÔªËØ
+bool CellNode::AddSubNode(CellNode* node)
+{
+	//Èç¹ûÊÇ·ûºÅÁ´½Ó£¬£¬²»ÔÊĞíÓĞ×ÓÏî£¬Ö»ÄÜÓĞtarget;
+	if (nodeType == LINK)
+	{
+		return false;
+	}
+
+	if (&node != NULL)
+	{
+		node->preLink = this;
+		subCellNodeList.push_back(node);
+		//¸üĞÂµ±Ç°½ÚµãµÄĞŞ¸ÄÊ±¼ä
+		UpdateLastModifyTime();
+		return true;
+	}
+	return false;
+}
+
+//´Óµ±Ç°½áµãµÄ×Ó½ÚµãÖĞÒÆ³ıÌØ¶¨½Úµã£¬¿ÉÒÔÑ¡ÔñÊÇ·ñÊÍ·Å´Ë½Úµã
+bool CellNode::RemoveSubNode(CellNode * node, bool release)
+{
+	auto new_end = remove(subCellNodeList.begin(), subCellNodeList.end(), node);
+
+	if (new_end == subCellNodeList.end())
+	{
+		return true;
+	}
+	node->preLink = NULL;
+	subCellNodeList.erase(new_end, subCellNodeList.end());
+	if (release)
+	{
+		delete node;
+	}
+	UpdateLastModifyTime();
+	return false;
+}
+
+void CellNode::RemoveFromPreSubList(bool release)
+{
+	if (preLink == NULL)
+	{
+		return;
+	}
+	preLink->RemoveSubNode(this, release);
+}
+
+list<CellNode*> CellNode::FilterSubNode(string whildcard)
+{
+	list<CellNode*> res;
+	copy_if(subCellNodeList.begin(), subCellNodeList.end(), back_inserter(res), [&](CellNode* node) {return Tools::IsWildcardMatch(whildcard, node->GetCellName()); });
+	return res;
+}
+
+CellNode * CellNode::GetParent()
+{
+	return preLink;
+}
+
+vector<char>& CellNode::Content()
+{
+	return content;
+}
+
+//ÕÒµ½Ö¸¶¨½Úµã
+CellNode * CellNode::GetNode(const Path & path)
+{
+	vector<string> items = path.split();
+
+	CellNode* curNode = this;
+
+	for (size_t i = 0; i < items.size(); i++)
+	{
+		if (!curNode)
+		{
+			return NULL;
+		}
+		if (items[i] == ".")
+			continue;
+		if (items[i] == "..")
+		{
+			curNode = curNode->preLink;
+			continue;
+		}
+
+		auto target = find_if(curNode->subCellNodeList.begin(), curNode->subCellNodeList.end(), [&](CellNode* child) {return child->GetCellName() == items[i]; });
+		//·µ»ØµÄµü´úÆ÷ÊÇ·ñÎª³¬Î²ÔªËØ
+		curNode = target == curNode->subCellNodeList.end() ? NULL : *target;
+	}
+	return curNode;
+}
+
+void CellNode::SetNodeType(FileNodeType type)
+{
+	nodeType = type;
+}
+
+FileNodeType CellNode::GetNodeType()
+{
+	return nodeType;
+}
+
+string CellNode::GetNodeTypeStr()
+{
+	if (nodeType == LINK)
+	{
+		return "<LINK>";
+	}
+	else if (nodeType == FOLD)
+	{
+		return "<FOLD>";
+	}
+	else
+	{
+		return "";
+	}
+}
+
+void CellNode::SetCellName(string name)
+{
+	cellName = name;
+}
+
+void CellNode::UpdateLastModifyTime()
+{
+	time(&lastModifyTime);
+}
+
+time_t CellNode::GetlastModifyTime()
+{
+	return lastModifyTime;
+}
+
+void CellNode::SetLastModifyTime(time_t value)
+{
+	lastModifyTime = value;
+}
+
+Path CellNode::GetNodePath()
+{
+	list<CellNode*> nodePath;
+	CellNode* cur = this;
+	while (cur)
+	{
+		nodePath.push_front(cur);
+		cur = cur->GetParent();
+	}
+	Path ret;
+	for (auto it = nodePath.begin(); it != nodePath.end(); it++)
+	{
+		ret.append((*it)->GetCellName());
+	}
+	return ret;
+}
+
+bool CellNode::IsRootNode()
+{
+	
+	return preLink == NULL && (cellName == "/" || cellName =="C:" || cellName == "c:");
+}
+
+string CellNode::Target()
+{
+	if (nodeType&LINK)
+	{
+		return string(content.begin(), content.end());
+	}
+	return "";
+}
+
+string CellNode::GetCellName()
+{
+	return cellName;
+}
+
+
+ostream & operator<<(ostream & output, CellNode & self)
+{
+	//ÔÚÃ¿Ò»ÌõÓĞĞ§Êı¾İÇ°ÉèÖÃ¹Ø¿¨
+
+	//ĞŞ¸ÄÊ±¼äĞÅÏ¢
+	int guard = 0;
+	output.write((char*)&guard, sizeof(guard));
+	output.write((char*)&self.lastModifyTime, sizeof(time_t));
+
+	//½ÚµãÀàĞÍĞÅÏ¢
+	guard = 0;
+	output.write((char*)&guard, sizeof(guard));
+	output.write((char*)&self.nodeType, sizeof(FileNodeType));
+
+	//ÎÄ¼şÄÚÈİĞÅÏ¢
+	guard = 0;
+	size_t count = self.content.size();
+	output.write((char*)&guard, sizeof(guard));
+	output.write((char*)&count, sizeof(size_t));
+	if (self.content.size() > 0)
+	{
+		//½«½ÚµãÄÚÈİĞ´Èëµ½ÎÄ¼şÖĞ£¬Ğ´Èë´óĞ¡ÎªÄÚÈİ×Ü´óĞ¡
+		output.write(&self.content.front(), self.content.size());
+	}
+
+	//½ÚµãÃû³ÆĞÅÏ¢
+	guard = 0;
+	count = self.GetCellName().size();
+	output.write((char*)&guard, sizeof(guard));
+	output.write((char*)&count, sizeof(size_t));
+	output.write(&self.cellName.front(), count);
+
+
+	//×Ó½ÚµãĞÅÏ¢
+	guard = 0;
+	count = self.subCellNodeList.size();
+	output.write((char*)&guard, sizeof(guard));
+	output.write((char*)&count, sizeof(size_t));
+
+	for (auto itera = self.subCellNodeList.begin(); itera != self.subCellNodeList.end(); itera++)
+	{
+		CellNode* node = *itera;
+		output << *node;
+	}
+	//Ñ­»·Êä³ö
+	return output;
+}
+
+istream & operator>>(istream & input, CellNode & self)
+{
+	// TODO: ÔÚ´Ë´¦²åÈë return Óï¾ä
+
+	//ĞŞ¸ÄÊ±¼äĞÅÏ¢
+	int guard;
+	input.read((char*)&guard, sizeof(guard));
+	if (guard == 0)
+	{
+		input.read((char*)&self.lastModifyTime, sizeof(time_t));
+	}
+
+
+	//½ÚµãÀàĞÍĞÅÏ¢
+	input.read((char*)&guard, sizeof(guard));
+	if (guard == 0)
+	{
+		input.read((char*)&self.nodeType, sizeof(FileNodeType));
+	}
+	
+	size_t count =0;
+	//¶ÁÈ¡½ÚµãÄÚÈİĞÅÏ¢
+	input.read((char*)&guard, sizeof(guard));
+	if (guard == 0)
+	{
+		input.read((char*)&count, sizeof(size_t));
+	}
+	if (count > 0)
+	{
+		self.content.resize(count);
+		input.read(&self.content.front(), count);
+	}
+
+
+	//½ÚµãÃû³ÆĞÅÏ¢
+	count = 0;
+	input.read((char*)&guard, sizeof(guard));
+	if (guard == 0)
+	{
+		input.read((char*)&count, sizeof(size_t));
+	}
+	if (count > 0)
+	{
+		self.cellName.resize(count);
+		input.read(&self.cellName.front(), count);
+	}
+
+	//×Ó½ÚµãĞÅÏ¢
+	count = 0;
+	input.read((char*)&guard, sizeof(guard));
+	if (guard == 0)
+	{
+		input.read((char*)&count, sizeof(size_t));
+	}
+	for (size_t i = 0; i < count; i++)
+	{
+		CellNode* node = new CellNode();
+		input >> *node;
+		if (node->cellName.empty())
+		{
+			return input;
+		}
+		self.AddSubNode(node);
+	}
+	//Ñ­»·¶ÁÈ¡
+	return input;
+}
+#include "ClsCmd.h"
+
+bool ClsCmd::Execute(VirtualDiskInside * virtualdiskInside)
+{
+	system("cls");
+	return true;
+}
+#include "CmdParameters.h"
+#include <iterator>
+#include <algorithm>
+#include "MyString.h"
+
+void CmdParameters::SetPathCount(int min, int max)
+{
+	min_pathNum = min;
+	max_pathNum = max;
+}
+
+//½«ÓÃ»§ÊäÈë·Ö½âÎªÃüÁî²ÎÊıºÍÃüÁîÂ·¾¶
+bool CmdParameters::SplitUserInput(string & userInput)
+{
+	vector < pair<string, bool>> items = SplitToWordBySpace(userInput);
+	//²»ÔÙ´¦ÀíÃüÁîÃû
+	for (size_t i = 1; i < items.size(); i++)
+	{
+		string &word = items[i].first;
+		bool inquote = items[i].second;
+
+		if (word.empty())
+		{
+			continue;
+		}
+		//Èç¹û´øÓĞÒıºÅ
+		if (inquote)
+		{
+			m_pathItems.push_back(word);
+		}
+		else if (word[0] == '/' && word.size() >= 2 && word.size() <= 3)
+		{
+			//µ±Ç°½âÎöµ½µÄÊÇ²ÎÊı
+			string tmp = word;
+			transform(word.begin(), word.end(), tmp.begin(), ::tolower);
+			m_parsedOptions.insert(tmp);
+		}
+		else
+		{
+			m_pathItems.push_back(word);
+		}
+	}
+
+	set<string> opAdditional;
+	//½«ÃüÁîÖĞ°üº¬µÄ£¬ÏµÍ³Ã»ÓĞ¶¨ÒåµÄ²ÎÊı£¬·ÅÈë²ÎÊısetÖĞ
+	set_difference(m_parsedOptions.begin(), m_parsedOptions.end(), m_definedOptions.begin(), m_definedOptions.end(), inserter(opAdditional, opAdditional.begin()));
+
+	//Èç¹ûÓÃ»§ÊäÈëµÄÓĞÏµÍ³Î´¶¨ÒåµÄ²ÎÊı£¬·µ»Ø
+	if (!opAdditional.empty())
+	{
+		return false;
+	}
+	if ((int)m_pathItems.size() < min_pathNum)
+	{
+		return false;
+	}
+	if (max_pathNum >= 0 && (int)m_pathItems.size() > max_pathNum)
+	{
+		return false;
+	}
+	return true;
+}
+
+vector<pair<string, bool>> CmdParameters::SplitToWordBySpace(string & input)
+{
+	vector<pair<string, bool>> ret;
+	string word;
+	bool inquote = false;
+
+	for (size_t cur = 0; cur < input.size(); ++cur)
+	{
+		if (input[cur] == '\"')
+		{
+			if (!inquote)
+			{
+				inquote = true;
+			}
+			else
+			{
+				inquote = false;
+				continue;
+				/*if (!StrProcess::stripspace(word).empty())
+				{
+					ret.push_back(make_pair(word, true));
+				}
+				word.clear();*/
+			}
+			continue;
+		}//ÔÚ²»Óöµ½ÏÂÒ»¸öÒıºÅÖ®Ç°Ö±½ÓÖ´ĞĞcontinue£¬
+		if (inquote)
+		{
+			word.push_back(input[cur]);
+			continue;
+		}//ÒıºÅ½áÊøÖ®ºóÔÙ¼ÌĞøÖ´ĞĞ
+		if (isspace(input[cur]))
+		{
+			if (!StrProcess::stripspace(word).empty())
+			{
+				ret.push_back(make_pair(word, false));
+			}
+			word.clear();
+		}
+		else
+		{
+			word.push_back(input[cur]);
+		}
+	}
+	//½«×îºóÒ»Ïî·ÅÈëretÖĞ
+	if (!inquote)
+	{
+		if (!StrProcess::stripspace(word).empty())
+		{
+			ret.push_back(make_pair(word, false));
+		}
+		word.clear();
+	}
+
+	return ret;
+}
+#include "Command.h"
+
+bool Command::Execute(VirtualDiskInside * virtualdisk)
+{
+	return false;
+}#include "CommandFactory.h"
+#include <iostream>
+#include "MyString.h"
+
+#include "ClsCmd.h"
+
+#include"CdCmd.h"
+#include "DirCmd.h"
+
+
+#include"MdCmd.h"
+#include "DelCmd.h"
+#include "RdCmd.h"
+#include "TouchCmd.h"
+
+#include "MklinkCmd.h"
+#include "RenCmd.h"
+#include "MoveCmd.h"
+#include "CopyCmd.h"
+
+#include "SaveCmd.h"
+#include "LoadCmd.h"
+CommandFactory::CommandFactory()
+{
+}
+
+CommandFactory::~CommandFactory()
+{
+	delete command;
+}
+
+Command * CommandFactory::CreatCommand(string cmd)
+{
+	//ÏÈ½«ÃüÁîÖÃ¿Õ£¬·½±ãÏÂÃæÅĞ¶Ï·µ»Ø
+	command = NULL;
+	vector<string> items = StrProcess::SplitNoEmpty(cmd, ' ');
+	if (items.empty())
+	{
+		return NULL;
+	}
+	CmdTypeAnalyse(items[0]);
+	switch (commandType)
+	{
+	case clsCmd:
+		command = new ClsCmd();
+		break;
+
+	case cdCmd:
+		command = new CdCmd();
+		break;
+	case saveCmd:
+		command = new SaveCmd();
+		break;
+	case loadCmd:
+		command = new LoadCmd();
+		break;
+
+	case dirCmd:
+		command = new DirCmd();
+		command->cmdParaCollection.m_definedOptions.insert("/s");
+		command->cmdParaCollection.m_definedOptions.insert("/ad");
+		break;
+	case touchCmd:
+		command = new TouchCmd();
+		break;
+	case rdCmd:
+		command = new RdCmd();
+		command->cmdParaCollection.m_definedOptions.insert("/s");
+		break;
+	case delCmd:
+		command = new DelCmd();
+		command->cmdParaCollection.m_definedOptions.insert("/s");
+		break;
+	case mdCmd:
+		command = new MdCmd();
+		break;
+
+	case renCmd:
+		command = new RenCmd();
+		break;
+	case moveCmd:
+		command = new MoveCmd();
+		break;
+	case copyCmd:
+		command = new CopyCmd();
+		break;
+	case mklinkCmd:
+		command = new MklinkCmd();
+		command->cmdParaCollection.m_definedOptions.insert("/d");
+		break;
+
+	default:
+		//ÃüÁî²»´æÔÚ - ½«ÁÙÊ±±£´æµÄÓÃ»§ÊäÈëÃüÁîÊä³ö
+		std::cout << outputMsg.Command_Illegal << "  userInput : " << cmd << std::endl;
+		break;
+	}
+
+	if (!command)
+	{
+		cout << "ÃüÁî´´½¨Ê§°Ü";
+		return false;
+	}
+	//ÉèÖÃÃüÁîËùÖ§³ÖµÄÂ·¾¶ÊıÁ¿
+	SetCmdPathCount();
+	//½âÎöÓÃ»§ÊäÈë£¬½«µÃµ½µÄ²ÎÊı¼°Â·¾¶·ÅÈëµ½ÃüÁî²ÎÊı¼¯ºÏÖĞ
+	if (!command->cmdParaCollection.SplitUserInput(cmd))
+	{
+		cout << "ÃüÁî²ÎÊı»òÂ·¾¶´íÎó " << endl;
+		return false;
+	}
+	return command;
+}
+
+//¸ù¾İcmdElentÖĞµÄÃüÁî×Ö·û´®£¬·ÖÎö³öÃüÁîID
+int CommandFactory::CmdTypeAnalyse(string cmdName)
+{
+
+	commandType = -1;
+
+	for (int i = 0; i < sizeof(outputMsg.CommandCollection) / sizeof(outputMsg.CommandCollection[0]); i++)
+	{
+		if (cmdName == outputMsg.CommandCollection[i])
+		{
+			commandType = i;
+		}
+	}
+	return commandType;
+}
+
+void CommandFactory::SetCmdPathCount()
+{
+	//ÉèÖÃÃüÁî¿ÉÖ§³ÖµÄÂ·¾¶ÊıÁ¿
+	if (commandType == clsCmd)
+	{
+		command->cmdParaCollection.SetPathCount(0, 0);
+	}
+	if (commandType == cdCmd)
+	{
+		command->cmdParaCollection.SetPathCount(0, 1);
+	}
+	if (commandType == dirCmd)
+	{
+		command->cmdParaCollection.SetPathCount(0, -1);
+	}
+	if (commandType == saveCmd || commandType == loadCmd)
+	{
+		command->cmdParaCollection.SetPathCount(1, 1);
+	}
+	if (commandType == touchCmd || commandType == rdCmd || commandType == delCmd || commandType == mdCmd)
+	{
+		command->cmdParaCollection.SetPathCount(1, -1);
+	}
+	if (commandType == copyCmd  || commandType == renCmd || commandType == mklinkCmd)
+	{
+		command->cmdParaCollection.SetPathCount(2, 2);
+	}
+	if (commandType == moveCmd)
+	{
+		command->cmdParaCollection.SetPathCount(1, 2);
+	}
+}
+
+#include "Common.h"
+#include"MyString.h"
+#include <algorithm>
+
+
+
+bool Tools::isWildcard(const string & pattern)
+{
+	if (pattern.find('*') != string::npos)
+	{
+		return true;
+	}
+	else if (pattern.find('?') != string::npos)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool Tools::IsWildcardMatch(const string & wildcard, const string & str)
+{
+	string pattern;
+	for (size_t i = 0; i < wildcard.size(); ++i)
+	{
+		if (wildcard[i] == '?')
+		{
+			pattern += ".?";
+		}
+		else if (wildcard[i] == '*')
+		{
+			pattern += ".*";
+		}
+		else
+		{
+			pattern += wildcard[i];
+		}
+	}
+
+	return regex_match(str, regex(pattern));
+}
+
+bool Tools::IsLegalPathName(const string & pathName)
+{
+	string temp = pathName;
+	if (StrProcess::stripspace(temp).empty())
+	{
+		return false;
+	}
+	string IlegalChar = "\\/:*?\"<>|";
+	if (any_of(pathName.begin(), pathName.end(), [&](char c) {return IlegalChar.find(c) != string::npos; }))
+	{
+		return false;
+	}
+	return true;
+}
+
+bool Tools::IsLegalFileName(const string & filename)
+{
+	if (!IsLegalPathName(filename))
+	{
+		return false;
+	}
+	if (filename == ".")
+	{
+		return false;
+	}
+	if (filename == "..")
+	{
+		return false;
+	}
+
+	return true;
+}
+#define _CRT_SECURE_NO_WARNINGS
+#include "CopyCmd.h"
+#include "MyString.h"
+#include "VirtualDiskInside.h"
+#include <io.h>
+
+//±¾ÃüÁîÒªÖ§³Ö´ÓÎïÀí´ÅÅÌ¿½±´ÄÚÈİ
+
+//ËÄÖÖ¿½±´·½Ê½
+//V-R
+//R-V
+//V-V
+//R-R
+
+//µÚÒ»¸öÂ·¾¶´æ·Å×ÅÔ´Â·¾¶ĞÅÏ¢	Ö§³ÖÍ¨Åä·û
+//µÚ¶ş¸öÂ·¾¶´æ·Å×ÅÄ¿±êÂ·¾¶ĞÅÏ¢		Ö§³ÖÍ¨Åä·û
+
+
+//µÃµ½ËùÓĞ´ı²Ù×÷Â·¾¶
+//ÓÃ»§ÊäÈëµÄÊÇÕæÊµÂ·¾¶	
+	//ÊäÈëµÄÂ·¾¶ÖĞ²»°üÀ¨Í¨Åä·û
+		//ÊÇÒ»¸öÕı³£µÄÎÄ¼ş
+		//ÊÇÒ»¸öÎÄ¼ş¼Ğ,½«ÎÄ¼ş¼ĞÖĞµÄËùÓĞÎÄ¼ş½Úµã·ÅÈë´ı²Ù×÷ÁĞ±í
+	//º¬ÓĞÍ¨Åä·û
+		//µÃµ½Æä¸¸¼¶Â·¾¶£¬ÔÚ¸¸¼¶Â·¾¶ÖĞ½øĞĞÉ¸Ñ¡
+
+//ÓÃ»§ÊäÈëµÄ²»ÊÇÕæÊµÂ·¾¶	
+	//ÊäÈëµÄÂ·¾¶ÖĞ²»°üÀ¨Í¨Åä·û
+		//ÊÇÒ»¸öÕı³£µÄÎÄ¼ş
+		//ÊÇÒ»¸öÎÄ¼ş¼Ğ,½«ÎÄ¼ş¼ĞÖĞµÄËùÓĞÎÄ¼ş½Úµã·ÅÈë´ı²Ù×÷ÁĞ±í
+	//º¬ÓĞÍ¨Åä·û
+		//µÃµ½Æä¸¸¼¶Â·¾¶£¬ÔÚ¸¸¼¶Â·¾¶ÖĞ½øĞĞÉ¸Ñ¡
+
+
+
+//µÃµ½´ı²Ù×÷ÁĞ±í
+
+
+
+bool CopyCmd::Execute(VirtualDiskInside * virtualdisk)
+{
+	m_VirtualDisk = virtualdisk;
+	vector<string> pathItems = cmdParaCollection.m_pathItems;
+	Path srcPath(pathItems[0]);
+	Path dstPath(pathItems[1]);
+
+
+
+	//Ê×ÏÈÕÒµ½ËùÓĞµÄ´ı²Ù×÷ÎÄ¼ş£¬·Åµ½Â·¾¶Á´±íÖĞ
+	vector<Path> allsrcPath;
+	//ÓÃ»§ÊäÈëµÄÊÇÕæÊµÂ·¾¶
+	if (srcPath.IsReal())
+	{
+		//ÊäÈëµÄÂ·¾¶ÖĞ²»°üÀ¨Í¨Åä·û
+		if (!Tools::isWildcard(srcPath.split().back()))
+		{
+			_finddata_t findData;
+			intptr_t fileHandle = _findfirst(srcPath.str().c_str(), &findData);
+
+			if (fileHandle == -1)
+			{
+				//²éÕÒÊ§°Ü£¬¿ÉÄÜÊÇÂ·¾¶³ö´í
+				return false;
+			}
+			if (findData.attrib &_A_ARCH)
+			{
+				//ÊÇÒ»¸öÕı³£µÄÎÄ¼ş
+				allsrcPath.push_back(srcPath);
+			}
+			else if (findData.attrib & _A_SUBDIR)
+			{
+				//ÊÇÒ»¸öÎÄ¼ş¼Ğ,½«ÎÄ¼ş¼ĞÖĞµÄËùÓĞÎÄ¼ş½Úµã·ÅÈë´ı²Ù×÷ÁĞ±í
+				fileHandle = _findfirst(srcPath.Self().append("*").str().c_str(), &findData);
+				do
+				{
+					if (string(findData.name) == "." || string(findData.name) == "..")
+					{
+						continue;
+					}
+					if (findData.attrib & _A_SUBDIR)
+					{
+						continue;
+					}
+					allsrcPath.push_back(srcPath.Self().append(findData.name));
+
+				} while (_findnext(fileHandle, &findData) == 0);
+			}
+		}
+		else
+		{
+			//º¬ÓĞÍ¨Åä·û
+			_finddata_t findData;
+			intptr_t fileHandle = _findfirst(srcPath.str().c_str(), &findData);
+
+			if (fileHandle == -1)
+			{
+				//²éÕÒÊ§°Ü£¬¿ÉÄÜÊÇÂ·¾¶³ö´í
+				return false;
+			}
+			do
+			{
+				if (string(findData.name) == "." || string(findData.name) == "..")
+				{
+					continue;
+				}
+				if (findData.attrib & _A_SUBDIR)
+				{
+					continue;
+				}
+				if (!Tools::IsWildcardMatch(srcPath.split().back(), findData.name))
+				{
+					//ÔÙÅĞ¶ÏÒ»´ÎµÃµ½ÎÄ¼şÁĞ±íÖĞµ±Ç°ÎÄ¼şÊÇ·ñÆ¥ÅäÓÃ»§ÊäÈëµÄÍ¨Åä·û
+					continue;
+				}
+				allsrcPath.push_back(srcPath.Self().append("..").append(findData.name));
+
+			} while (_findnext(fileHandle, &findData) == 0);
+		}
+	}
+	else
+	{
+		//²»ÊÇÕæÊµÂ·¾¶
+		if (!Tools::isWildcard(srcPath.split().back()))
+		{
+			//ÊäÈëµÄÂ·¾¶ÖĞ²»°üÀ¨Í¨Åä·û
+			CellNode* node = m_VirtualDisk->GetNodeByPath(srcPath);
+			if (node)
+			{
+				node = m_VirtualDisk->LookingForTaget(node);
+				//Â·¾¶Ö¸Ïò½ÚµãÊÇÒ»¸öÎÄ¼ş£¬½«´ËÎÄ¼şµÄÂ·¾¶·ÅÈë´ı¸´ÖÆÁĞ±í
+				if (node->GetNodeType()&FileNodeType::FILE_CUSTOM)
+				{
+					allsrcPath.push_back(node->GetNodePath());
+				}
+				else
+				{
+					//Â·¾¶Ö¸ÏòµÄ½ÚµãÊÇÒ»¸öÎÄ¼ş¼Ğ£¬½«ÎÄ¼ş¼ĞÖĞµÄËùÓĞÎÄ¼ş½Úµã·ÅÈë´ı²Ù×÷ÁĞ±í
+					list<CellNode*> children = node->FilterSubNode("*");
+					for (auto itera = children.begin(); itera != children.end(); itera++)
+					{
+						if ((*itera)->GetNodeType()&FileNodeType::FILE_CUSTOM)
+						{
+							allsrcPath.push_back(m_VirtualDisk->LookingForTaget(*itera)->GetNodePath());
+						}
+					}
+
+				}
+			}
+			else
+			{
+				m_VirtualDisk->LogMsgToConsole("Â·¾¶²»´æÔÚ");
+			}
+		}
+		else
+		{
+			//º¬ÓĞÍ¨Åä·û
+			//µÃµ½Æä¸¸¼¶Â·¾¶£¬ÔÚ¸¸¼¶Â·¾¶ÖĞ½øĞĞÉ¸Ñ¡
+			CellNode* dir = m_VirtualDisk->GetNodeByPath(srcPath.Self().append(".."));
+			if (dir)
+			{
+				dir = m_VirtualDisk->LookingForTaget(dir);
+				//ÔÚ¸¸¼¶Â·¾¶ÏÂÉ¸Ñ¡ÎÄ¼ş½Úµã£¬·ÅÈëµ½´ı²Ù×÷ÁĞ±í
+				if (dir)
+				{
+					list<CellNode*> children = dir->FilterSubNode(srcPath.split().back());
+					for (auto itera = children.begin(); itera != children.end(); itera++)
+					{
+						if ((*itera)->GetNodeType()&FileNodeType::FILE_CUSTOM)
+						{
+							allsrcPath.push_back(m_VirtualDisk->LookingForTaget(*itera)->GetNodePath());
+						}
+					}
+				}
+			}
+			else
+			{
+				m_VirtualDisk->LogMsgToConsole("Â·¾¶²»´æÔÚ");
+			}
+		}
+	}
+
+
+	if (allsrcPath.empty())
+	{
+		//Ã»ÓĞÒª´¦ÀíµÄÎÄ¼ş
+		return true;
+	}
+	for (size_t i = 0; i < allsrcPath.size(); i++)
+	{
+		Path& src(allsrcPath[i]);
+		if (Tools::isWildcard(dstPath.split().back()))
+		{
+			//Ä¿±êÂ·¾¶ÖĞÓĞÍ¨Åä·û
+			string name;
+
+			if (dstPath.split().back() == "*" || dstPath.split().back() == "*.*")
+			{
+				name = src.FileName();
+			}
+			else
+			{
+				string ret = dstPath.split().back();
+				StrProcess::replace(ret, "*", src.Title());
+				StrProcess::replace(ret, "?", src.Title());//´Ë´¦¿ÉÄÜÆ¥Åä²»¶Ô£¬*Æ¥Åä¶à¸ö£¬£¿Æ¥ÅäÒ»¸ö
+				m_VirtualDisk->LogMsgToConsole("´Ë´¦¿ÉÄÜÆ¥Åä²»¶Ô£¬*Æ¥Åä¶à¸ö£¬£¿Æ¥ÅäÒ»¸ö");
+				name = ret;
+			}
+
+			Path tempdstpath = dstPath.Parent().append(name);
+			Copy(src, tempdstpath, true);
+		}
+		else
+		{
+			//Ä¿±êÂ·¾¶ÖĞÃ»ÓĞÍ¨Åä·û
+			Copy(src, dstPath, i == 0);
+		}
+	}
+	return true;
+}
+
+void CopyCmd::Copy(Path & src, Path & dst, bool first)
+{
+	if (dst.IsReal())
+	{
+		//R-R
+		if (src.IsReal())
+		{
+			string cmd = StrProcess::sstr("copy \"%s\" \"%s\"", src.str().c_str(), dst.str().c_str());	//½»ÓÉÏµÍ³Ö´ĞĞ
+			system(cmd.c_str());
+		}
+		else
+		{	//V-R
+			_finddata_t findData;
+			intptr_t handle = _findfirst(dst.str().c_str(), &findData);
+
+			if (handle == -1)
+			{
+				//Ã»ÓĞÏàÍ¬µÄÎÄ¼ş
+				CopyNodeToReal(src, dst);
+			}
+			else if (findData.attrib & _A_RDONLY)
+			{
+				m_VirtualDisk->LogMsgToConsole("ÎÄ¼şÖ»¶Á£¬Ö»ÄÜ×÷Îª¸´ÖÆÔ´");
+				return;
+			}
+			else if (findData.attrib & _A_SUBDIR)
+			{
+				//½«¸ÃÎÄ¼ş¿½±´µ½dstÖ¸ÏòµÄÎÄ¼ş¼ĞÖĞ£¬ÎÄ¼şÃû³ÉÓëÔ­Ãû³ÆÏàÍ¬
+				Copy(src, dst.Self().append(src.FileName()), true);
+			}
+			else
+			{
+				if (first)
+				{
+					//Èç¹ûÎÄ¼ş´æÔÚÔò Çå¿ÕÆäÄÚÈİ£»   £¿£¿£¿£¿£¿ÎªÊ²Ã´ÎŞĞ§£¿
+					FILE* fout = fopen(dst.str().c_str(), "wb");
+					fclose(fout);
+				}
+				CopyNodeToReal(src, dst);
+
+			}
+		}
+	}
+	else   //dst is virtualdiskNode
+	{
+		CellNode* dstNode = m_VirtualDisk->GetNodeByPath(dst);
+		if (!dstNode)
+		{
+			//´´½¨Ò»¸öÄ¿±ê½Úµã
+			string filenametemp = dst.FileName();
+			if (filenametemp.empty())
+			{
+				return;
+			}
+			CellNode* nodeprelink = m_VirtualDisk->GetNodeByPath(dst.Self().append(".."));
+			nodeprelink = m_VirtualDisk->LookingForTaget(nodeprelink);
+			if (!nodeprelink)
+			{
+				m_VirtualDisk->LogMsgToConsole("Â·¾¶²»´æÔÚ");
+				return;
+			}
+			CellNode* node = new CellNode();
+			node->SetCellName(dst.FileName());
+			node->SetNodeType(FileNodeType::FILE_CUSTOM);
+			nodeprelink->AddSubNode(node);
+
+
+			if (!node)
+			{
+				//´´½¨Ê§°Ü£¬·µ»Ø
+				return;
+			}
+			else if(src.IsReal())
+			{
+				//´´½¨³É¹¦£¬·µ»Ø
+				CopyRealToNode(src, node);
+			}
+			else
+			{
+				//srcÒÑ¾­¾­¹ıÅĞ¶Ï£¬¿ÉÒÔÖ±½ÓÊ¹ÓÃ
+				//nodeÒ²¾­¹ıÅĞ¶Ï£¬¿ÉÒÔÖ±½ÓÊ¹ÓÃ
+				CellNode* srcNode = m_VirtualDisk->GetNodeByPath(src);
+				if (!srcNode) { return; }
+				node->Content().insert(node->Content().end(), srcNode->Content().begin(), srcNode->Content().end());
+				node->SetLastModifyTime(srcNode->GetlastModifyTime());
+			}
+		}
+		else if (dstNode->GetNodeType()&FileNodeType::FOLD)
+		{
+			CellNode* node = m_VirtualDisk->LookingForTaget(dstNode);
+			if (!node)
+			{
+				m_VirtualDisk->LogMsgToConsole("Â·¾¶²»´æÔÚ");
+				return;
+			}
+			//ÔÚ¸ÃÎÄ¼ş¼ĞÄ©Î²Ìí¼ÓÒª¸´ÖÆµÄÎÄ¼şÃû£¬ÔÙ´Î½øÈëCopyÃüÁî£¬Ö´ĞĞ´´½¨½ÚµãµÄÓï¾ä
+			node->GetNodePath();
+			Copy(src, node->GetNodePath().Self().append(src.FileName()), true);
+			//Copy(src, dst.Self().append(src.FileName()), true);
+		}
+		else if (dstNode->GetNodeType()&FileNodeType::FILE_CUSTOM)
+		{
+
+			//µ±Ç°½ÚµãÊÇÎÄ¼ş£¬»òÕßÖ¸ÏòÎÄ¼şµÄ·ûºÅÁ´½Ó£¬£¬£¬ÕÒµ½×îÖÕ½Úµã½øĞĞ²Ù×÷
+			CellNode* prelink = dstNode;
+			CellNode* tempNode = m_VirtualDisk->LookingTarget(prelink);
+			while (tempNode&& tempNode != prelink)
+			{
+				prelink = tempNode;
+				tempNode = m_VirtualDisk->LookingTarget(tempNode);
+			}
+
+			//µÃµ½×îÖÕ½Úµã £¬×îÖÕ½ÚµãÈô²»´æÔÚ£¬ÔòËµÃ÷Æä¸¸½ÚµãÊÇÎÄ¼ş½Úµã£¬Ö´ĞĞ¿½±´
+			if (!tempNode)
+			{
+				Path tempdstpath = prelink->Target();
+				Copy(src, tempdstpath, first);
+			}
+			else if (m_VirtualDisk->LookingForTaget(m_VirtualDisk->GetNodeByPath(src)) == tempNode)
+			{
+				m_VirtualDisk->LogMsgToConsole("Ô´½ÚµãÓëÄ¿±ê½ÚµãÏàÍ¬");
+			}
+			else
+			{
+				if (first)
+				{
+					tempNode->Content().clear();
+				}
+				if (src.IsReal())
+				{
+					CopyRealToNode(src, tempNode);
+				}
+				else
+				{
+					//Ô´½ÚµãºÍÄ¿±ê½Úµã¶¼ÒÑ¾­¹ıÅĞ¶Ï
+					CellNode* srcNode = m_VirtualDisk->GetNodeByPath(src);
+					if (!srcNode) { return; }
+					tempNode->Content().insert(tempNode->Content().end(), srcNode->Content().begin(), srcNode->Content().end());
+					tempNode->SetLastModifyTime(srcNode->GetlastModifyTime());
+				}
+			}
+		}
+		else
+		{
+			m_VirtualDisk->LogMsgToConsole("Çé¿ö²»¶Ô£¬³·ÍË");
+			return;
+		}
+	}
+}
+
+
+
+void CopyCmd::CopyNodeToReal(Path&src, Path& dst)
+{
+	//ÒÑ¾­¶Ôsrcnode¾­¹ıÅĞ¶Ï£¬´Ë´¦¿ÉÖ±½ÓÊ¹ÓÃ
+	CellNode* nodesrc = m_VirtualDisk->GetNodeByPath(src);
+	if (!nodesrc){return;}
+	
+	//Èç¹ûÎÄ¼ş²»´æÔÚÔò´´½¨¸ÃÎÄ¼ş£¬ ²¢ÒÔ¶ş½øÖÆÖ»Ğ´·½Ê½´ò¿ª¸ÃÎÄ¼ş
+	FILE* fout = fopen(dst.str().c_str(), "ab");
+	if (!fout)
+	{
+		m_VirtualDisk->LogMsgToConsole("±¾µØÎÄ¼ş´ò¿ªÊ§°Ü");
+		return;
+	}
+	//½«Ô´½ÚµãÖĞµÄÊı¾İÄÚÈİÒÔ×Ö·ûÎªµ¥Î»Ğ´Èëµ½ÕæÊµÎÄ¼şÖĞÈ¥
+	if (nodesrc->Content().size() > 0)
+	{
+		fwrite(&nodesrc->Content().front(), 1, nodesrc->Content().size(), fout);
+	}
+	fclose(fout);
+}
+
+void CopyCmd::CopyRealToNode(Path&src, CellNode* dstNode)
+{
+	if (!dstNode) { return; }
+	//¶ÁÈ¡ÎÄ¼şÁ÷Ğ´Èëµ½ĞéÄâ½ÚµãµÄcontentÖĞ
+	//ÒÔ¶ş½øÖÆÖ»¶Á·½Ê½´ò¿ª¸ÃÎÄ¼ş
+	FILE* fin = fopen(src.str().c_str(), "rb");
+	if (!fin)
+	{
+		m_VirtualDisk->LogMsgToConsole("±¾µØÎÄ¼ş´ò¿ªÊ§°Ü");
+		return;
+	}
+	char buff[1024];
+	//²»µ½ÎÄ¼ş½áÎ²µÄ»°¾ÍÒ»Ö±¼ÌĞø¶ÁÈ¡
+	while (!feof(fin))
+	{
+		size_t count = fread(buff, 1, sizeof(buff), fin);
+		dstNode->Content().insert(dstNode->Content().end(), buff, buff + count);
+	}
+	fclose(fin);
+}
+
+
+#include "DelCmd.h"
+#include "Path.h"
+#include "Common.h"
+#include "VirtualDiskInside.h"
+#include "MyString.h"
+
+
+bool DelCmd::Execute(VirtualDiskInside * virtualdisk)
+{
+	m_VirtualDisk = virtualdisk;
+	vector<string> pathItems = cmdParaCollection.m_pathItems;
+	if (pathItems.empty())
+	{
+		return false;
+		//Â·¾¶ÊÇ¿ÕµÄ
+		//ÃüÁîÓï·¨²»ÕıÈ·£¬×îÉÙÒ»ÌõÂ·¾¶£¬pathÖĞÒÑ¾­¾­¹ıÅĞ¶Ï
+	}
+	//¶ÔÃ¿ÌõÂ·¾¶·Ö±ğ´¦Àí
+	for (size_t i = 0; i < pathItems.size(); i++)
+	{
+		CellNode* node = NULL;
+		string wildcard;
+		Path tempPath(pathItems[i]);
+
+		//Ê×ÏÈ¹ıÂË²»´æÔÚµÄÏîÄ¿
+
+		if (Tools::isWildcard(tempPath.split().back()))
+		{
+			wildcard = tempPath.split().back();
+
+			CellNode* tempNode = m_VirtualDisk->GetNodeByPath(tempPath.Self().append(".."));
+			if (!tempNode)
+			{
+				//Ã»ÓĞÏàÓ¦µÄ¸¸¼¶ÎÄ¼ş
+				continue;
+			}
+			else if (!(tempNode->GetNodeType()&FOLD))
+			{
+				//Ã»ÓĞÕÒµ½¶ÔÓ¦µÄÎÄ¼ş
+				continue;
+			}
+			node = tempNode;
+		}
+		else
+		{
+			node = m_VirtualDisk->GetNodeByPath(tempPath);
+			if (!node)
+			{
+				//Ã»ÓĞÕÒµ½¶ÔÓ¦µÄÎÄ¼ş
+				continue;
+			}
+		}
+
+		//¿ªÊ¼´¦Àí
+		if (wildcard.empty())
+		{
+			wildcard = "*";
+		}
+		DisPatchPathItem(node, wildcard);
+	}
+
+	return true;
+}
+
+
+void DelCmd::DisPatchPathItem(CellNode * node, const string & wildcard)
+{
+	if (node->GetNodeType()&FILE_CUSTOM && node->GetNodeType()&LINK)
+	{
+		RemoveFoldLinkFile(node->GetParent(), m_VirtualDisk->LookingForTaget(node->GetParent()), node->GetCellName());
+	}
+	else if (node->GetNodeType()&FOLD && node->GetNodeType()&LINK)
+	{
+		CellNode* target = m_VirtualDisk->LookingForTaget(node);
+		if (!target)
+		{
+			m_VirtualDisk->LogMsgToConsole("ÕÒ²»µ½ÎÄ¼ş");
+		}
+		else
+		{
+			RemoveFoldLinkFile(target, target, wildcard);
+		}
+	}
+	else if (node->GetNodeType()&FILE_CUSTOM)
+	{
+		RemoveFoldLinkFile(node->GetParent(), node->GetParent(), node->GetCellName());
+	}
+	else if (node->GetNodeType()&FOLD)
+	{
+		RemoveFoldLinkFile(node, node, wildcard);
+	}
+	else
+	{
+		m_VirtualDisk->LogMsgToConsole("Èç¹û´ËÌõĞÅÏ¢±»´òÓ¡£¬ËµÃ÷³ÌĞò´æÔÚÒâÍâÇé¿ö£¬ÏêÏ¸ÅĞ¶ÏÇë¼û£ºbool DelCmd::Execute");
+		return;
+	}
+}
+
+void DelCmd::RemoveFoldLinkFile(CellNode * fold, CellNode * deep, const string & filesName)
+{
+	//ÊÇ·ñÊÇÆ¥ÅäËùÓĞÎÄ¼ş
+	if (filesName == "*" || filesName == "*.*")
+	{
+		while (true)
+		{
+			//Ñ¯ÎÊÓÃ»§ÊÇ·ñÉ¾³ıµ±Ç°Â·¾¶ÏÂµÄ±¾ÏîÄÚÈİ
+			//ÏòVirtual DiskÇëÇó²Ù×÷
+			string answer = m_VirtualDisk->AskForUserInput(StrProcess::sstr("%s, ÊÇ·ñÈ·ÈÏ(Y/N)?", fold->GetNodePath().str().c_str()));
+
+			string result;
+
+			transform(answer.begin(), answer.end(), answer.begin(), tolower);
+			if (answer == "y" || answer == "yes")
+			{
+				break;
+			}
+			else if (answer == "n" || answer == "no")
+			{
+				return;
+			}
+		}
+	}
+
+	list<CellNode*> children = deep->FilterSubNode(filesName);
+	for (auto itera = children.begin(); itera != children.end(); itera++)
+	{
+		if ((*itera)->GetNodeType()&FILE_CUSTOM)
+		{
+			//Èç¹ûÓÃ»§ÓĞÑ­»·É¾³ıµÄ²ÎÊı£¬ÔòÉ¾³ıÊ±ÌáĞÑµ±Ç°²Ù×÷¶ÔÏó
+			if (cmdParaCollection.m_parsedOptions.find("/s") != cmdParaCollection.m_parsedOptions.end())
+			{
+				m_VirtualDisk->LogMsgToConsole(StrProcess::sstr("É¾³ıÎÄ¼ş - %s", (*itera)->GetNodePath().str().c_str()));
+				//É¾³ıÕâ¸ö½Úµã
+			}
+			//ÎŞ·¨È·¶¨É¾³ı¸ÄµãÖ®ºóÊÇ·ñ»áÓ°ÏìÕû¸ölist
+			(*itera)->RemoveFromPreSubList(true);
+			//É¾³ıµôÕâ¸ö½Úµã
+		}
+	}
+
+	//ÅĞ¶ÏÊÇ·ñÑ­»·´¦Àí×Ó½Úµã
+	if (cmdParaCollection.m_parsedOptions.find("/s") != cmdParaCollection.m_parsedOptions.end())
+	{
+		list<CellNode*> children = deep->FilterSubNode("*");
+		for (auto itera = children.begin(); itera != children.end(); itera++)
+		{
+			if ((*itera)->GetNodeType()&FOLD)
+			{
+				DisPatchPathItem(*itera, filesName);
+			}
+		}
+	}
+}
+#define _CRT_SECURE_NO_WARNINGS
+
+#include "DirCmd.h"
+#include "MyString.h"
+#include "VirtualDiskInside.h"
+bool DirCmd::Execute(VirtualDiskInside * virtualdisk)
+{
+	m_VirtualDisk = virtualdisk;
+
+
+	vector<string> pathItems = cmdParaCollection.m_pathItems;
+	//Èç¹ûÓÃ»§Ã»ÓĞÊäÈëÂ·¾¶,·Çµİ¹é´òÓ¡µ±Ç°Â·¾¶
+	if (pathItems.empty())
+	{
+		pathItems.push_back(".");
+	}
+
+	for (size_t i = 0; i < pathItems.size(); i++)
+	{
+		if (cmdParaCollection.m_parsedOptions.find("/s") != cmdParaCollection.m_parsedOptions.end())
+		{
+			//µİ¹éÊä³ö
+			RecursionPrintItem(pathItems[i]);
+		}
+		else
+		{
+			PrintItem(pathItems[i]);
+			//Êä³ö±¾½ÚµãµÄ×Ó½Úµã
+		}
+	}
+
+
+	//¼ÆËã±¾´ÎµÄ×ÜÊä³öĞÅÏ¢
+	size_t filecount = 0;
+	size_t foldcount = 0;
+	size_t totalsize = 0;
+	CountSummary(totalNode, filecount, foldcount, totalsize);
+
+	//Èç¹ûÏµÍ³Ã»ÓĞÒªÇóµİ¹éÊä³ö ********************************************************************************´ıĞŞ¸Ä
+	if (!(cmdParaCollection.m_parsedOptions.find("/s") != cmdParaCollection.m_parsedOptions.end()))
+	{
+		m_VirtualDisk->LogMsgToConsole(StrProcess::sstr("%16d ¸öÄ¿Â¼", (int)foldcount));
+	}
+	else
+	{
+		if (filecount == 0 && foldcount == 0)
+		{
+			m_VirtualDisk->LogMsgToConsole("ÕÒ²»µ½ÏàÓ¦µÄÎÄ¼ş");
+		}
+		else
+		{
+			m_VirtualDisk->LogMsgToConsole(StrProcess::sstr("\n     ËùÁĞÎÄ¼ş×ÜÊı:\n%16d ¸öÎÄ¼ş%s ×Ö½Ú\n%16d¸öÄ¿Â¼", (int)filecount, NumberToString(totalsize, 15).c_str(), foldcount));
+		}
+	}
+
+	return true;
+}
+
+
+void DirCmd::RecursionPrintItem(const Path & path)
+{
+	//ÊÇ·ñÊÇÊ¹ÓÃÍ¨Åä·ûµÄÂ·¾¶ĞÅÏ¢
+	if (Tools::isWildcard(path.split().back()))
+	{
+		CellNode* prelink = m_VirtualDisk->GetNodeByPath(path.Parent());
+		CheckDirWithFiles(prelink, path.split().back());
+	}
+	else
+	{
+		CellNode* node = m_VirtualDisk->GetNodeByPath(path);
+		//Èç¹ûÂ·¾¶ËùÖ¸ÏòµÄ½Úµã²»´æÔÚ£¬Ôò²»½øĞĞÊä³ö£¬Ö±½Ó·µ»Ø
+		if (!node)
+		{
+			m_VirtualDisk->LogMsgToConsole("¸ÃÎ»ÖÃ¿ÉÄÜ³ö´í£ºvoid DirCmd::RecursionPrintItem(const Path & path)  FormatCheck.noexist ");
+			return;
+		}
+		else if (node->GetNodeType()& LINK && node->GetNodeType()& FOLD)
+		{
+			//Â·¾¶ĞÅÏ¢ÊÇÖ¸ÏòÎÄ¼ş¼ĞµÄ·ûºÅÁ´½Ó Êä³öÄ¿±êÎÄ¼ş¼ĞÏÂµÄËùÓĞÎÄ¼ş£¨ÎÄ¼ş¼Ğ£©ĞÅÏ¢£¬ÈôÓÃ»§ÊäÈëÏà¹Ø²ÎÊı£¬ÔòÖ»ÏÔÊ¾¶ÔÓ¦ĞÅÏ¢
+			//Ã»ÓĞÕÒµ½·ûºÅÁ´½ÓµÄÄ¿±êÎÄ¼ş---------´ËÊ±Ôİ²»´¦ÀíÊ§Ğ§µÄ·ûºÅÁ´½Ó
+			if (!m_VirtualDisk->LookingForTaget(node))
+			{
+				return;
+			}
+			CheckDirWithFiles(node, "*");
+		}
+		else if (node->GetNodeType() & LINK && node->GetNodeType() & FILE_CUSTOM)
+		{
+			//Â·¾¶ĞÅÏ¢ÊÇÖ¸ÏòÎÄ¼şµÄ·ûºÅÁ´½Ó  --½öÏÔÊ¾µ±Ç°Ö¸ÏòµÄÎÄ¼şµÄÕâÒ»ÌõĞÅÏ¢
+			if (!m_VirtualDisk->LookingForTaget(node))
+			{
+				return;
+			}
+			CheckDirWithFiles(node->GetParent(), node->GetCellName());
+		}
+		else if (node->GetNodeType()&FOLD)
+		{
+			//Â·¾¶ĞÅÏ¢ÊÇÖ¸ÏòÎÄ¼ş¼ĞµÄ£¬Êä³öÄ¿±êÎÄ¼ş¼ĞÏÂµÄËùÓĞĞÅÏ¢
+			CheckDirWithFiles(node, "*");
+		}
+		else if (node->GetNodeType()&FILE_CUSTOM)
+		{
+			//Â·¾¶ĞÅÏ¢ÊÇÖ¸ÏòÎÄ¼şµÄ   ÕÒµ½Æä¸¸½Úµã£¬Êä³öÆäĞÅÏ¢ --½öÏÔÊ¾µ±Ç°Ö¸ÏòµÄÎÄ¼şµÄÕâÒ»ÌõĞÅÏ¢
+			CheckDirWithFiles(node->GetParent(), node->GetCellName());
+		}
+	}
+}
+
+void DirCmd::PrintItem(const Path & path)
+{
+	if (Tools::isWildcard(path.split().back()))
+	{
+		CellNode* parent = m_VirtualDisk->GetNodeByPath(path.Parent());
+		if (parent)
+		{
+			CheckDirWithFiles(parent, path.split().back());
+		}
+		else
+		{
+			m_VirtualDisk->LogMsgToConsole("ÏµÍ³ÕÒ²»µ½Ö¸¶¨µÄÂ·¾¶");
+		}
+	}
+	else
+	{
+		CellNode* node = m_VirtualDisk->GetNodeByPath(path);
+		if (!node)
+		{
+			CellNode* parent = m_VirtualDisk->GetNodeByPath(path.Parent());
+			if (parent)
+			{
+				CheckDirWithFiles(parent, path.split().back());
+			}
+			else
+			{
+				m_VirtualDisk->LogMsgToConsole("ÏµÍ³ÕÒ²»µ½Ö¸¶¨µÄÂ·¾¶");
+			}
+		}
+		else if (node->GetNodeType()& LINK && node->GetNodeType()& FOLD)
+		{
+			if (!m_VirtualDisk->LookingForTaget(node))
+			{
+				m_VirtualDisk->LogMsgToConsole("ÏµÍ³ÕÒ²»µ½Ö¸¶¨µÄÂ·¾¶");
+				return;
+			}
+			CheckDirWithFiles(node, "*");
+		}
+		else if (node->GetNodeType() & LINK && node->GetNodeType() & FILE_CUSTOM)
+		{
+			//Â·¾¶ĞÅÏ¢ÊÇÖ¸ÏòÎÄ¼şµÄ·ûºÅÁ´½Ó  --½öÏÔÊ¾µ±Ç°Ö¸ÏòµÄÎÄ¼şµÄÕâÒ»ÌõĞÅÏ¢
+			if (!m_VirtualDisk->LookingForTaget(node))
+			{
+				m_VirtualDisk->LogMsgToConsole("ÏµÍ³ÕÒ²»µ½Ö¸¶¨µÄÂ·¾¶");
+				return;
+			}
+			CheckDirWithFiles(node->GetParent(), node->GetCellName());
+		}
+		else if (node->GetNodeType()&FOLD)
+		{
+			//Â·¾¶ĞÅÏ¢ÊÇÖ¸ÏòÎÄ¼ş¼ĞµÄ£¬Êä³öÄ¿±êÎÄ¼ş¼ĞÏÂµÄËùÓĞĞÅÏ¢
+			CheckDirWithFiles(node, "*");
+		}
+		else if (node->GetNodeType()&FILE_CUSTOM)
+		{
+			//Â·¾¶ĞÅÏ¢ÊÇÖ¸ÏòÎÄ¼şµÄ   ÕÒµ½Æä¸¸½Úµã£¬Êä³öÆäĞÅÏ¢ --½öÏÔÊ¾µ±Ç°Ö¸ÏòµÄÎÄ¼şµÄÕâÒ»ÌõĞÅÏ¢
+			CheckDirWithFiles(node->GetParent(), node->GetCellName());
+		}
+	}
+}
+
+void DirCmd::CheckDirWithFiles(CellNode * node, const string & filesname)
+{
+	if (!node)
+	{
+		return;
+	}
+
+	//Ïë°ì·¨¼ÇÂ¼Ò»ÏÂÒÑ¾­´¦Àí¹ıµÄÎÄ¼ş£¨»òÎÄ¼ş¼Ğ£©£¬¶ÔÏàÍ¬µÄÈÎÎñ²»ÖØ¸´½øĞĞ£¬·ÀÖ¹Ñ­»·Á´½ÓµÄÎŞ¾¡Êä³ö
+	if (m_proCessed.find(ProcessedInfo{ node , filesname }) != m_proCessed.end())
+	{
+		return;
+	}
+	m_proCessed.insert(ProcessedInfo{ node , filesname });
+
+	//Êä³öµ±Ç°Ä¿Â¼µÄ±êÍ·×ÜÀ¨
+	m_VirtualDisk->LogMsgToConsole(StrProcess::sstr("%s µÄÄ¿Â¼\n", node->GetNodePath().str().c_str()));
+
+	//Èç¹ûÊÇ·ûºÅÁ´½Ó£¬ÔòÕÒµ½ÆäÄ¿±ê½Úµã£¬È»ºó¿ªÊ¼´¦Àí
+	//Èç¹û·Ç·ûºÅÁ´½Ó£¬Ôò·µ»ØÆä±¾Éí£¬¼ÌĞø´¦Àí
+	node = m_VirtualDisk->LookingForTaget(node);
+	if (!node) { return; }
+
+	//¸ù¾İÎÄ¼şÃû½øĞĞÉ¸Ñ¡µ±Ç°½ÚµãµÄ×Ó½ÚµãÈ»ºó½øĞĞÊä³ö´¦Àí
+	list<CellNode*> children = node->FilterSubNode(filesname);
+	if (Tools::IsWildcardMatch(filesname, "."))
+	{
+		//Êä³öÒ»¸öĞÅÏ¢
+		m_VirtualDisk->LogMsgToConsole(MakeOneOutput(node, "."));
+	}
+	if (Tools::IsWildcardMatch(filesname, "..") && !node->IsRootNode())
+	{
+		//MakeOneOutput(node->GetParent(), "..");
+		m_VirtualDisk->LogMsgToConsole(MakeOneOutput(node->GetParent(), ".."));
+	}
+
+
+	for (auto it = children.begin(); it != children.end(); it++)
+	{
+		//Èç¹ûÏµÍ³Ö»ÒªÇóÊä³öÎÄ¼ş¼Ğ£¬ÔòÌø¹ıµ±Ç°ÎÄ¼şÀàĞÍ²»ÊÇfoldµÄÑ¡Ïî
+		if (cmdParaCollection.m_parsedOptions.find("/ad") != cmdParaCollection.m_parsedOptions.end() && !((*it)->GetNodeType() & FOLD))
+		{
+			continue;
+		}
+		m_VirtualDisk->LogMsgToConsole(MakeOneOutput(*it, (*it)->GetCellName()));
+	}
+
+	//½ØÖÁµ±Ç°£¬ÒÑ¾­´¦ÀíÍêÒ»¸öÎÄ¼ş¼Ğ*********************************************************************
+	oneFoldSummary();
+	totalNode.insert(totalNode.end(), oneFoldNode.begin(), oneFoldNode.end());
+	oneFoldNode.clear();
+
+	//Ïë°ì·¨¼ÇÂ¼´¦Àí¹ıµÄÊıÁ¿
+	//Í³¼ÆĞÅÏ¢
+
+	if (cmdParaCollection.m_parsedOptions.find("/s") != cmdParaCollection.m_parsedOptions.end())
+	{
+		list<CellNode*> children = node->FilterSubNode("*");
+
+		for (auto it = children.begin(); it != children.end(); it++)
+		{
+			if ((*it)->GetNodeType()& FOLD)
+			{
+				RecursionPrintItem((*it)->GetNodePath().append(filesname));
+			}
+		}
+	}
+}
+
+string DirCmd::MakeOneOutput(CellNode * node, const string & name)
+{
+	time_t rawtime = node->GetlastModifyTime();
+
+	struct tm * timeinfo = localtime(&rawtime);
+
+	char buff[128] = { 0 };
+
+	//ÈÕÆÚÓëÊ±¼ä Á½¸ö¿Õ¸ñ£¬   Ê±¼äÓëÀàĞÍ£¬ËÄ¸ö¿Õ¸ñ
+	strftime(buff, sizeof(buff), "%G/%m/%d  %H:%M    ", timeinfo);
+
+	string res = buff;
+
+	if ((node->GetNodeType()& FILE_CUSTOM) && !(node->GetNodeType()& LINK))
+	{
+		res += NumberToString(node->Content().size(), 14);
+	}
+	else
+	{
+		res += StrProcess::sstr("%-14s", node->GetNodeTypeStr().c_str());
+	}
+
+	res += " ";
+	res += name;
+
+	oneFoldNode.push_back(node);
+	//²»ÔÚÊä³öÆäÁ´½ÓĞÅÏ¢
+	return res;
+}
+
+//½«Êı×Ö×ª»¯³ÉÖ¸¶¨¸ñÊ½µÄ×Ö·û´®
+string DirCmd::NumberToString(size_t num, size_t length)
+{
+	list<char> retTmp;
+	const string temp = StrProcess::sstr("%u", num);
+
+	for (auto it = temp.rbegin(); it != temp.rend(); it++)
+	{
+		int diff = (int)distance(temp.rbegin(), it);
+		if (diff > 0 && diff % 3 == 0)
+		{
+			retTmp.push_front(',');
+		}
+		retTmp.push_front(*it);
+	}
+	while (retTmp.size() < length)
+	{
+		retTmp.push_front(' ');
+	}
+	return string(retTmp.begin(), retTmp.end());
+}
+
+void DirCmd::oneFoldSummary()
+{
+	size_t fileCount = 0;
+	size_t foldCount = 0;
+	size_t totalSize = 0;
+
+	CountSummary(oneFoldNode, fileCount, foldCount, totalSize);
+
+	if (fileCount == 0 && foldCount == 0)
+	{
+		if (!(cmdParaCollection.m_parsedOptions.find("/s") != cmdParaCollection.m_parsedOptions.end()))
+		{
+			//¸ÃÎ»ÖÃ¿ÉÄÜ»áÎŞÏŞÑ­»·
+			m_VirtualDisk->LogMsgToConsole("ÕÒ²»µ½Ö¸¶¨ÎÄ¼ş");
+			m_VirtualDisk->LogMsgToConsole("¸ÃÎ»ÖÃ¿ÉÄÜ»áÎŞÏŞÑ­»·£ºvoid DirCmd::oneFoldSummary()");
+		}
+	}
+	else
+	{
+		//Êä³öÕâÒ»¸öÎÄ¼ş¼ĞµÄÍ³¼ÆĞÅÏ¢£¬È»ºó¼ÌĞøÑ­»·    ²»Êä³öÎÄ¼ş¼ĞµÄÊıÁ¿*********************************************************************************
+		m_VirtualDisk->LogMsgToConsole(StrProcess::sstr("%s ¸öÎÄ¼ş%s ×Ö½Ú", NumberToString(fileCount, 16).c_str(), NumberToString(totalSize, 15).c_str()));
+	}
+}
+
+void DirCmd::CountSummary(const list<CellNode*>& nodes, size_t & files, size_t & dirs, size_t & sizes)
+{
+	//Ê¹ÓÃÎ½´Êº¯Êı½øĞĞÊıÁ¿¼ÆËã
+	//´Ë´¦ÓĞ´ıĞŞ¸ÄÄÚÈİ
+	for (auto itera = nodes.begin(); itera != nodes.end(); itera++)
+	{
+		CellNode* tempNode = *itera;
+		Path tempPath = tempNode->GetNodePath();
+
+		if (Tools::isWildcard(tempPath.split().back()))
+		{
+
+		}
+		else
+		{
+			if (!tempNode)
+			{
+
+			}
+			else if (tempNode->GetNodeType()& LINK && tempNode->GetNodeType()& FOLD)
+			{
+				dirs++;
+			}
+			else if (tempNode->GetNodeType() & LINK && tempNode->GetNodeType() & FILE_CUSTOM)
+			{
+				files++;
+			}
+			else if (tempNode->GetNodeType()&FOLD)
+			{
+				dirs++;
+			}
+			else if (tempNode->GetNodeType()&FILE_CUSTOM)
+			{
+				files++;
+				sizes += (int)tempNode->Content().size();
+			}
+		}
+	}
+}
+
+
+
+#include "LoadCmd.h"
+#include <fstream>
+#include "VirtualDiskInside.h"
+bool LoadCmd::Execute(VirtualDiskInside * virtualdisk)
+{
+	m_VirtualDisk = virtualdisk;
+
+	//¸ÃÃüÁîÖ±½ÓÊÕÒ»ÌõÂ·¾¶£¬±ØĞëÎªÕæÊµÂ·¾¶
+
+	//´´½¨Ò»¸ö½ÚµãÓÃÓÚ½ÓÊÜ´ÓÎÄ¼şÖĞ¶ÁÈ¡µÄÊı¾İ
+	//½«´Ë½ÚµãÉèÖÃÎªroot½Úµã£¬
+		//ÈçºÎ´¦ÀíÔ´¸ù½Úµã£¿
+
+
+
+	vector<string> pathItems = cmdParaCollection.m_pathItems;
+
+	Path srcPath(pathItems[0]);
+
+	if (!srcPath.IsReal())
+	{
+		m_VirtualDisk->LogMsgToConsole("²»ÊÇÕæÊµÂ·¾¶");
+		return false;
+	}
+
+	fstream fin;
+	fin.open(srcPath.str(), ios::binary | ios::in);
+
+	if (!fin)
+	{
+		m_VirtualDisk->LogMsgToConsole("ÎÄ¼ş´ò¿ªÊ§°Ü");
+		return false;
+	}
+
+	CellNode* rootNode = new CellNode();
+
+	fin >> *rootNode;
+
+	fin.close();
+
+
+	if (rootNode->GetCellName().empty() || rootNode->GetCellName()!= "/")
+	{
+		m_VirtualDisk->LogMsgToConsole("¶ÁÈ¡Ê§°Ü");
+		return false;
+	}
+
+	m_VirtualDisk->SetRootNode(rootNode);
+	m_VirtualDisk->SetWorkingNode(rootNode);
+
+	return true;
+}
+
+#include "MdCmd.h"
+#include "VirtualDiskInside.h"
+#include "Common.h"
+//¸ÃÎ»ÖÃÅĞ¶Ï¿ÉÄÜ³ö´í
+bool MdCmd::Execute(VirtualDiskInside* virtualdisk)
+{
+	vector<string> pathItems = cmdParaCollection.m_pathItems;
+	for (size_t i = 0; i < pathItems.size(); i++)
+	{
+		//²»´¦Àí¾ø¶ÔÂ·¾¶
+		//¶Ô²ÎÊı¼¯ºÏÖĞµÄÂ·¾¶ĞÅÏ¢½øĞĞ·Ö½â£¬Ê×ÏÈ½«\Ìæ»»Îª/£¬ È»ºó°´ÕÕ/½øĞĞ·Ö½â¡£·Ö½âÎªµ¥¸ö½ÚµãÃû³Æ
+		Path tempPath(pathItems[i]);
+
+		if (tempPath.IsReal())
+		{
+			return false;
+		}
+		//µÃµ½Â·¾¶µÄ½ÚµãÃû³ÆÊ¸Á¿×é
+		vector<string> items = tempPath.split();
+
+		//ÅĞ¶ÏÊÇ·ñÊÇÏà¶ÔÂ·¾¶À´È·¶¨µ±Ç°½Úµã
+		CellNode * curNode = virtualdisk->GetNodeByPath(tempPath.StartNode());
+
+		//¿ªÊ¼Ñ°Â·»òÕß´´½¨ÏàÓ¦µÄÎÄ¼ş¼Ğ
+		for (size_t i = 0; i < items.size(); i++)
+		{
+			if (curNode == NULL)
+			{
+				return false;
+			}
+			//ÅĞ¶Ïµ±Ç°Â·¾¶½ÚµãÃû³ÆÊÇ·ñºÏ·¨
+			if (!Tools::IsLegalPathName(items[i]))
+			{
+				return false;
+			}
+			if (items[i] == "." || items[i] == "..")
+			{
+				curNode = curNode->GetNode(items[i]);
+				continue;
+			}
+
+			//¸ù¾İµ±Ç°½ÚµãÃû³ÆÈ¥Ñ°ÕÒÏàÓ¦µÄ½Úµã
+			CellNode* child = curNode->GetNode(items[i]);
+			if (!child)
+			{
+				child = new CellNode();
+				child->SetCellName(items[i]);
+				child->SetNodeType(FOLD);
+				curNode->AddSubNode(child);
+				//½«´´½¨µÄ½ÚµãÖÃÎªµ±Ç°½Úµã£¬¼ÌĞøÏÂÒ»¸öÓÃ»§ÊäÈë½ÚµãµÄ´´½¨
+				curNode = child;
+			}
+			else if (child->GetNodeType() & FOLD)
+			{
+				//Èç¹ûchildµÄÀàĞÍÎªÎÄ¼ş¼Ğ£¬ÔòcurNode = child ; ÈôÀàĞÍÎªlink£¬ÔòcurNode µÈÓÚ childµÄtarget
+				curNode = virtualdisk->LookingForTaget(child);
+				continue;
+			}
+			else
+			{
+				virtualdisk->LogMsgToConsole("ÒÑ´æÔÚÏàÍ¬Ãû³ÆµÄÎÄ¼ş");
+				return false;
+			}
+		}
+		return true;
+	}
+	return true;
+}
+#include "MklinkCmd.h"
+#include "VirtualDiskInside.h"
+#include "Path.h"
+bool MklinkCmd::Execute(VirtualDiskInside * virtualdisk)
+{
+	m_VirtualDisk = virtualdisk;
+	//ÔÚpathItemsÖĞ±£´æ×ÅÁ½¸öitems£¬·Ö±ğ´æÓĞÒ»¸öÂ·¾¶
+	//µÃµ½Ä¿±ê½ÚµãµÄ Â·¾¶¡¢ÀàĞÍ¡¢Ãû³ÆĞÅÏ¢ £¬ ´æ·Åµ½Òª½¨Á¢µÄ·ûºÅÁ´½Ó½ÚµãµÄcontentÖĞ¡£
+
+	
+	vector<string> pathItems = cmdParaCollection.m_pathItems;
+	//Ê×ÏÈÒª±£Ö¤¸ÃvectorÖĞÓĞÁ½¸öÂ·¾¶ĞÅÏ¢¡£
+	Path linkNodePath(pathItems[0]);
+	Path targetNodePath(pathItems[1]);
+
+	if (linkNodePath.FileName().empty())
+	{
+		m_VirtualDisk->LogMsgToConsole("ÎÄ¼şÃû²»ºÏ·¨£¬ÍË³ö");
+		return false;
+	}
+
+	if (virtualdisk->GetNodeByPath(linkNodePath))
+	{
+		m_VirtualDisk->LogMsgToConsole("´´½¨µÄ½Úµã´æÔÚÍ¬ÃûÎÄ¼ş£¬ÍË³ö");
+		return false;
+	}
+
+	CellNode* targetNode = virtualdisk->GetNodeByPath(targetNodePath);
+	if (!targetNode)
+	{
+		m_VirtualDisk->LogMsgToConsole("Ä¿±ê½Úµã²»´æÔÚ£¬ÍË³ö");
+		return false;
+	}
+	if (cmdParaCollection.m_parsedOptions.find("/d") != cmdParaCollection.m_parsedOptions.end() && !(targetNode->GetNodeType()&FOLD))
+	{
+		m_VirtualDisk->LogMsgToConsole("Ä¿±êÎÄ¼ş±ØĞëÊÇÄ¿Â¼£¬ÍË³ö");
+		return false;
+	}
+	if (!(cmdParaCollection.m_parsedOptions.find("/d") != cmdParaCollection.m_parsedOptions.end()) && !(targetNode->GetNodeType()&FILE_CUSTOM))
+	{
+		m_VirtualDisk->LogMsgToConsole("Ä¿±êÎÄ¼ş±ØĞëÊÇÎÄ¼ş£¬ÍË³ö");
+		return false;
+	}
+
+
+	//ÅĞ¶Ï½áÊø£¬¿ªÊ¼´´½¨Á´½Ó¡£
+
+	//Ä¿±êÎÄ¼şÊÇ·ñ¿ÉÒÔÊÇ·ûºÅÁ´½Ó£¿
+
+	string filename = linkNodePath.FileName();
+	//ÕÒµ½´ı´´½¨Â·¾¶µÄÉÏ¼¶½Úµã
+	linkNodePath.append("..");
+
+	CellNode* prelink = virtualdisk->GetNodeByPath(linkNodePath);
+
+	if (!prelink)
+	{
+		return false;
+	}
+
+	//´´½¨¸Ã½Úµã
+	CellNode* node = new CellNode();
+	node->SetCellName(filename);
+	prelink->AddSubNode(node);
+
+	node->SetNodeType(FileNodeType(LINK |targetNode->GetNodeType()));
+
+	//½«Ä¿±ê½ÚµãµÄĞÅÏ¢·Åµ½¸Ã½ÚµãµÄcontentÖĞ
+	const string tempPathString = targetNode->GetNodePath().str();
+	node->Content().assign(tempPathString.begin(), tempPathString.end());
+
+	return true;
+}
+#include "MoveCmd.h"
+#include "Path.h"
+#include "VirtualDiskInside.h"
+#include "MyString.h"
+
+//µÃµ½ Ô´Â·¾¶	Ö§³ÖÍ¨Åä·û
+//µÃµ½Ä¿±êÂ·¾¶	²»Ö§³ÖÍ¨Åä·û
+
+//´ÓÔ´Â·¾¶ÖĞµÃµ½´ı²Ù×÷µÄÎÄ¼şÁĞ±í£¨Ö»°üº¬ÎÄ¼ş£©
+	//ÈôÔ´Â·¾¶Ö¸ÏòÎÄ¼ş¼Ğ
+		
+			//ÈôÄ¿±êÂ·¾¶ÎªÎÄ¼ş¼Ğ
+			//ÈôÄ¿±êÂ·¾¶²»´æÔÚ
+	//ÈôÔ´Â·¾¶Ê¹ÓÃÍ¨Åä·û
+		//ÈôÆ¥ÅäÎÄ¼şÏîÄ¿ < 1
+			//ÒÆ¶¯»òÕß¸²¸Ç
+		//ÈôÆ¥ÅäÎÄ¼şÏîÄ¿ > 1
+			//ÈôÄ¿±êÂ·¾¶ÎªÎÄ¼ş¼Ğ
+				//ÒÆ¶¯»òÕß¸²¸Ç
+			//ÈôÄ¿±êÂ·¾¶²»´æÔÚ
+				//´íÎó
+	//ÈôÔ´Â·¾¶Ö¸ÏòÆÕÍ¨ÎÄ¼ş
+			//ÈôÄ¿±êÂ·¾¶ÎªÎÄ¼ş¼Ğ
+			//ÈôÄ¿±êÂ·¾¶²»´æÔÚ
+
+bool MoveCmd::Execute(VirtualDiskInside * virtualdisk)
+{
+	m_VirtualDisk = virtualdisk;
+	needAsk = !(cmdParaCollection.m_parsedOptions.find("/y") != cmdParaCollection.m_parsedOptions.end());
+	vector<string> pathItems = cmdParaCollection.m_pathItems;
+	//copyºÍmoveÃüÁîÖ§³Öµ¥¸öÂ·¾¶£¬Ä¬ÈÏµÚ¶şÌõÂ·¾¶Îªµ±Ç°¹¤×÷Â·¾¶
+	if (pathItems.size() == 1)
+	{
+		pathItems.push_back(".");
+	}
+	Path from(pathItems[0]);
+	Path to(pathItems[1]);
+
+	//ÆäÖĞÓĞÖ¸Ïò²»Í¬Ä¿Â¼µÄ·ûºÅÁ´½ÓÎÄ¼ş£¬ÒªÕÒµ½ÕâĞ©·ûºÅÁ´½ÓÎÄ¼şµÄÄ¿±êÎÄ¼ş£¬¼ÓÈë´ı²Ù×÷Á´±í
+	if (!Tools::IsLegalPathName(to.split().back()))
+	{
+		return false;
+	}
+
+	vector<Path> srcAllPath;
+	if (Tools::isWildcard(from.split().back()))
+	{
+		CellNode* dir = m_VirtualDisk->GetNodeByPath(from.Self().append(".."));
+		if (!dir)
+		{
+			//Çé¿ö²»¶Ô£¬ÍË³ö
+			m_VirtualDisk->LogMsgToConsole("Çé¿ö²»¶Ô£¬³·ÍË");
+			return false;
+		}
+		else
+		{
+			dir = m_VirtualDisk->LookingForTaget(dir);
+			if (dir)
+			{
+				list<CellNode*> children = dir->FilterSubNode(from.split().back());
+				for (auto it = children.begin(); it != children.end(); ++it)
+				{
+					if ((*it)->GetNodeType()&FileNodeType::FILE_CUSTOM) {
+						srcAllPath.push_back(m_VirtualDisk->LookingForTaget(*it)->GetNodePath());
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		CellNode* node = m_VirtualDisk->GetNodeByPath(from);
+		if (!node) {
+			m_VirtualDisk->LogMsgToConsole("ÎÄ¼ş²»´æÔÚ");
+			return false;
+		}
+		if (m_VirtualDisk->IfNodeBeUsing(node))
+		{
+			m_VirtualDisk->LogMsgToConsole("¾Ü¾ø·ÃÎÊ£¬¸¸¼¶Ä¿Â¼ÕıÔÚ±»Ê¹ÓÃ");
+			return false;
+		}
+		srcAllPath.push_back(from);
+	}
+
+#pragma region pick½ØÈ¡
+
+	//if (!Tools::isWildcard(from.split().back()))
+	//{
+	//	CellNode* node = m_VirtualDisk->GetNodeByPath(from);
+	//	if (!node)
+	//	{
+
+	//	}
+	//	else
+	//	{
+	//		node = m_VirtualDisk->LookingForTaget(node);
+	//		if (node->GetNodeType()&FileNodeType::FILE_CUSTOM)
+	//		{
+	//			srcAllPath.push_back(node->GetNodePath());
+	//		}
+	//		else
+	//		{
+	//			list<CellNode*> children = node->FilterSubNode("*");
+	//			for (auto it = children.begin(); it != children.end(); ++it)
+	//			{
+	//				if ((*it)->GetNodeType()&FileNodeType::FILE_CUSTOM) {
+	//					srcAllPath.push_back(m_VirtualDisk->LookingForTaget(*it)->GetNodePath());
+	//				}
+	//			}
+	//		}
+	//	}
+	//	
+	//}
+	//else
+	//{
+	//	CellNode* dir = m_VirtualDisk->GetNodeByPath(from.Self().append(".."));
+	//	if (!dir)
+	//	{
+
+	//	}
+	//	else
+	//	{
+	//		dir = m_VirtualDisk->LookingForTaget(dir);
+	//		if (dir)
+	//		{
+	//			list<CellNode*> children = dir->FilterSubNode(from.split().back());
+	//			for (auto it = children.begin(); it != children.end(); ++it)
+	//			{
+	//				if ((*it)->GetNodeType()&FileNodeType::FILE_CUSTOM) {
+	//					srcAllPath.push_back(m_VirtualDisk->LookingForTaget(*it)->GetNodePath());
+	//				}
+	//			}
+	//		}
+	//	}
+	//	
+	//}
+
+
+#pragma endregion
+
+	if (srcAllPath.empty())
+	{
+		//Ã»ÓĞ´ı²Ù×÷ÎÄ¼ş
+		return true;
+	}
+	if (  srcAllPath.size()>1 && (!m_VirtualDisk->GetNodeByPath(to) || m_VirtualDisk->GetNodeByPath(to)->GetNodeType()&FileNodeType::FILE_CUSTOM))
+	{
+		m_VirtualDisk->LogMsgToConsole("Ä¿±ê½Úµã²»ÄÜÊÇÎÄ¼ş½Úµã »òÕß²»´æÔÚ");
+		return false;
+	}
+
+	for (auto itera = srcAllPath.begin(); itera != srcAllPath.end(); itera++)
+	{
+		MoveNode(m_VirtualDisk->GetNodeByPath(*itera), to);
+	}	
+	m_VirtualDisk->LogMsgToConsole(StrProcess::sstr("ÒÆ¶¯ÁË%9d ¸öÎÄ¼ş", srcAllPath.size()));	
+	return false;
+}
+
+
+void MoveCmd::MoveNode(CellNode* from, Path& to)
+{
+
+	CellNode* dst = m_VirtualDisk->GetNodeByPath(to);
+	if (!dst)
+	{
+		//Èç¹ûÄ¿±êÂ·¾¶²»´æÔÚ£¬ÇÒÆäÓĞ¸¸½Úµã
+		CellNode* parent = m_VirtualDisk->GetNodeByPath(to.Parent());
+		if (!parent)
+		{
+			//Â·¾¶²»´æÔÚ
+			return;
+		}
+		ConfirmThenMove(from, to);
+	}
+	else if (dst->GetNodeType()&FileNodeType::FOLD)
+	{
+		//Èç¹ûÄ¿±ê½Úµã´æÔÚ£¬ÇĞÎÊÎÄ¼ş¼Ğ½Úµã»òÕß·ûºÅÁ´½ÓÖÁÎÄ¼ş¼ĞµÄ½Úµã
+
+		//µÃµ½Ä¿±êÎÄ¼ş¼Ğ£¬
+		CellNode* node = m_VirtualDisk->LookingForTaget(dst);
+		if (!node) {
+
+			//Â·¾¶²»´æÔÚ
+			return;
+		}
+		else if (from == node)
+		{
+			//Èç¹ûÄ¿±êÎÄ¼ş¼ĞÕıÔÚ±»·ÃÎÊ
+			m_VirtualDisk->LogMsgToConsole("¾Ü¾ø·ÃÎÊ£¬ÕıÔÚ±»Ê¹ÓÃ");
+			return;
+		}
+		else
+		{
+			//Èç¹ûÄ¿±êÎÄ¼ş¼Ğ´æÔÚ£¬¶øÇÒÃ»ÓĞ±»Ê¹ÓÃ£¬ÔòÔÚ´ËÄ¿±êÎÄ¼ş¼ĞÂ·¾¶µÄÄ©¶Ë£¬¼ÓÉÏÒªÒÆ¶¯µÄÎÄ¼şµÄÃû×Ö¡£ÔÚÒÆ¶¯Ê±Ö±½Ó´´½¨
+			CellNode* cur = node->GetParent();
+			while (cur)
+			{
+				if (cur == from)
+				{
+					m_VirtualDisk->LogMsgToConsole("¾Ü¾ø·ÃÎÊ£¬¸¸¼¶Ä¿Â¼ÕıÔÚ±»Ê¹ÓÃ");
+					return;
+				}
+				cur = cur->GetParent();
+			}
+		}
+		ConfirmThenMove(from, node->GetNodePath().append(from->GetCellName()));
+	}
+	else
+	{
+		//Èç¹ûÄ¿±ê½Úµã´æÔÚ£¬ÎªÎÄ¼ş½Úµã»òÕß·ûºÅÁ´½ÓÖÁÎÄ¼şµÄ½Úµã £¬ ¸²¸Ç
+		Path tempPath = dst->GetNodePath();
+		ConfirmThenMove(from, tempPath);
+	}
+}
+
+
+void MoveCmd::ConfirmThenMove(CellNode * from,Path & to)
+{
+	bool conflict = false;
+	CellNode* dst = m_VirtualDisk->GetNodeByPath(to);
+	conflict = (dst != nullptr);
+
+	//Ê×ÏàÊä³öÔÚË­µÄÄ¿Â¼ÏÂ½øĞĞµÄ±¾´Î²Ù×÷
+	m_VirtualDisk->LogMsgToConsole(from->GetNodePath().str());
+	//Ä¿±êÂ·¾¶ÒÑ¾­±»¼ì²â£¬Ó¦µ±Îª¿Õ»òÕßÎÄ¼ş¡£²»¿ÉÄÜÎªÎÄ¼ş¼Ğ
+	if (dst && dst->GetNodeType()&FileNodeType::FOLD)
+	{
+		m_VirtualDisk->LogMsgToConsole("sadfasdfasdfasdfasdfasdfasd");
+		//checkProc(LanguageDenyAccess);
+		return;
+	}
+	//ÒÆ¶¯²Ù×÷
+	CellNode* parent = m_VirtualDisk->GetNodeByPath(to.Parent());
+
+
+	//Ä¿±ê½ÚµãÓëÔ´½ÚµãÏàÍ¬£¬Ö¸ÏòÍ¬Ò»½Úµã
+	if (dst == from)
+	{
+		from->RemoveFromPreSubList(false);
+		from->SetCellName(to.split().back());
+		parent->AddSubNode(from);
+		++countFile;
+	}
+	else if (conflict && needAsk)
+	{
+		//Ä¿±ê½Úµã´æÔÚÇÒĞèÒªÑ¯ÎÊ
+		while (true)
+		{
+			string answer = m_VirtualDisk->AskForUserInput(StrProcess::sstr("¸²¸Ç %s Âğ? (Yes/No/All):", to.str().c_str()));
+			transform(answer.begin(), answer.end(), answer.begin(), tolower);
+			if (answer == "y" || answer == "yes")
+			{
+				//ÒÆ¶¯
+				if (dst && dst != from) {
+					dst->RemoveFromPreSubList(true);
+				}
+				from->RemoveFromPreSubList(false);
+				from->SetCellName(to.split().back());
+				parent->AddSubNode(from);
+				++countFile;
+				break;
+			}
+			else if (answer == "n" || answer == "no")
+			{
+				break;
+			}
+			else if (answer == "all")
+			{
+				needAsk = false;
+				//ÒÆ¶¯ÎÄ¼ş
+				if (dst && dst != from) {
+					dst->RemoveFromPreSubList(true);
+				}
+				from->RemoveFromPreSubList(false);
+				from->SetCellName(to.split().back());
+				parent->AddSubNode(from);
+				++countFile;
+				break;
+			}
+		}
+	}
+	else
+	{
+		//Ä¿±ê½Úµã²»´æÔÚ»òÕßÓÃ»§ÒÑ¾­ÊäÈëallÑ¡Ïî
+		if (dst && dst != from) {
+			dst->RemoveFromPreSubList(true);
+		}
+		from->RemoveFromPreSubList(false);
+		from->SetCellName(to.split().back());
+		parent->AddSubNode(from);
+		++countFile;
+	}
+}
+
+
+
+
+//############################# ÖØĞ´£¬ÕâÖÖ·½·¨Ö»ÄÜÒÆ¶¯µ½ÌØ¶¨µÄ´æÔÚÄ¿Â¼ £¬²»ÄÜÊµÏÖĞŞ¸ÄÃû³ÆµÈ¹¦ÄÜ
+
+//bool MoveCmd::Execute(VirtualDiskInside * virtualdisk)
+//{
+//	m_VirtualDisk = virtualdisk;
+//	
+//	vector<string> pathItems = cmdParaCollection.m_pathItems;
+//
+//	//copyºÍmoveÃüÁîÖ§³Öµ¥¸öÂ·¾¶£¬Ä¬ÈÏµÚ¶şÌõÂ·¾¶Îªµ±Ç°¹¤×÷Â·¾¶
+//	if (pathItems.size() == 1)
+//	{
+//		pathItems.push_back(".");
+//	}
+//	
+//
+//	Path from(pathItems[0]);
+//	Path to(pathItems[1]);
+//
+//	if (from.IsReal() || to.IsReal())
+//	{
+//		m_VirtualDisk->LogMsgToConsole("²»Ö§³ÖÕæÊµÂ·¾¶");
+//		return false;
+//	}
+//	if (!Tools::IsLegalPathName(to.split().back()))
+//	{
+//		m_VirtualDisk->LogMsgToConsole("Ä¿Â¼Ãû²»ÕıÈ·");
+//		return false;
+//	}
+//
+//
+//	list<CellNode*> srcNodeList;
+//	if (Tools::isWildcard(from.split().back()))
+//	{
+//		//º¬ÓĞÍ¨Åä·û
+//		CellNode* prelink = m_VirtualDisk->GetNodeByPath(from.Parent());
+//		srcNodeList = prelink->FilterSubNode(from.split().back());
+//
+//	}
+//	else
+//	{
+//		CellNode* node = m_VirtualDisk->GetNodeByPath(from);
+//		if (!node)
+//		{
+//			m_VirtualDisk->LogMsgToConsole("ÎÄ¼ş²»´æÔÚ");
+//			return false;
+//		}
+//		if (m_VirtualDisk->IfNodeBeUsing(node))
+//		{
+//			m_VirtualDisk->LogMsgToConsole("¾Ü¾ø·ÃÎÊ£¬¸¸¼¶Ä¿Â¼ÕıÔÚ±»Ê¹ÓÃ");
+//			return false;
+//		}
+//		srcNodeList.push_back(node);
+//	}
+//
+//
+//	if (srcNodeList.empty())
+//	{
+//		
+//		//Ã»ÓĞĞèÒª²Ù×÷µÄÎÄ¼ş
+//		return false;
+//	}
+//	if (!m_VirtualDisk->GetNodeByPath(to) || m_VirtualDisk->GetNodeByPath(to)->GetNodeType()&FileNodeType::FILE_CUSTOM)
+//	{
+//		m_VirtualDisk->LogMsgToConsole("Ä¿±ê½Úµã²»ÄÜÊÇÎÄ¼ş½Úµã »òÕß²»´æÔÚ");
+//		return false;
+//	}
+//
+//	//ÔÚÄ¿±êÎÄ¼ş¼ĞÏÂ´æÔÚ³åÍ»ÎÄ¼ş
+//	string filename = from.FileName();
+//	if (!m_VirtualDisk->GetNodeByPath(to)->FilterSubNode(filename).empty())
+//	{
+//		conflict = true;
+//	}
+//
+//	needAsk = !(cmdParaCollection.m_parsedOptions.find("/y") != cmdParaCollection.m_parsedOptions.end());
+//
+//
+//	for (auto itera = srcNodeList.begin(); itera != srcNodeList.end(); itera++)
+//	{
+//		MoveNode(*itera, to);
+//	}
+//
+//	m_VirtualDisk->LogMsgToConsole(StrProcess::sstr("ÒÆ¶¯ÁË%9d ¸öÎÄ¼ş", srcNodeList.size()));
+//
+//	return false;
+//}
+//
+//
+//void MoveCmd::MoveNode(CellNode* from, Path& to)
+//{
+//	CellNode* dstNode = m_VirtualDisk->GetNodeByPath(to);
+//
+//	//Ä¿±êÊÇÎÄ¼ş¼Ğ»òÕß·ûºÅÁ´½Ó
+//	if (dstNode->GetNodeType()&FileNodeType::FOLD)
+//	{
+//		
+//		CellNode* node = m_VirtualDisk->LookingForTaget(dstNode);
+//		if (!node)
+//		{
+//			m_VirtualDisk->LogMsgToConsole("ÕÒ²»µ½Â·¾¶");
+//			//ÕÒ²»µ½Â·¾¶
+//			return;
+//		}
+//		else if (from == node)
+//		{
+//			//ÏàÍ¬£¬²»Ö´ĞĞ
+//			return;
+//		}
+//		CellNode* cur = node->GetParent();
+//		while (cur)
+//		{
+//			if (cur == from)
+//			{
+//				m_VirtualDisk->LogMsgToConsole("¾Ü¾ø·ÃÎÊ£¬¸¸¼¶Ä¿Â¼ÕıÔÚ±»Ê¹ÓÃ");
+//				return;
+//			}
+//			cur = cur->GetParent();
+//		}
+//		//ÒÆ¶¯¸Ã½Úµã
+//		if (conflict && needAsk)
+//		{
+//			while (true)
+//			{
+//				//Ñ¯ÎÊÊÇ·ñÒÆ¶¯
+//				string answer = m_VirtualDisk->AskForUserInput(StrProcess::sstr("¸²¸Ç %s Âğ? (Yes/No/All):", to.str().c_str()));
+//				string result;
+//
+//				transform(answer.begin(), answer.end(), answer.begin(), tolower);
+//				if (answer == "y" || answer == "yes")
+//				{
+//					//ÒÆ¶¯
+//					from->RemoveFromPreSubList(false);
+//					dstNode->AddSubNode(from);
+//					break;
+//				}
+//				else if (answer == "n" || answer == "no")
+//				{
+//					return;
+//				}
+//				else if (answer == "all")
+//				{
+//					needAsk = false;
+//					//ÒÆ¶¯ÎÄ¼ş
+//					from->RemoveFromPreSubList(false);
+//					dstNode->AddSubNode(from);
+//					break;
+//				}
+//			}
+//		}
+//		else
+//		{
+//			//ÒÆ¶¯ÎÄ¼ş
+//			from->RemoveFromPreSubList(false);
+//			dstNode->AddSubNode(from);
+//		}
+//	}
+//}
+
+
+//void MoveCmd::MoveImpl(CellNode* from, const Path& to)
+//{
+//	//Ê×ÏàÊä³öÔÚË­µÄÄ¿Â¼ÏÂ½øĞĞµÄ±¾´Î²Ù×÷
+//	m_VirtualDisk->LogMsgToConsole(from->GetNodePath().str());
+//
+//	CellNode* dst = m_VirtualDisk->GetNodeByPath(to);
+//	//Ä¿±êÂ·¾¶ÒÑ¾­±»¼ì²â£¬Ó¦µ±Îª¿Õ»òÕßÎÄ¼ş¡£²»¿ÉÄÜÎªÎÄ¼ş¼Ğ
+//	if (dst && dst->GetNodeType()&FileNodeType::FOLD)
+//	{
+//		m_VirtualDisk->LogMsgToConsole("sadfasdfasdfasdfasdfasdfasd");
+//		//checkProc(LanguageDenyAccess);
+//		return;
+//	}
+//	//ÒÆ¶¯²Ù×÷
+//	CellNode* parent = m_VirtualDisk->GetNodeByPath(to.Parent());
+//	if (dst && dst != from) {
+//		dst->RemoveFromPreSubList(true);
+//	}
+//	from->RemoveFromPreSubList(false);
+//	from->SetCellName(to.split().back());
+//	parent->AddSubNode(from);
+//	++countFile;
+//}
+#include "MyString.h"
+#include <algorithm>
+using namespace std;
+
+
+
+vector<string> StrProcess::split(string & str, char separa)
+{
+	vector<string> ret;
+
+	//³õÊ¼»¯µÚÒ»¸öÔªËØµÄÎ»ÖÃ
+	string::size_type separa_pre = 0;
+	string::size_type separa_cur = str.find(separa);
+
+	//Ñ­»·ËÑË÷ÖÁ×îºóÒ»¸öÔªËØ
+	while (separa_cur != string::npos)
+	{
+		ret.push_back(str.substr(separa_pre, separa_cur - separa_pre));
+
+		separa_pre = separa_cur + 1;
+		separa_cur = str.find(separa, separa_pre);
+	}
+
+	//½«×îºóÒ»¸öÔªËØ·ÅÈëvectorÖĞ
+	if (separa_pre < str.size())
+	{
+		ret.push_back(str.substr(separa_pre));
+	}
+
+	return ret;
+}
+
+vector<string> StrProcess::SplitNoEmpty(string & str, char separa)
+{
+	auto ret = split(str, separa);
+
+	auto target = remove_if(ret.begin(), ret.end(), [&](string item) {return item.empty(); });
+
+	ret.erase(target, ret.end());
+	return ret;
+}
+
+void StrProcess::replace(string & str, string from, string to)
+{
+	do
+	{
+		auto i = str.find(from);
+		if (i == string::npos)
+			break;
+		str.replace(i, from.size(), to);
+	} while (true);
+}
+
+string StrProcess::join(vector<string>& vec, string addStr)
+{
+	if (vec.empty())
+	{
+		return "";
+	}
+	else if (vec.size() == 1)
+	{
+		return vec.front();
+	}
+	string ret;
+	for (size_t i = 0; i < vec.size(); i++)
+	{
+		ret += vec[i];
+		ret += addStr;
+	}
+	//ret += vec.back();
+	return ret;
+}
+
+string StrProcess::stripspace(string & str)
+{
+	locale loc;
+	string ret = str;
+	while (ret.size() > 0 && isspace(ret.front()))
+	{
+		ret.erase(ret.begin());
+	}
+	while (ret.size() > 0 && isspace(ret.back()))
+	{
+		ret.pop_back();
+	}
+	return ret;
+}
+#include "Path.h"
+#include "MyString.h"
+#include "Common.h"
+Path::Path()
+{
+}
+Path::Path(const string & Unprocessed)
+{
+	startNode = 0;
+	append(Unprocessed);
+}
+
+Path & Path::append(string pathStr)
+{
+	//Ê×ÏÈ£¬½«pathStrÖĞµÄËùÓĞ\Ìæ»»Îª/£¬È»ºóÔÚ°´ÕÕ/À´·ÖÀë
+
+	//È¡µØÖ·Ìæ»»
+	StrProcess::replace(pathStr, "\\", "/");
+
+
+	//ÉèÖÃÂ·¾¶ÀàĞÍ  £¬ £¨¾ø¶Ô£©¸ùÂ·¾¶£¬ÕæÊµÂ·¾¶£¬£¨Ïà¶Ô£©µ±Ç°Â·¾¶
+	if (startNode == 0)
+	{
+		startNode = pathStr.front();
+		startNode = (startNode == '/' || startNode == '@') ? startNode : '.';
+	}
+	vector<string> items = StrProcess::SplitNoEmpty(pathStr, '/');
+
+	for (size_t i = 0; i < items.size(); i++)
+	{
+		if (i == 0)
+		{
+			//Èç¹ûÓÃ»§ÊäÈëÎªCÅÌ¿ªÊ¼µÄµØÖ·
+			if (items[0] == "c:"||items[0] =="C:")
+			{
+				startNode = '/';
+				continue;
+			}
+		}
+		if (items[i] == ".")
+		{
+
+		}
+		else if (items[i] == ".." && !pathItems.empty() && pathItems.back() != "..")
+		{
+			//Èç¹ûÊÇÉÏÒ»¼¶Ä¿Â¼µÄ»°£¬¾Í½«Â·¾¶ÖĞµÄ×îºóÒ»Ïîµ¯³ö£¬Ñ°Â·Ê±²»ÔÚÏòÏÂ¼¶Ñ°ÕÒ
+			//Èç¹û±»µ¯³öµÄÂ·¾¶ÊÇ·ûºÅÁ´½Ó£¬Ôò¿ÉÄÜ³ö´í
+			pathItems.pop_back();
+		}
+		else
+		{
+			pathItems.push_back(items[i]);
+		}
+	}
+
+	if (IsReal() && !pathItems.empty() && pathItems.front().front() == '@')
+	{
+		//Èç¹ûÊÇÕæÊµÂ·¾¶£¬Ôò½«Â·¾¶ÃûÖĞµÄµÚÒ»¸ö½ÚµãµÄÃû×ÖÌø¹ı¡°@¡±·ûºÅ
+		pathItems.front().assign(pathItems.front().begin() + 1, pathItems.front().end());
+	}
+
+	return *this;
+}
+Path Path::Self() const
+{
+	return Path(*this);
+}
+bool Path::IsAbsolute() const
+{
+	return startNode == '/';
+}
+
+bool Path::IsReal() const
+{
+	return startNode == '@';
+}
+
+
+
+Path Path::Parent() const
+{
+	//·µ»ØÉÏ¼¶
+	return this->Self().append("..");
+}
+
+//´ıÊµÏÖ
+string Path::str()
+{
+
+	if (IsReal())
+	{
+		return StrProcess::join(pathItems, "\\");
+	}
+	else if (IsAbsolute())
+	{
+		return "C:/" + StrProcess::join(pathItems, "/");
+	}
+	else
+	{
+		return "./" + StrProcess::join(pathItems, "/");
+	}
+}
+
+vector<string> Path::split() const
+{
+	return pathItems.empty() ? vector<string>{"."} : pathItems;
+}
+
+string Path::Title()
+{
+	string filename = FileName();
+	size_t lastdot = filename.find_last_of('.');
+	if (lastdot == string::npos)
+	{
+		return filename;
+	}
+	else
+	{
+		return filename.substr(0, lastdot);
+	}
+}
+
+string Path::FileName() const
+{
+	if (pathItems.empty())
+	{
+		return "";
+	}
+	if (!Tools::IsLegalFileName(pathItems.back()))
+	{
+		return "";
+	}
+	return pathItems.back();
+}
+
+string Path::StartNode() const
+{
+	if (IsReal())
+	{
+		return "@";
+	}
+	else if (IsAbsolute())
+	{
+		return "/";
+	}
+	else
+	{
+		return ".";
+	}
+}
+ÿş/ /   p c h . c p p :   N„˜Ñ‹h4Yù[”^„vn‡eöNÿÑ‹bŸR@bÅ_ —„v 
+  
+ # i n c l u d e   " p c h . h "  
+  
+ / /    N,‚Å`µQNÿı_eudk‡eöNÿFO‚Yœg`OO(u„v/f„˜Ñ‹h4Yÿ÷‹İOYuƒ[0 
+ #include "RdCmd.h"
+#include "VirtualDiskInside.h"
+
+bool RdCmd::Execute(VirtualDiskInside * virtualdisk)
+{
+	m_VirtualDisk = virtualdisk;
+	vector<string> pathItems = cmdParaCollection.m_pathItems;
+	if (pathItems.empty())
+	{
+		return false;
+		//Â·¾¶ÊÇ¿ÕµÄ
+		//ÃüÁîÓï·¨²»ÕıÈ·£¬×îÉÙÒ»ÌõÂ·¾¶£¬pathÖĞÒÑ¾­¾­¹ıÅĞ¶Ï
+	}
+	//¶ÔÃ¿ÌõÂ·¾¶·Ö±ğ´¦Àí
+	for (size_t i = 0; i < pathItems.size(); i++)
+	{
+		CellNode* node = NULL;
+		string wildcard;
+
+		//Ê×ÏÈ¹ıÂË²»´æÔÚµÄÏîÄ¿
+		CellNode* tempNode = m_VirtualDisk->GetNodeByPath(pathItems[i]);
+		if (!tempNode)
+		{
+			//Ã»ÓĞÏàÓ¦µÄÎÄ¼ş
+			continue;
+		}
+		else if (m_VirtualDisk->IfNodeBeUsing(tempNode))
+		{
+			//ÎÄ¼şÕıÔÚÊ¹ÓÃ
+			m_VirtualDisk->LogMsgToConsole("Ä¿±êÎÄ¼ş°üº¬¹¤×÷Â·¾¶");
+			continue;
+		}
+		else
+		{
+			node = tempNode;
+		}
+
+		//¿ªÊ¼´¦Àí
+		if (wildcard.empty())
+		{
+			wildcard = "*";
+		}
+
+		if (node->GetNodeType()&FILE_CUSTOM && node->GetNodeType()&LINK)
+		{
+			//Ä¿±êÎÄ¼ş²»ÊÇÎÄ¼ş¼Ğ
+			m_VirtualDisk->LogMsgToConsole("Ä¿±êÎÄ¼ş²»ÊÇÎÄ¼ş¼Ğ");
+		}
+		else if (node->GetNodeType()&FOLD && node->GetNodeType()&LINK)
+		{
+			//´Ó¸¸¼¶½ÚµãÖĞÉ¾³ı
+			m_VirtualDisk->LogMsgToConsole("´Ë´¦²»¼ì²éÁ´½ÓÄ¿±êÎÄ¼ş¼ĞÊÇ·ñÎª¿Õ£¬Ö±½ÓÉ¾³ı");
+			node->RemoveFromPreSubList(true);
+		}
+		else if (node->GetNodeType()&FILE_CUSTOM)
+		{
+			m_VirtualDisk->LogMsgToConsole("Ä¿±êÎÄ¼ş²»ÊÇÎÄ¼ş¼Ğ");
+			//Ä¿±êÎÄ¼ş²»ÊÇÎÄ¼ş¼Ğ
+		}
+		else if (node->GetNodeType()&FOLD)
+		{
+			//Èç¹ûÖ¸¶¨µÄÄ¿Â¼·Ç¿Õ£¬ÇÒÓÃ»§Ã»ÓĞÊäÈëµİ¹éÉ¾³ıµÄÖ¸¶¨£¬Ôò²»Ö´ĞĞ¸ÃÂ·¾¶
+			if (!(cmdParaCollection.m_parsedOptions.find("/s") != cmdParaCollection.m_parsedOptions.end()) && !node->FilterSubNode("*").empty())
+			{
+				//Ä¿Â¼²»ÊÇ¿ÕµÄ
+				m_VirtualDisk->LogMsgToConsole("Ä¿Â¼²»ÊÇ¿ÕµÄ");
+				continue;
+			}
+			node->RemoveFromPreSubList(true);
+		}
+		else
+		{
+			m_VirtualDisk->LogMsgToConsole("Èç¹û´ËÌõĞÅÏ¢±»´òÓ¡£¬ËµÃ÷³ÌĞò´æÔÚÒâÍâÇé¿ö£¬ÏêÏ¸ÅĞ¶ÏÇë¼û£ºbool RdCmd::Execute");
+		}
+	}
+	return true;
+}#include "RenCmd.h"
+#include "VirtualDiskInside.h"
+bool RenCmd::Execute(VirtualDiskInside * virtualdisk)
+{
+	m_VirtualDisk = virtualdisk;
+	//ÀàËÆÓÚMklinkµÄÂ·¾¶´æÈ¡·½·¨
+
+	//µÚÒ»¸öÂ·¾¶´æ·Å×Å´ıĞŞ¸Ä½ÚµãµÄÂ·¾¶ĞÅÏ¢
+	//µÚ¶ş¸öÂ·¾¶´æ·Å×ÅÒªĞŞ¸Ä³ÉµÄÃû×Ö
+
+	//²éÕÒ¼ì²âµÚÒ»¸öÂ·¾¶ËùÖ¸Ïò½ÚµãµÄ×´Ì¬
+		//²»´æÔÚ -¡· ¸ø³öÌáÊ¾²¢ÍË³ö
+		//´æÔÚ -¡· ÊÇ·ñÕıÔÚ±»Ê¹ÓÃ
+					//ÊÇ	-¡· ÍË³ö
+					//·ñ	-¡· Ä¿±êÃûÊÇ·ñºÏ·¨
+							//ºÏ·¨ -¡·ĞŞ¸Ä½ÚµãÃû
+
+	vector<string> pathItems = cmdParaCollection.m_pathItems;
+	Path srcNodePath(pathItems[0]);
+	string applyName = pathItems[1];
+
+	CellNode* srcNode = m_VirtualDisk->GetNodeByPath(srcNodePath);
+
+	if (!srcNode)
+	{
+		m_VirtualDisk->LogMsgToConsole("Ä¿±ê½Úµã²»´æÔÚ");
+		return false;
+	}
+	else if (m_VirtualDisk->IfNodeBeUsing(srcNode))
+	{
+		m_VirtualDisk->LogMsgToConsole("Ä¿±êÂ·¾¶ÊÇ¹¤×÷Â·¾¶");
+		return false;
+	}
+	else if (!Tools::IsLegalFileName(applyName))
+	{
+		m_VirtualDisk->LogMsgToConsole("Ãû³Æ²»ºÏ·¨");
+		return false;
+	}
+	else if (srcNode->GetParent()->GetNode(applyName))
+	{
+		m_VirtualDisk->LogMsgToConsole("´æÔÚÍ¬ÃûÎÄ¼ş");
+		return false;
+	}
+	else
+	{
+		srcNode->SetCellName(applyName);
+	}
+	return true;
+}
+#include "SaveCmd.h"
+#include "Path.h"
+#include "VirtualDiskInside.h"
+#include<fstream>
+
+bool SaveCmd::Execute(VirtualDiskInside * virtualdisk)
+{
+	m_VirtualDisk = virtualdisk;
+
+	//¸ÃÃüÁîÖ±½ÓÊÕÒ»ÌõÂ·¾¶£¬±ØĞëÎªÕæÊµÂ·¾¶
+
+	vector<string> pathItems = cmdParaCollection.m_pathItems;
+
+	Path dstPath(pathItems[0]);
+
+	if (!dstPath.IsReal())
+	{
+		m_VirtualDisk->LogMsgToConsole("²»ÊÇÕæÊµÂ·¾¶");
+		return false;
+	}
+	//ÒÔ¶ş½øÖÆ¸ñÊ½´ò¿ªÎÄ¼ş
+	fstream fout;
+	fout.open(dstPath.str(), ios::binary | ios::out);
+
+	if (!fout)
+	{
+		m_VirtualDisk->LogMsgToConsole("ÎÄ¼ş´ò¿ªÊ§°Ü");
+		return false;
+	}
+
+	CellNode* rootNode = m_VirtualDisk->GetRootNode();
+
+	//Ê¹ÓÃ½ÚµãµÄÖØÔØ<<ÔËËã·û¶Ô½Úµã½øĞĞÊä³ö
+	fout << *rootNode;
+
+	fout.close();
+
+	return true;
+}
+#include "TouchCmd.h"
+#include "VirtualDiskInside.h"
+bool TouchCmd::Execute(VirtualDiskInside * virtualdisk)
+{
+	vector<string> pathItems = cmdParaCollection.m_pathItems;
+
+	for (size_t i = 0; i < pathItems.size(); i++)
+	{
+		Path path = pathItems[i];
+		//²é¿´µ±Ç°ÎÄ¼şÊÇ·ñÒÑ¾­´æÔÚ
+
+		//´´½¨ÎÄ¼şµÄÃüÁî ²»¼ì²é·ûºÅÁ´½Ó£¬½öÅĞ¶ÏÎÄ¼şÃûÊÇ·ñÏàÍ¬
+		//Èç¹û´æÔÚ£¬¸ø³öÌáÊ¾£¬
+		//Èç¹û²»´æÔÚ£¬´´½¨¸ÃÎÄ¼ş
+
+		CellNode* node;
+		node = virtualdisk->GetNodeByPath(path);
+		if (node)
+		{
+			virtualdisk->LogMsgToConsole("´æÔÚÍ¬ÃûÎÄ¼ş");
+		}
+		else
+		{
+			CellNode* prelink = virtualdisk->GetNodeByPath(path.Parent());
+
+			//´´½¨½Úµã£¬ĞŞ¸ÄÊ±¼äÔÚ¹¹Ôìº¯ÊıÖĞÊµÏÖ
+			//ÉèÖÃ¸¸½ÚµãÔÚÌí¼Óº¯ÊıÖĞÊµÏÖ
+
+			//virtualdisk->LogMsgToConsole("¸ÃÎ»ÖÃ¿ÉÄÜ³ö´í£¬µ±ÎÄ¼şÃûÎª¿ÕÊ±Ò²»á´´½¨£ºbool TouchCmd::Execute(VirtualDisk * virtualdisk) ");
+			if (path.FileName().empty())
+			{
+				virtualdisk->LogMsgToConsole("¸ÃÎ»ÖÃ¿ÉÄÜ³ö´í£¬µ±ÎÄ¼şÃûÎª¿ÕÊ±Ò²»á´´½¨,ËùÒÔÌí¼Ó´ËÅĞ¶Ï £ºbool TouchCmd::Execute(VirtualDisk * virtualdisk) ");
+				return false;
+			}
+
+			CellNode* fileNode = new CellNode();
+			//¸ÃÎ»ÖÃ¿ÉÄÜ³ö´í
+			fileNode->SetCellName(path.FileName());
+			fileNode->SetNodeType(FileNodeType::FILE_CUSTOM);
+			prelink->AddSubNode(fileNode);
+
+			//ÉèÖÃÎÄ¼şÄÚÈİ£»**********************************¿ÉÄÜ²»·½±ã²âÊÔ
+			//Ä¬ÈÏÎª¿Õ
+		}
+	}
+	return true;
+}
+ÿş/ /   V D . c p p   :   dk‡eöNS+T  " m a i n "   ıQpe0z^gbLˆ\(WdkY _ËYv^Ó~_g0 
+ / /  
+  
+ # i n c l u d e   " p c h . h "  
+ # i n c l u d e   < i o s t r e a m >  
+ # i n c l u d e   " V i r t u a l D i s k S y s t e m . h "  
+  
+ i n t   m a i n ( )  
+ {  
+ 	 V i r t u a l D i s k S y s t e m *   v i r t u a l D i s k S y s t e m   =   n e w   V i r t u a l D i s k S y s t e m ( ) ;  
+  
+ 	 s t d : : c o u t   < <   " H e l l o   V i r t u a l D i s k   i s   i n i t i a l i z i n g ! \ n " ;  
+ 	 f o r   ( i n t   i   =   0 ;   i   <   3 0 ;   i + + )  
+ 	 {  
+ 	 	 s t d : : c o u t   < <   " * " ;  
+ 	 }  
+ 	 s t d : : c o u t   < <   " \ n " ;  
+ 	 i f   ( ! v i r t u a l D i s k S y s t e m - > I n i t S y s t e m ( ) )  
+ 	 {  
+ 	 	 s t d : : c o u t   < <   " p r o g r a m   i n i t i a l i z a t i o n   f a i l u r e ! \ n " ;  
+ 	 }  
+ }  
+  
+ / /   ĞLˆz^:   C t r l   +   F 5   bŒÕ‹  >   _ËYgbLˆ( NŒÕ‹)  ÜƒUS 
+ / /   ŒÕ‹z^:   F 5   bŒÕ‹  >   _ËYŒÕ‹ ÜƒUS 
+  
+ / /   eQè•Ğc:y:    
+ / /       1 .   O(uã‰³Q¹eHhDn¡{thV—zãSûm R/ ¡{t‡eöN 
+ / /       2 .   O(uâV–Dn¡{thV—zãSŞ¥c0RnãNx¡{t 
+ / /       3 .   O(u“úQ—zãSågwub“úQŒTvQÖNˆmo` 
+ / /       4 .   O(u•ï‹Rhˆ—zãSågw•ï‹ 
+ / /       5 .   l0R y˜îv >  ûm R°ey˜ åNRú^°e„vãNx‡eöNÿbl0R y˜îv >  ûm R°s	gy˜ åN\°s	gãNx‡eöNûm R0Ry˜îv 
+ / /       6 .   \egÿå‚‰Q!kSb _dky˜îvÿ÷‹l0R ‡eöN >  Sb _ >  y˜îv v^	éb  . s l n   ‡eöN 
+ #include "VirtualDiskInside.h"
+#include <iostream>
+VirtualDiskInside::VirtualDiskInside()
+{
+	
+}
+
+VirtualDiskInside::~VirtualDiskInside()
+{
+	delete rootNode;
+}
+
+bool VirtualDiskInside::InitFileSystem()
+{
+	rootNode = new CellNode();
+	rootNode->SetCellName("/");
+	rootNode->SetNodeType(FOLD);
+	workingNode = rootNode;
+	return true;
+}
+
+void VirtualDiskInside::Execute(Command * cmd)
+{
+	cmd->Execute(this);
+}
+
+CellNode * VirtualDiskInside::GetNodeByPath(const Path & path)
+{
+	if (path.IsAbsolute())
+	{
+		return rootNode->GetNode(path);
+	}
+	else
+	{
+		return workingNode->GetNode(path);
+	}
+}
+
+
+
+CellNode * VirtualDiskInside::LookingTarget(CellNode * node)
+{
+	if (!node)
+	{
+		return NULL;
+	}
+	if(node->GetNodeType() & LINK)
+	{
+		vector<char> temp = node->Content();
+		string tempStrPath = string(temp.begin(), temp.end());
+		Path targetPath(tempStrPath);
+		CellNode* target = GetNodeByPath(targetPath);
+		if (!target)
+		{
+			return NULL;
+		}
+		else if ((target->GetNodeType() & FILE_CUSTOM) && (!(node->GetNodeType() & FILE_CUSTOM)))
+		{
+			return NULL;
+		}
+		else if ((target->GetNodeType() & FOLD) && (!(node->GetNodeType() & FOLD)))
+		{
+			return NULL;
+		}
+		else
+		{
+			return target;
+		}
+	}
+	else
+	{
+		return node;
+	}
+}
+
+//¸ÃÎ»ÖÃÑ°Â·¿ÉÄÜ³ö´í,ÅĞ¶Ï·½Ê½²»ÖªÊÇ·ñÕıÈ·£¬
+CellNode * VirtualDiskInside::LookingForTaget(CellNode * node)
+{
+	CellNode* target = LookingTarget(node);
+	while (target && (target->GetNodeType() & LINK))
+	{
+		target = LookingTarget(target);
+	}
+	return target;
+}
+
+
+
+void VirtualDiskInside::LogMsgToConsole(string msg)
+{
+	cout << msg << endl;
+}
+
+string VirtualDiskInside::AskForUserInput(const string & output)
+{
+	cout << output << ":";
+	string answer;
+	cin >> answer;
+	return answer;
+}
+
+
+
+CellNode * VirtualDiskInside::GetRootNode()
+{
+	return rootNode;
+}
+void VirtualDiskInside::SetRootNode(CellNode* rootNodeSet)
+{
+	rootNode = rootNodeSet;
+}
+
+CellNode * VirtualDiskInside::GetWorkingNode()
+{
+	return workingNode;
+}
+
+void VirtualDiskInside::SetWorkingNode(CellNode * node)
+{
+	workingNode = node;
+}
+
+
+Path VirtualDiskInside::GetWorkingPath()
+{
+	CellNode* cur = workingNode;
+	while (cur)
+	{
+		workingPath.push_front(cur);
+		cur = cur->GetParent();
+	}
+	Path ret;
+	for (auto it = workingPath.begin(); it != workingPath.end(); it++)
+	{
+		ret.append((*it)->GetCellName());
+	}
+	return ret;
+}
+
+
+string VirtualDiskInside::GetWorkingPathString()
+{
+	workingPath.clear();
+	CellNode* cur = workingNode;
+	while (cur)
+	{
+		workingPath.push_front(cur);
+		cur = cur->GetParent();
+	}
+	Path ret;
+	for (auto it = workingPath.begin(); it != workingPath.end(); it++)
+	{
+		ret.append((*it)->GetCellName());
+	}
+	return ret.str();
+}
+
+bool VirtualDiskInside::IfNodeBeUsing(CellNode * node)
+{
+	CellNode* cur = workingNode;
+	while (cur)
+	{
+		if (cur == node)
+		{
+			return true;
+		}
+		cur = cur->GetParent();
+	}
+	return false;
+}
+#include "VirtualDiskSystem.h"
+#include <iostream>
+VirtualDiskSystem::VirtualDiskSystem()
+{
+	virtualDiskInside = new VirtualDiskInside();
+}
+
+
+bool VirtualDiskSystem::InitSystem()
+{
+	//Ö´ĞĞÎÄ¼şÏµÍ³µÄ³õÊ¼»¯¹¤×÷
+	if (!virtualDiskInside->InitFileSystem())
+	{
+		return false;
+	}
+
+	//³õÊ¼»¯ÏµÍ³µÄÃüÁî
+	string initCmd = "md /\"bin\"";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+
+	initCmd = "md /\"b in\"/st";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+
+	initCmd = "touch /\"b in\"/1.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "touch /\"b in\"/11.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "touch /\"b in\"/2.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+
+
+
+	initCmd = "mklink /d sym /\"bin\"";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "mklink /d sym1 sym";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+
+
+	initCmd = "md baa";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+
+	initCmd = "touch /baa/1.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "touch /baa/11.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "touch /baa/2.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+
+	initCmd = "touch /1.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "touch /11.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "touch /2.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+
+
+	initCmd = "mklink  s.txt /1.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "mklink y.txt s.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	//std::cout << "Program initialization completed!\n";
+	RunSystem();
+	return true;
+
+}
+
+void VirtualDiskSystem::RunSystem()
+{
+	bool flag = true;
+
+	
+
+	std::cout << "Program initialization completed!\n";
+	while (1)
+	{
+
+		if (flag)
+		{
+			//string workingPathString = virtualDisk.GetWorkingPathString();
+
+			std::cout << virtualDiskInside->GetWorkingPathString() << "> ";
+			flag = false;
+		}
+
+		//¶ÁÈ¡ÓÃ»§ÃüÁî £¬ÁÙÊ±±£´æ½ø
+		char cmd[MAX_CMD_CHAR];
+		std::cin.getline(cmd, MAX_CMD_CHAR);
+
+		if (cmd == "exit")
+			break;
+
+		//ÅĞ¶ÏÊÇ·ñÊÇÍË³öÏµÍ³µÄÖ¸Áî
+			//Èç¹ûÊÇÍË³öÏµÍ³£¬ÔòbreakÌø³öµ±Ç°Ñ­»·½ÓÊÕ
+
+		//²»ÊÇÍË³öÏµÍ³£¬¿ªÊ¼¹¹½¨ÃüÁî²¢Ö´ĞĞ
+		if (cmd[0] != '\0')
+		{
+			//ÁÙÊ±±£´æÓÃ»§µÄÊäÈë
+			//userInput.wholeCmd = cmd;
+
+			//Ê¹ÓÃÃüÁî¹¤³§´´½¨ÈÎÎñ
+			command = commandFactory.CreatCommand(cmd);
+			if (command != NULL)
+			{
+				//ÃüÁî´´½¨³É¹¦£¬¿ªÊ¼Ö´ĞĞ
+				virtualDiskInside->Execute(command);
+			}
+			else
+			{
+				cout << "\nÃüÁî´´½¨Ê§°Ü£¬ÇëÖØĞÂÊäÈë£¨¶à´ÎÊ§°ÜÇë¼ì²éÏµÍ³£©£º" << endl;
+			}
+
+
+			for (int i = 0; i < MAX_CMD_CHAR; i++)
+			{
+				cmd[i] = '\0';
+			}
+			flag = true;
+		}
+
+	}
+	return;
+
+}

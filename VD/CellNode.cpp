@@ -177,7 +177,7 @@ Path CellNode::GetNodePath()
 bool CellNode::IsRootNode()
 {
 	
-	return preLink == NULL && cellName == "/";
+	return preLink == NULL && (cellName == "/" || cellName =="C:" || cellName == "c:");
 }
 
 string CellNode::Target()

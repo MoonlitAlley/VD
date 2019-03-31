@@ -80,9 +80,11 @@ Command * CommandFactory::CreatCommand(string cmd)
 		break;
 	case moveCmd:
 		command = new MoveCmd();
+		command->cmdParaCollection.m_definedOptions.insert("/y");
 		break;
 	case copyCmd:
 		command = new CopyCmd();
+		command->cmdParaCollection.m_definedOptions.insert("/y");
 		break;
 	case mklinkCmd:
 		command = new MklinkCmd();
@@ -97,7 +99,6 @@ Command * CommandFactory::CreatCommand(string cmd)
 
 	if (!command)
 	{
-		cout << "命令创建失败";
 		return false;
 	}
 	//设置命令所支持的路径数量
