@@ -31,7 +31,10 @@ bool MklinkCmd::Execute(VirtualDiskInside * virtualdisk)
 		m_VirtualDisk->LogMsgToConsole("目标节点不存在，退出");
 		return false;
 	}
-	if (cmdParaCollection.m_parsedOptions.find("/d") != cmdParaCollection.m_parsedOptions.end() && !(targetNode->GetNodeType()&FOLD))
+
+	//本系统中不考虑/d参数
+
+	/*if (cmdParaCollection.m_parsedOptions.find("/d") != cmdParaCollection.m_parsedOptions.end() && !(targetNode->GetNodeType()&FOLD))
 	{
 		m_VirtualDisk->LogMsgToConsole("目标文件必须是目录，退出");
 		return false;
@@ -40,7 +43,7 @@ bool MklinkCmd::Execute(VirtualDiskInside * virtualdisk)
 	{
 		m_VirtualDisk->LogMsgToConsole("目标文件必须是文件，退出");
 		return false;
-	}
+	}*/
 
 
 	//判断结束，开始创建链接。

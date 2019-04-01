@@ -31,6 +31,7 @@ CommandFactory::~CommandFactory()
 
 Command * CommandFactory::CreatCommand(string cmd)
 {
+	std::cout << "  userInput : " << cmd << std::endl;
 	//先将命令置空，方便下面判断返回
 	command = NULL;
 	vector<string> items = StrProcess::SplitNoEmpty(cmd, ' ');
@@ -88,7 +89,8 @@ Command * CommandFactory::CreatCommand(string cmd)
 		break;
 	case mklinkCmd:
 		command = new MklinkCmd();
-		command->cmdParaCollection.m_definedOptions.insert("/d");
+		//本系统中不考虑/d参数
+		//command->cmdParaCollection.m_definedOptions.insert("/d");
 		break;
 
 	default:

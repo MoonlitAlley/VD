@@ -21,6 +21,7 @@ bool MdCmd::Execute(VirtualDiskInside* virtualdisk)
 
 		//判断是否是相对路径来确定当前节点
 		CellNode * curNode = virtualdisk->GetNodeByPath(tempPath.StartNode());
+		curNode = virtualdisk->LookingForTaget(curNode);
 
 		//开始寻路或者创建相应的文件夹
 		for (size_t i = 0; i < items.size(); i++)

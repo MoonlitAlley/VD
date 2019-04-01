@@ -161,11 +161,18 @@ bool MoveCmd::Execute(VirtualDiskInside * virtualdisk)
 void MoveCmd::MoveNode(CellNode* from, Path& to)
 {
 
-	CellNode* dst = m_VirtualDisk->GetNodeByPath(to);
+	//CellNode* dst = m_VirtualDisk->GetNodeByPath(to);
+	//NEW
+	CellNode* dst = GetDstNodeByPath(to);
+
 	if (!dst)
 	{
 		//如果目标路径不存在，且其有父节点
-		CellNode* parent = m_VirtualDisk->GetNodeByPath(to.Parent());
+		//CellNode* parent = m_VirtualDisk->GetNodeByPath(to.Parent());
+
+		//NEW
+		CellNode* parent = GetDstNodeByPath(to.Parent());
+
 		if (!parent)
 		{
 			//路径不存在
@@ -218,7 +225,10 @@ void MoveCmd::MoveNode(CellNode* from, Path& to)
 void MoveCmd::ConfirmThenMove(CellNode * from,Path & to)
 {
 	bool conflict = false;
+
 	CellNode* dst = m_VirtualDisk->GetNodeByPath(to);
+
+
 	conflict = (dst != nullptr);
 
 	//首相输出在谁的目录下进行的本次操作
@@ -231,6 +241,8 @@ void MoveCmd::ConfirmThenMove(CellNode * from,Path & to)
 		return;
 	}
 	//移动操作
+
+
 	CellNode* parent = m_VirtualDisk->GetNodeByPath(to.Parent());
 
 
@@ -293,7 +305,48 @@ void MoveCmd::ConfirmThenMove(CellNode * from,Path & to)
 	}
 }
 
+CellNode* MoveCmd::GetDstNodeByPath(const Path &to)
+{
 
+	CellNode* targetNode = NULL;
+	CellNode* curNode = m_VirtualDisk->GetNodeByPath(to.StartNode());
+	curNode = m_VirtualDisk->LookingForTaget(curNode);
+	vector<string> path = to.split();
+
+	for (size_t i = 0; i < path.size(); i++)
+	{
+		targetNode = curNode->GetNode(path[i]);
+		targetNode = m_VirtualDisk->LookingForTaget(targetNode);
+
+		/*if (++i < path.size())
+		{
+			--i;
+			targetNode = m_VirtualDisk->LookingForTaget(targetNode);
+		}*/
+
+		if (!targetNode)
+		{
+			m_VirtualDisk->LogMsgToConsole("路径不存在");
+			return NULL;
+
+		}
+		else if (targetNode->GetNodeType()& FOLD)
+		{
+			curNode = targetNode;
+		}
+		else if (targetNode->GetNodeType()& FILE_CUSTOM)
+		{
+			//是一个文件,判断是否是最终节点
+			if (++i < path.size())
+			{
+				--i;
+				m_VirtualDisk->LogMsgToConsole("路径中不应该出现文件");
+				return NULL;
+			}
+		}
+	}
+	return targetNode;
+}
 
 
 //############################# 重写，这种方法只能移动到特定的存在目录 ，不能实现修改名称等功能

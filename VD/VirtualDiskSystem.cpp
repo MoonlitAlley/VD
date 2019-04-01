@@ -31,9 +31,9 @@ bool VirtualDiskSystem::InitSystem()
 
 
 
-	initCmd = "mklink /d sym /\"b in\"";
+	initCmd = "mklink sym /\"b in\"";
 	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
-	initCmd = "mklink /d sym1 sym";
+	initCmd = "mklink sym1 sym";
 	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
 
 

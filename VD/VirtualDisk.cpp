@@ -5,7 +5,7 @@ VirtualDisk::VirtualDisk()
 {
 	virtualDiskInside = new VirtualDiskInside();
 	//初始化系统的命令
-	string initCmd = "md /\"bin\"";
+	/*string initCmd = "md /\"bin\"";
 	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
 
 	initCmd = "md /\"b in\"/st";
@@ -47,7 +47,7 @@ VirtualDisk::VirtualDisk()
 	initCmd = "mklink  s.txt /1.txt";
 	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
 	initCmd = "mklink y.txt s.txt";
-	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));*/
 }
 
 VirtualDisk::~VirtualDisk()
@@ -90,8 +90,51 @@ string VirtualDisk::getCurPath()
 //如果path路径（绝对路径）的节点存在，则返回true，否则返回false。如果存在，size表示该节点的大小，type表示该节点的类型（1表示文件夹， 2表示文件， 3表示符号链接）；如果不存在，size为 - 1，type为0。
 bool VirtualDisk::containNode(string pathstr, int & size, int & type)
 {
-	Path tempPath(pathstr);
-	CellNode* tempNode = virtualDiskInside->GetNodeByPath(tempPath);
+	virtualDiskInside->LogMsgToConsole("bool VirtualDisk::containNode : "+pathstr);
+
+	Path path(pathstr);
+	CellNode* tempNode = NULL;
+
+	//CellNode* tempNode = virtualDiskInside->GetNodeByPath(path);
+
+
+	vector<string> item = path.split();
+	CellNode* curNode = virtualDiskInside->GetNodeByPath(path.StartNode());
+	curNode = virtualDiskInside->LookingForTaget(curNode);
+
+
+	for (size_t i = 0; i < item.size(); i++)
+	{
+
+		tempNode = curNode->GetNode(item[i]);
+
+		if (++i < item.size())
+		{
+			--i;
+			tempNode = virtualDiskInside->LookingForTaget(tempNode);
+		}
+
+		if (!tempNode)
+		{
+			break;
+		}
+		else if (tempNode->GetNodeType()& FOLD)
+		{
+			curNode = tempNode;
+		}
+		else if(tempNode->GetNodeType()& FILE_CUSTOM)
+		{
+
+			//是一个文件,判断是否是最终节点
+			if (++i < item.size())
+			{
+				
+				return false;
+			}
+			--i;
+			break;
+		}
+	}
 
 	if (!tempNode)
 	{

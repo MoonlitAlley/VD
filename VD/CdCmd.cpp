@@ -92,7 +92,7 @@ bool CdCmd::Execute(VirtualDiskInside * virtualdiskInside)
 			return true;
 		}
 
-		
+
 		vector<string> item = path.split();
 
 		CellNode* curNode = virtualdiskInside->GetNodeByPath(path.StartNode());
@@ -111,7 +111,7 @@ bool CdCmd::Execute(VirtualDiskInside * virtualdiskInside)
 			}
 			else if (tempNode->GetNodeType()& FOLD)
 			{
-				curNode = tempNode;	
+				curNode = tempNode;
 			}
 			else
 			{
@@ -127,7 +127,10 @@ bool CdCmd::Execute(VirtualDiskInside * virtualdiskInside)
 		{
 			virtualdiskInside->workingPath_CD = path;
 		}
-		virtualdiskInside->workingPath_CD.append(path.str());
+		else
+		{
+			virtualdiskInside->workingPath_CD.append(path.str());
+		}
 		virtualdiskInside->SetWorkingNode(curNode);
 		return true;
 
