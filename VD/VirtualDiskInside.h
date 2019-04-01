@@ -22,7 +22,7 @@ public:
 
 	bool InitFileSystem();
 
-	void Execute(Command* cmd);
+	bool Execute(Command* cmd);
 
 	CellNode* GetNodeByPath(const Path &path);
 

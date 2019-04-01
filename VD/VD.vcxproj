@@ -172,6 +172,7 @@
     <ClInclude Include="RenCmd.h" />
     <ClInclude Include="SaveCmd.h" />
     <ClInclude Include="TouchCmd.h" />
+    <ClInclude Include="VirtualDisk.h" />
     <ClInclude Include="VirtualDiskInside.h" />
     <ClInclude Include="VirtualDiskSystem.h" />
   </ItemGroup>
@@ -203,6 +204,7 @@
     <ClCompile Include="SaveCmd.cpp" />
     <ClCompile Include="TouchCmd.cpp" />
     <ClCompile Include="VD.cpp" />
+    <ClCompile Include="VirtualDisk.cpp" />
     <ClCompile Include="VirtualDiskInside.cpp" />
     <ClCompile Include="VirtualDiskSystem.cpp" />
   </ItemGroup>

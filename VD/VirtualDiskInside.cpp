@@ -19,9 +19,9 @@ bool VirtualDiskInside::InitFileSystem()
 	return true;
 }
 
-void VirtualDiskInside::Execute(Command * cmd)
+bool VirtualDiskInside::Execute(Command * cmd)
 {
-	cmd->Execute(this);
+	 return cmd->Execute(this);
 }
 
 CellNode * VirtualDiskInside::GetNodeByPath(const Path & path)

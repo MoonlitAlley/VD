@@ -102,6 +102,9 @@
     <ClInclude Include="VirtualDiskInside.h">
       <Filter>头文件\DISK</Filter>
     </ClInclude>
+    <ClInclude Include="VirtualDisk.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -175,6 +178,9 @@
     </ClCompile>
     <ClCompile Include="MoveCmd.cpp">
       <Filter>源文件\CMD</Filter>
+    </ClCompile>
+    <ClCompile Include="VirtualDisk.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
