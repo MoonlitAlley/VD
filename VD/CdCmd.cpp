@@ -5,6 +5,10 @@
 
 bool CdCmd::Execute(VirtualDiskInside * virtualdiskInside)
 {
+
+	//ADD
+	//Path workingPath = virtualdiskInside->workingPath_CD;
+
 	//从命令参数中取出路径
 	vector<string> pathItem = cmdParaCollection.m_pathItems;
 
@@ -17,32 +21,137 @@ bool CdCmd::Execute(VirtualDiskInside * virtualdiskInside)
 	if (pathItem.empty())
 	{
 		//打印当前路径****************************
-		virtualdiskInside->LogMsgToConsole(virtualdiskInside->GetWorkingPath().str());
+		//virtualdiskInside->LogMsgToConsole(virtualdiskInside->GetWorkingPath().str());
+
+		//new
+		virtualdiskInside->LogMsgToConsole(virtualdiskInside->workingPath_CD.str());
 		return false;
 		//不处理
 	}
 	else
 	{
 		Path path(pathItem[0]);
-		//根据路径去寻找相应的节点
-		CellNode* node = virtualdiskInside->GetNodeByPath(path);
-		node = virtualdiskInside->LookingForTaget(node);
-		if (!node)
+
+		//含有通配符
+		if (Tools::isWildcard(path.split().back()))
 		{
-			virtualdiskInside->LogMsgToConsole("路径不存在或为文件名");
-			return false;
-		}
-		else if (node->GetNodeType()& FOLD)
-		{
-			virtualdiskInside->SetWorkingNode(node);
+			string wildcard = path.split().back();
+
+			vector<string> wildPath = path.Self().append("..").split();
+
+			CellNode* curNode = virtualdiskInside->GetNodeByPath(path.StartNode());
+
+			curNode = virtualdiskInside->LookingForTaget(curNode);
+
+			for (size_t i = 0; i < wildPath.size(); i++)
+			{
+				CellNode* tempNode = curNode->GetNode(wildPath[i]);
+				tempNode = virtualdiskInside->LookingForTaget(tempNode);
+
+				if (!tempNode)
+				{
+					virtualdiskInside->LogMsgToConsole("路径不存在或为文件名");
+					return false;
+				}
+				else if (tempNode->GetNodeType()& FOLD)
+				{
+					curNode = tempNode;
+				}
+				else
+				{
+					//路径不存在或为文件名
+					virtualdiskInside->LogMsgToConsole("路径不存在或为文件名");
+					return false;
+				}
+			}
+			//假设curNode存在
+			list<CellNode*> wildNodeList = curNode->FilterSubNode(wildcard);
+
+			if (wildNodeList.empty())
+			{
+				//目标不存在
+				return false;
+			}
+
+			CellNode* targetNode = wildNodeList.front();
+
+			if (!targetNode)
+			{
+				//目标不存在
+				return false;
+			}
+
+			path.append("..").append(targetNode->GetCellName());
+			//NEW
+			if (path.IsAbsolute())
+			{
+				virtualdiskInside->workingPath_CD = path;
+			}
+			virtualdiskInside->workingPath_CD.append(path.str());
+			virtualdiskInside->SetWorkingNode(targetNode);
 			return true;
 		}
-		else
+
+		
+		vector<string> item = path.split();
+
+		CellNode* curNode = virtualdiskInside->GetNodeByPath(path.StartNode());
+
+		curNode = virtualdiskInside->LookingForTaget(curNode);
+
+		for (size_t i = 0; i < item.size(); i++)
 		{
-			//路径不存在或为文件名
-			virtualdiskInside->LogMsgToConsole("路径不存在或为文件名");
-			return false;
+			CellNode* tempNode = curNode->GetNode(item[i]);
+			tempNode = virtualdiskInside->LookingForTaget(tempNode);
+
+			if (!tempNode)
+			{
+				virtualdiskInside->LogMsgToConsole("路径不存在或为文件名");
+				return false;
+			}
+			else if (tempNode->GetNodeType()& FOLD)
+			{
+				curNode = tempNode;	
+			}
+			else
+			{
+				//路径不存在或为文件名
+				virtualdiskInside->LogMsgToConsole("路径不存在或为文件名");
+				return false;
+			}
 		}
+
+
+		//NEW
+		if (path.IsAbsolute())
+		{
+			virtualdiskInside->workingPath_CD = path;
+		}
+		virtualdiskInside->workingPath_CD.append(path.str());
+		virtualdiskInside->SetWorkingNode(curNode);
+		return true;
+
+
+
+		////根据路径去寻找相应的节点
+		//CellNode* node = virtualdiskInside->GetNodeByPath(path);
+		//node = virtualdiskInside->LookingForTaget(node);
+		//if (!node)
+		//{
+		//	virtualdiskInside->LogMsgToConsole("路径不存在或为文件名");
+		//	return false;
+		//}
+		//else if (node->GetNodeType()& FOLD)
+		//{
+		//	virtualdiskInside->SetWorkingNode(node);
+		//	return true;
+		//}
+		//else
+		//{
+		//	//路径不存在或为文件名
+		//	virtualdiskInside->LogMsgToConsole("路径不存在或为文件名");
+		//	return false;
+		//}
 	}
 }
 

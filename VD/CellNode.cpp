@@ -92,6 +92,7 @@ CellNode * CellNode::GetNode(const Path & path)
 
 	for (size_t i = 0; i < items.size(); i++)
 	{
+
 		if (!curNode)
 		{
 			return NULL;
@@ -103,7 +104,10 @@ CellNode * CellNode::GetNode(const Path & path)
 			curNode = curNode->preLink;
 			continue;
 		}
-
+		if (curNode->GetNodeType()&FileNodeType::LINK)
+		{
+			return curNode;
+		}
 		auto target = find_if(curNode->subCellNodeList.begin(), curNode->subCellNodeList.end(), [&](CellNode* child) {return child->GetCellName() == items[i]; });
 		//返回的迭代器是否为超尾元素
 		curNode = target == curNode->subCellNodeList.end() ? NULL : *target;

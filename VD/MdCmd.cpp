@@ -63,7 +63,6 @@ bool MdCmd::Execute(VirtualDiskInside* virtualdisk)
 				return false;
 			}
 		}
-		return true;
 	}
 	return true;
 }

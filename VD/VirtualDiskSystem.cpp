@@ -15,8 +15,9 @@ bool VirtualDiskSystem::InitSystem()
 	}
 
 	//初始化系统的命令
-	string initCmd = "md /\"bin\"";
-	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	string initCmd;
+	/*string initCmd = "md /\"bin\"";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));*/
 
 	initCmd = "md /\"b in\"/st";
 	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
@@ -30,7 +31,7 @@ bool VirtualDiskSystem::InitSystem()
 
 
 
-	initCmd = "mklink /d sym /\"bin\"";
+	initCmd = "mklink /d sym /\"b in\"";
 	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
 	initCmd = "mklink /d sym1 sym";
 	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
@@ -77,8 +78,11 @@ void VirtualDiskSystem::RunSystem()
 		if (flag)
 		{
 			//string workingPathString = virtualDisk.GetWorkingPathString();
+			//std::cout << virtualDiskInside->GetWorkingPathString() << "> ";
 
-			std::cout << virtualDiskInside->GetWorkingPathString() << "> ";
+			//NEW
+			std::cout << virtualDiskInside->workingPath_CD.str() << "> ";
+
 			flag = false;
 		}
 
@@ -99,7 +103,12 @@ void VirtualDiskSystem::RunSystem()
 			//userInput.wholeCmd = cmd;
 
 			//使用命令工厂创建任务
-			command = commandFactory.CreatCommand(cmd);
+			string cmdtemp = cmd;
+			if (cmdtemp == "cd..")
+			{
+				cmdtemp = "cd ..";
+			}
+			command = commandFactory.CreatCommand(cmdtemp);
 			if (command != NULL)
 			{
 				//命令创建成功，开始执行

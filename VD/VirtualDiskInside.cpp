@@ -123,6 +123,7 @@ void VirtualDiskInside::SetWorkingNode(CellNode * node)
 
 Path VirtualDiskInside::GetWorkingPath()
 {
+	workingPath.clear();
 	CellNode* cur = workingNode;
 	while (cur)
 	{

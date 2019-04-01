@@ -5,7 +5,7 @@
 class VirtualDiskInside
 {
 public:
-
+	Path workingPath_CD = Path("c:/");
 private:
 	CellNode* rootNode;
 	CellNode* workingNode;
@@ -14,7 +14,7 @@ private:
 
 	Command* cmdObject;
 
-
+	
 
 public:
 	VirtualDiskInside();

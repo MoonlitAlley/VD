@@ -4,6 +4,50 @@
 VirtualDisk::VirtualDisk()
 {
 	virtualDiskInside = new VirtualDiskInside();
+	//初始化系统的命令
+	string initCmd = "md /\"bin\"";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+
+	initCmd = "md /\"b in\"/st";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+
+	initCmd = "touch /\"b in\"/1.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "touch /\"b in\"/11.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "touch /\"b in\"/2.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+
+
+
+	initCmd = "mklink /d sym /\"b in\"";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "mklink /d sym1 sym";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+
+
+	initCmd = "md baa";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+
+	initCmd = "touch /baa/1.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "touch /baa/11.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "touch /baa/2.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+
+	initCmd = "touch /1.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "touch /11.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "touch /2.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+
+
+	initCmd = "mklink  s.txt /1.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = "mklink y.txt s.txt";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
 }
 
 VirtualDisk::~VirtualDisk()
@@ -17,9 +61,14 @@ bool VirtualDisk::formatDisk()
 }
 
 //执行相应的命令
-bool VirtualDisk::ececuteCmd(string cmdStr)
+bool VirtualDisk::executeCmd(string cmdStr)
 {
-	command = commandFactory.CreatCommand(cmdStr);
+	string cmdtemp = cmdStr;
+	if (cmdtemp == "cd..")
+	{
+		cmdtemp = "cd ..";
+	}
+	command = commandFactory.CreatCommand(cmdtemp);
 	if (command != NULL)
 	{
 		//命令创建成功，开始执行
@@ -31,7 +80,10 @@ bool VirtualDisk::ececuteCmd(string cmdStr)
 //获得当前文件夹所在路径
 string VirtualDisk::getCurPath()
 {
-	return virtualDiskInside->GetWorkingPathString();
+	//return virtualDiskInside->GetWorkingPathString();
+
+	//NEW
+	return virtualDiskInside->workingPath_CD.str();	
 }
 
 

@@ -14,7 +14,7 @@ public:
 
 	bool formatDisk();
 
-	bool ececuteCmd(string cmdStr);
+	bool executeCmd(string cmdStr);
 
 	string getCurPath();
 

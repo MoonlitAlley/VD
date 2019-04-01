@@ -62,12 +62,12 @@ string StrProcess::join(vector<string>& vec, string addStr)
 		return vec.front();
 	}
 	string ret;
-	for (size_t i = 0; i < vec.size(); i++)
+	for (size_t i = 0; i < vec.size()-1; i++)
 	{
 		ret += vec[i];
 		ret += addStr;
 	}
-	//ret += vec.back();
+	ret += vec.back();
 	return ret;
 }
 
