@@ -31,7 +31,6 @@ CommandFactory::~CommandFactory()
 
 Command * CommandFactory::CreatCommand(string cmd)
 {
-	std::cout << "  userInput : " << cmd << std::endl;
 	//先将命令置空，方便下面判断返回
 	command = NULL;
 	vector<string> items = StrProcess::SplitNoEmpty(cmd, ' ');
@@ -94,14 +93,12 @@ Command * CommandFactory::CreatCommand(string cmd)
 		break;
 
 	default:
-		//命令不存在 - 将临时保存的用户输入命令输出
-		std::cout << outputMsg.Command_Illegal << "  userInput : " << cmd << std::endl;
 		break;
 	}
 
 	if (!command)
 	{
-		return false;
+		return NULL;
 	}
 	//设置命令所支持的路径数量
 	SetCmdPathCount();

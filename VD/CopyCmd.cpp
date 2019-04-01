@@ -145,7 +145,6 @@ bool CopyCmd::Execute(VirtualDiskInside * virtualdisk)
 							allsrcPath.push_back(m_VirtualDisk->LookingForTaget(*itera)->GetNodePath());
 						}
 					}
-
 				}
 			}
 			else
@@ -181,7 +180,6 @@ bool CopyCmd::Execute(VirtualDiskInside * virtualdisk)
 		}
 	}
 
-
 	if (allsrcPath.empty())
 	{
 		//没有要处理的文件
@@ -202,18 +200,45 @@ bool CopyCmd::Execute(VirtualDiskInside * virtualdisk)
 			else
 			{
 				string ret = dstPath.split().back();
-				StrProcess::replace(ret, "*", src.Title());
-				StrProcess::replace(ret, "?", src.Title());//此处可能匹配不对，*匹配多个，？匹配一个
-				m_VirtualDisk->LogMsgToConsole("此处可能匹配不对，*匹配多个，？匹配一个");
-				name = ret;
+
+				name = src.FileName();
+
+				//StrProcess::replace(ret, "*", src.Title());
+				//StrProcess::replace(ret, "?", src.Title());//此处可能匹配不对，*匹配多个，？匹配一个
+				//m_VirtualDisk->LogMsgToConsole("此处可能匹配不对，*匹配多个，？匹配一个");
+				//name = ret;
 			}
 
-			Path tempdstpath = dstPath.Parent().append(name);
+			//Path tempdstpath = dstPath.Parent().append(name);
+
+
+			//NEW
+			Path tempdstpath;
+			if (!dstPath.IsReal())
+			{
+				CellNode* targetNode = GetDstNodeByPath(dstPath.Parent());
+				if (targetNode == NULL)
+				{
+					m_VirtualDisk->LogMsgToConsole("路径检查不通过");
+					return false;
+				}
+				tempdstpath = targetNode->GetNodePath().append(name);
+			}
+			else
+			{
+				tempdstpath = dstPath.Parent().append(name);
+			}
+			//END_NEW
+
+
+
 			Copy(src, tempdstpath, true);
 		}
 		else
 		{
 			//目标路径中没有通配符
+
+
 			Copy(src, dstPath, i == 0);
 		}
 	}
@@ -293,7 +318,11 @@ void CopyCmd::Copy(Path & src, Path & dst, bool first)
 	}
 	else   //dst is virtualdiskNode
 	{
-		CellNode* dstNode = m_VirtualDisk->GetNodeByPath(dst);
+		//CellNode* dstNode = m_VirtualDisk->GetNodeByPath(dst);
+
+		//NEW
+		CellNode* dstNode = GetDstNodeByPath(dst);
+
 		if (!dstNode)
 		{
 			//创建一个目标节点
@@ -302,7 +331,12 @@ void CopyCmd::Copy(Path & src, Path & dst, bool first)
 			{
 				return;
 			}
-			CellNode* nodeprelink = m_VirtualDisk->GetNodeByPath(dst.Self().append(".."));
+
+			//CellNode* nodeprelink = m_VirtualDisk->GetNodeByPath(dst.Self().append(".."));
+
+			//NEW
+			CellNode* nodeprelink = GetDstNodeByPath(dst.Self().append(".."));
+
 			nodeprelink = m_VirtualDisk->LookingForTaget(nodeprelink);
 			if (!nodeprelink)
 			{
@@ -468,3 +502,43 @@ void CopyCmd::CopyRealToNode(Path&src, CellNode* dstNode)
 }
 
 
+CellNode* CopyCmd::GetDstNodeByPath(const Path &to)
+{
+
+	CellNode* targetNode = NULL;
+	CellNode* curNode = m_VirtualDisk->GetNodeByPath(to.StartNode());
+	curNode = m_VirtualDisk->LookingForTaget(curNode);
+	vector<string> path = to.split();
+
+	for (size_t i = 0; i < path.size(); i++)
+	{
+		targetNode = curNode->GetNode(path[i]);
+		targetNode = m_VirtualDisk->LookingForTaget(targetNode);
+
+		/*if (++i < path.size())
+		{
+			--i;
+			targetNode = m_VirtualDisk->LookingForTaget(targetNode);
+		}*/
+
+		if (!targetNode)
+		{
+			return NULL;
+		}
+		else if (targetNode->GetNodeType()& FOLD)
+		{
+			curNode = targetNode;
+		}
+		else if (targetNode->GetNodeType()& FILE_CUSTOM)
+		{
+			//是一个文件,判断是否是最终节点
+			if (++i < path.size())
+			{
+				--i;
+				m_VirtualDisk->LogMsgToConsole("路径中不应该出现文件");
+				return NULL;
+			}
+		}
+	}
+	return targetNode;
+}

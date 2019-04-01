@@ -12,6 +12,8 @@ private:
 
 	void CopyNodeToReal(Path&src, Path& dst);
 	void CopyRealToNode(Path&src, CellNode* dst);
+	CellNode* GetDstNodeByPath(const Path &to);
+
 private:
 	bool needAsk;
 };
