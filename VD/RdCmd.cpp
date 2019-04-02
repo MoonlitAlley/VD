@@ -49,7 +49,7 @@ bool RdCmd::Execute(VirtualDiskInside * virtualdisk)
 		else if (node->GetNodeType()&FOLD && node->GetNodeType()&LINK)
 		{
 			//从父级节点中删除
-			m_VirtualDisk->LogMsgToConsole("此处不检查链接目标文件夹是否为空，直接删除");
+			//m_VirtualDisk->LogMsgToConsole("此处不检查链接目标文件夹是否为空，直接删除");
 			node->RemoveFromPreSubList(true);
 		}
 		else if (node->GetNodeType()&FILE_CUSTOM)
