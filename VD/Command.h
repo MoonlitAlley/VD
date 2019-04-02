@@ -13,4 +13,5 @@ public:
 	virtual bool Execute(VirtualDiskInside* virtualdiskInside);
 protected:
 	VirtualDiskInside* m_VirtualDisk;
+
 };

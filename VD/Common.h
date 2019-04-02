@@ -28,16 +28,7 @@ public:
 	string PathName_Illegal = "路径名非法";
 	string Dir_BeingUse = "另一个程序正在使用此文件，进程无法访问";
 
-	string CommandCollection[13] = { "cls" ,"cd","save","load", "dir","touch","rd","del","md","ren","copy" ,"move" ,"mklink" };
-};
-
-enum pathTypeMsg
-{
-	PATH_REAL = 0,
-	FOLD_PATH = 1,	//文件夹的相对路径
-	FOLD_WHOLE_PATH = 2,	//文件夹的绝对路径
-	FILE_PATH = 3,		//文件的相对路径
-	//TODO
+	//string CommandCollection[13] = { "cls" ,"cd","save","load", "dir","touch","rd","del","md","ren","copy" ,"move" ,"mklink" };
 };
 
 

@@ -1,15 +1,22 @@
 #include "VirtualDiskInside.h"
 #include <iostream>
+
+//构造-析构
 VirtualDiskInside::VirtualDiskInside()
 {
-	
+	rootNode = NULL;
+	workingNode = NULL;
 }
 
 VirtualDiskInside::~VirtualDiskInside()
 {
 	delete rootNode;
+	rootNode = NULL;
+	workingNode = NULL;
 }
 
+
+//格式化-根节点创建
 bool VirtualDiskInside::InitFileSystem()
 {
 	rootNode = new CellNode();
@@ -19,11 +26,21 @@ bool VirtualDiskInside::InitFileSystem()
 	return true;
 }
 
+//命令执行
 bool VirtualDiskInside::Execute(Command * cmd)
 {
-	 return cmd->Execute(this);
+	if (cmd != NULL)
+	{
+		return cmd->Execute(this);
+	}
+	else
+	{
+		return false;
+	}
+	
 }
 
+//寻路
 CellNode * VirtualDiskInside::GetNodeByPath(const Path & path)
 {
 	if (path.IsAbsolute())
@@ -35,8 +52,6 @@ CellNode * VirtualDiskInside::GetNodeByPath(const Path & path)
 		return workingNode->GetNode(path);
 	}
 }
-
-
 
 CellNode * VirtualDiskInside::LookingTarget(CellNode * node)
 {
@@ -72,7 +87,6 @@ CellNode * VirtualDiskInside::LookingTarget(CellNode * node)
 		return node;
 	}
 }
-
 //该位置寻路可能出错,判断方式不知是否正确，
 CellNode * VirtualDiskInside::LookingForTaget(CellNode * node)
 {
@@ -85,12 +99,11 @@ CellNode * VirtualDiskInside::LookingForTaget(CellNode * node)
 }
 
 
-
+//用户交互
 void VirtualDiskInside::LogMsgToConsole(string msg)
 {
 	cout << msg << endl;
 }
-
 string VirtualDiskInside::AskForUserInput(const string & output)
 {
 	cout << output << ":";
@@ -100,7 +113,7 @@ string VirtualDiskInside::AskForUserInput(const string & output)
 }
 
 
-
+//GET-SET
 CellNode * VirtualDiskInside::GetRootNode()
 {
 	return rootNode;
@@ -114,9 +127,12 @@ CellNode * VirtualDiskInside::GetWorkingNode()
 {
 	return workingNode;
 }
-
 void VirtualDiskInside::SetWorkingNode(CellNode * node)
 {
+	if (node == rootNode)
+	{
+		workingPath_CD = Path("c:/");
+	}
 	workingNode = node;
 }
 
@@ -137,8 +153,6 @@ Path VirtualDiskInside::GetWorkingPath()
 	}
 	return ret;
 }
-
-
 string VirtualDiskInside::GetWorkingPathString()
 {
 	workingPath.clear();

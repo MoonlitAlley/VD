@@ -3,6 +3,14 @@
 VirtualDiskSystem::VirtualDiskSystem()
 {
 	virtualDiskInside = new VirtualDiskInside();
+	command = NULL;
+}
+
+VirtualDiskSystem::~VirtualDiskSystem()
+{
+	delete virtualDiskInside;
+	virtualDiskInside = NULL;
+	command = NULL;
 }
 
 

@@ -35,17 +35,14 @@
 
 //得到待操作列表
 
-
-
 bool CopyCmd::Execute(VirtualDiskInside * virtualdisk)
 {
 	m_VirtualDisk = virtualdisk;
 	needAsk = !(cmdParaCollection.m_parsedOptions.find("/y") != cmdParaCollection.m_parsedOptions.end());
-
 	vector<string> pathItems = cmdParaCollection.m_pathItems;
+	//命令参数解析中已经判断过路径数量
 	Path srcPath(pathItems[0]);
 	Path dstPath(pathItems[1]);
-
 
 
 	//首先找到所有的待操作文件，放到路径链表中
@@ -58,10 +55,10 @@ bool CopyCmd::Execute(VirtualDiskInside * virtualdisk)
 		{
 			_finddata_t findData;
 			intptr_t fileHandle = _findfirst(srcPath.str().c_str(), &findData);
-
 			if (fileHandle == -1)
 			{
 				//查找失败，可能是路径出错
+				m_VirtualDisk->LogMsgToConsole("路径不存在");
 				return false;
 			}
 			if (findData.attrib &_A_ARCH)
@@ -84,7 +81,6 @@ bool CopyCmd::Execute(VirtualDiskInside * virtualdisk)
 						continue;
 					}
 					allsrcPath.push_back(srcPath.Self().append(findData.name));
-
 				} while (_findnext(fileHandle, &findData) == 0);
 			}
 		}
@@ -93,10 +89,10 @@ bool CopyCmd::Execute(VirtualDiskInside * virtualdisk)
 			//含有通配符
 			_finddata_t findData;
 			intptr_t fileHandle = _findfirst(srcPath.str().c_str(), &findData);
-
 			if (fileHandle == -1)
 			{
 				//查找失败，可能是路径出错
+				m_VirtualDisk->LogMsgToConsole("路径不存在");
 				return false;
 			}
 			do
@@ -150,6 +146,7 @@ bool CopyCmd::Execute(VirtualDiskInside * virtualdisk)
 			else
 			{
 				m_VirtualDisk->LogMsgToConsole("路径不存在");
+				return false;
 			}
 		}
 		else
@@ -176,6 +173,7 @@ bool CopyCmd::Execute(VirtualDiskInside * virtualdisk)
 			else
 			{
 				m_VirtualDisk->LogMsgToConsole("路径不存在");
+				return false;
 			}
 		}
 	}
@@ -192,7 +190,6 @@ bool CopyCmd::Execute(VirtualDiskInside * virtualdisk)
 		{
 			//目标路径中有通配符
 			string name;
-
 			if (dstPath.split().back() == "*" || dstPath.split().back() == "*.*")
 			{
 				name = src.FileName();
@@ -200,17 +197,10 @@ bool CopyCmd::Execute(VirtualDiskInside * virtualdisk)
 			else
 			{
 				string ret = dstPath.split().back();
-
 				name = src.FileName();
-
-				//StrProcess::replace(ret, "*", src.Title());
-				//StrProcess::replace(ret, "?", src.Title());//此处可能匹配不对，*匹配多个，？匹配一个
-				//m_VirtualDisk->LogMsgToConsole("此处可能匹配不对，*匹配多个，？匹配一个");
-				//name = ret;
 			}
 
 			//Path tempdstpath = dstPath.Parent().append(name);
-
 
 			//NEW
 			Path tempdstpath;
@@ -219,7 +209,7 @@ bool CopyCmd::Execute(VirtualDiskInside * virtualdisk)
 				CellNode* targetNode = GetDstNodeByPath(dstPath.Parent());
 				if (targetNode == NULL)
 				{
-					m_VirtualDisk->LogMsgToConsole("路径检查不通过");
+					m_VirtualDisk->LogMsgToConsole("路径不存在");
 					return false;
 				}
 				tempdstpath = targetNode->GetNodePath().append(name);
@@ -230,15 +220,11 @@ bool CopyCmd::Execute(VirtualDiskInside * virtualdisk)
 			}
 			//END_NEW
 
-
-
 			Copy(src, tempdstpath, true);
 		}
 		else
 		{
 			//目标路径中没有通配符
-
-
 			Copy(src, dstPath, i == 0);
 		}
 	}
@@ -256,12 +242,10 @@ void CopyCmd::Copy(Path & src, Path & dst, bool first)
 			system(cmd.c_str());
 		}
 		else
-		{
-			
+		{		
 			//V-R
 			_finddata_t findData;
 			intptr_t handle = _findfirst(dst.str().c_str(), &findData);
-
 			if (handle == -1)
 			{
 				//没有相同的文件
@@ -303,8 +287,7 @@ void CopyCmd::Copy(Path & src, Path & dst, bool first)
 								break;
 							}
 						}
-					}
-					
+					}					
 				}
 				if (first)
 				{
@@ -322,7 +305,6 @@ void CopyCmd::Copy(Path & src, Path & dst, bool first)
 
 		//NEW
 		CellNode* dstNode = GetDstNodeByPath(dst);
-
 		if (!dstNode)
 		{
 			//创建一个目标节点
@@ -331,7 +313,6 @@ void CopyCmd::Copy(Path & src, Path & dst, bool first)
 			{
 				return;
 			}
-
 			//CellNode* nodeprelink = m_VirtualDisk->GetNodeByPath(dst.Self().append(".."));
 
 			//NEW
@@ -347,7 +328,6 @@ void CopyCmd::Copy(Path & src, Path & dst, bool first)
 			node->SetCellName(dst.FileName());
 			node->SetNodeType(FileNodeType::FILE_CUSTOM);
 			nodeprelink->AddSubNode(node);
-
 			if (!node)
 			{
 				//创建失败，返回
@@ -392,7 +372,6 @@ void CopyCmd::Copy(Path & src, Path & dst, bool first)
 				prelink = tempNode;
 				tempNode = m_VirtualDisk->LookingTarget(tempNode);
 			}
-
 			//得到最终节点 ，最终节点若不存在，则说明其父节点是文件节点，执行拷贝
 			if (!tempNode)
 			{

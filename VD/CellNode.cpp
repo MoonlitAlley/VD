@@ -16,6 +16,7 @@ CellNode::~CellNode()
 		delete *itera;
 	}
 	subCellNodeList.clear();
+	preLink = NULL;
 }
 
 //向当前节点的子节点链表中插入元素
@@ -38,6 +39,15 @@ bool CellNode::AddSubNode(CellNode* node)
 	return false;
 }
 
+
+void CellNode::RemoveFromPreSubList(bool release)
+{
+	if (preLink == NULL)
+	{
+		return;
+	}
+	preLink->RemoveSubNode(this, release);
+}
 //从当前结点的子节点中移除特定节点，可以选择是否释放此节点
 bool CellNode::RemoveSubNode(CellNode * node, bool release)
 {
@@ -54,17 +64,9 @@ bool CellNode::RemoveSubNode(CellNode * node, bool release)
 		delete node;
 	}
 	UpdateLastModifyTime();
-	return false;
+	return true;
 }
 
-void CellNode::RemoveFromPreSubList(bool release)
-{
-	if (preLink == NULL)
-	{
-		return;
-	}
-	preLink->RemoveSubNode(this, release);
-}
 
 list<CellNode*> CellNode::FilterSubNode(string whildcard)
 {

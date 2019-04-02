@@ -5,14 +5,13 @@ using namespace std;
 
 class CommandFactory
 {
-public:
-	OutputMsg outputMsg;
+private:
 	Command* command;
 	string commandString;
 	int commandType;
-	string cmdPara;
+
 private:
-	int CmdTypeAnalyse(string name);
+	void CmdTypeAnalyse(string name);
 	void SetCmdPathCount();
 public:
 	CommandFactory();

@@ -238,16 +238,12 @@ void DirCmd::CheckDirWithFiles(CellNode * node, const string & filesname)
 string DirCmd::MakeOneOutput(CellNode * node, const string & name)
 {
 	time_t rawtime = node->GetlastModifyTime();
-
 	struct tm * timeinfo = localtime(&rawtime);
-
 	char buff[128] = { 0 };
 
 	//日期与时间 两个空格，   时间与类型，四个空格
 	strftime(buff, sizeof(buff), "%G/%m/%d  %H:%M    ", timeinfo);
-
 	string res = buff;
-
 	if ((node->GetNodeType()& FILE_CUSTOM) && !(node->GetNodeType()& LINK))
 	{
 		res += NumberToString(node->Content().size(), 14);
@@ -256,10 +252,8 @@ string DirCmd::MakeOneOutput(CellNode * node, const string & name)
 	{
 		res += StrProcess::sstr("%-14s", node->GetNodeTypeStr().c_str());
 	}
-
 	res += " ";
 	res += name;
-
 	oneFoldNode.push_back(node);
 	//不在输出其链接信息
 	return res;

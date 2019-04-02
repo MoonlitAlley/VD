@@ -16,7 +16,7 @@ private:
 
 public:
 	VirtualDiskSystem();
-
+	~VirtualDiskSystem();
 
 	//文件系统初始化
 	bool InitSystem();

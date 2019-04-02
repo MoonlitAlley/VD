@@ -96,35 +96,32 @@ Command * CommandFactory::CreatCommand(string cmd)
 		break;
 	}
 
-	if (!command)
-	{
-		return NULL;
-	}
+	if (!command){	return NULL;	}
+
 	//设置命令所支持的路径数量
 	SetCmdPathCount();
 	//解析用户输入，将得到的参数及路径放入到命令参数集合中
 	if (!command->cmdParaCollection.SplitUserInput(cmd))
 	{
 		cout << "命令参数或路径错误 " << endl;
-		return false;
+		return NULL;
 	}
 	return command;
 }
 
 //根据cmdElent中的命令字符串，分析出命令ID
-int CommandFactory::CmdTypeAnalyse(string cmdName)
+void CommandFactory::CmdTypeAnalyse(string cmdName)
 {
+	string CommandCollection[13] = { "cls" ,"cd","save","load", "dir","touch","rd","del","md","ren","copy" ,"move" ,"mklink" };
 
 	commandType = -1;
-
-	for (int i = 0; i < sizeof(outputMsg.CommandCollection) / sizeof(outputMsg.CommandCollection[0]); i++)
+	for (int i = 0; i < sizeof(CommandCollection) / sizeof(CommandCollection[0]); i++)
 	{
-		if (cmdName == outputMsg.CommandCollection[i])
+		if (cmdName == CommandCollection[i])
 		{
 			commandType = i;
 		}
 	}
-	return commandType;
 }
 
 void CommandFactory::SetCmdPathCount()
