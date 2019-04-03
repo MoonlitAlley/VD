@@ -23,23 +23,23 @@ bool VirtualDiskSystem::InitSystem()
 	}
 
 	//初始化系统的命令
-	string initCmd;
-	/*string initCmd = "md /\"bin\"";
-	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));*/
-
-	initCmd = "md /\"b in\"/st";
+	//string initCmd;
+	string initCmd = R"(md "bin")";
 	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
 
-	initCmd = "touch /\"b in\"/1.txt";
+	initCmd = R"(md "b in"\st)";
 	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
-	initCmd = "touch /\"b in\"/11.txt";
+
+	initCmd = R"(touch "b in"\1.txt)";
 	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
-	initCmd = "touch /\"b in\"/2.txt";
+	initCmd = R"(touch "b in"\11.txt)";
+	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
+	initCmd = R"(touch "b in"\2.txt)";
 	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
 
 
 
-	initCmd = "mklink sym /\"b in\"";
+	initCmd = R"(mklink sym "b in")";
 	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
 	initCmd = "mklink sym1 sym";
 	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
