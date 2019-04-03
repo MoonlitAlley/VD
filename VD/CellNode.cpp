@@ -311,6 +311,7 @@ istream & operator>>(istream & input, CellNode & self)
 		{
 			return input;
 		}
+		//将读取到的子节点添加到当前结点的孩子列表中
 		self.AddSubNode(node);
 	}
 	//循环读取

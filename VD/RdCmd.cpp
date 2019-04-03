@@ -19,6 +19,10 @@ bool RdCmd::Execute(VirtualDiskInside * virtualdisk)
 
 		//首先过滤不存在的项目
 		CellNode* tempNode = m_VirtualDisk->GetNodeByPath(pathItems[i]);
+
+		//NEW
+		//CellNode* tempNode = GetDstNodeByPath(pathItems[i]);
+
 		if (!tempNode)
 		{
 			//没有相应的文件
@@ -40,7 +44,7 @@ bool RdCmd::Execute(VirtualDiskInside * virtualdisk)
 		{
 			wildcard = "*";
 		}
-
+		//node不可能为空
 		if (node->GetNodeType()&FILE_CUSTOM && node->GetNodeType()&LINK)
 		{
 			//目标文件不是文件夹
@@ -74,4 +78,47 @@ bool RdCmd::Execute(VirtualDiskInside * virtualdisk)
 		}
 	}
 	return true;
+}
+
+//此方法暂时无用 - rd不支持符号链接或者不能删除目录不为空的文件夹
+CellNode* RdCmd::GetDstNodeByPath(const Path &to)
+{
+
+	CellNode* targetNode = NULL;
+	CellNode* curNode = m_VirtualDisk->GetNodeByPath(to.StartNode());
+	curNode = m_VirtualDisk->LookingForTaget(curNode);
+	vector<string> path = to.split();
+
+	for (size_t i = 0; i < path.size(); i++)
+	{
+		targetNode = curNode->GetNode(path[i]);
+		targetNode = m_VirtualDisk->LookingForTaget(targetNode);
+
+		/*if (++i < path.size())
+		{
+			--i;
+			targetNode = m_VirtualDisk->LookingForTaget(targetNode);
+		}*/
+
+		if (!targetNode)
+		{
+			//m_VirtualDisk->LogMsgToConsole("路径不存在");
+			return NULL;
+		}
+		else if (targetNode->GetNodeType()& FOLD)
+		{
+			curNode = targetNode;
+		}
+		else if (targetNode->GetNodeType()& FILE_CUSTOM)
+		{
+			//是一个文件,判断是否是最终节点
+			if (++i < path.size())
+			{
+				--i;
+				m_VirtualDisk->LogMsgToConsole("路径中不应该出现文件");
+				return NULL;
+			}
+		}
+	}
+	return targetNode;
 }

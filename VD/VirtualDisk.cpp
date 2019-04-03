@@ -20,7 +20,7 @@ bool VirtualDisk::formatDisk()
 	return virtualDiskInside->InitFileSystem();
 }
 
-//执行相应的命令
+//执行相应的命令 - bool 对象是否创建成功（或者执行成功）
 bool VirtualDisk::executeCmd(string cmdStr)
 {
 	string cmdtemp = cmdStr;

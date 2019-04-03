@@ -82,62 +82,6 @@ bool MoveCmd::Execute(VirtualDiskInside * virtualdisk)
 		srcAllPath.push_back(from);
 	}
 
-#pragma region pick截取
-
-	//if (!Tools::isWildcard(from.split().back()))
-	//{
-	//	CellNode* node = m_VirtualDisk->GetNodeByPath(from);
-	//	if (!node)
-	//	{
-
-	//	}
-	//	else
-	//	{
-	//		node = m_VirtualDisk->LookingForTaget(node);
-	//		if (node->GetNodeType()&FileNodeType::FILE_CUSTOM)
-	//		{
-	//			srcAllPath.push_back(node->GetNodePath());
-	//		}
-	//		else
-	//		{
-	//			list<CellNode*> children = node->FilterSubNode("*");
-	//			for (auto it = children.begin(); it != children.end(); ++it)
-	//			{
-	//				if ((*it)->GetNodeType()&FileNodeType::FILE_CUSTOM) {
-	//					srcAllPath.push_back(m_VirtualDisk->LookingForTaget(*it)->GetNodePath());
-	//				}
-	//			}
-	//		}
-	//	}
-	//	
-	//}
-	//else
-	//{
-	//	CellNode* dir = m_VirtualDisk->GetNodeByPath(from.Self().append(".."));
-	//	if (!dir)
-	//	{
-
-	//	}
-	//	else
-	//	{
-	//		dir = m_VirtualDisk->LookingForTaget(dir);
-	//		if (dir)
-	//		{
-	//			list<CellNode*> children = dir->FilterSubNode(from.split().back());
-	//			for (auto it = children.begin(); it != children.end(); ++it)
-	//			{
-	//				if ((*it)->GetNodeType()&FileNodeType::FILE_CUSTOM) {
-	//					srcAllPath.push_back(m_VirtualDisk->LookingForTaget(*it)->GetNodePath());
-	//				}
-	//			}
-	//		}
-	//	}
-	//	
-	//}
-
-
-#pragma endregion
-
 	if (srcAllPath.empty())
 	{
 		//没有待操作文件

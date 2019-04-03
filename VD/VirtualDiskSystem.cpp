@@ -67,8 +67,7 @@ bool VirtualDiskSystem::InitSystem()
 	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
 	initCmd = "mklink y.txt s.txt";
 	virtualDiskInside->Execute(commandFactory.CreatCommand(initCmd));
-	//std::cout << "Program initialization completed!\n";
-	RunSystem();
+	std::cout << "Program initialization completed!\n";
 	return true;
 
 }
@@ -77,12 +76,8 @@ void VirtualDiskSystem::RunSystem()
 {
 	bool flag = true;
 
-	
-
-	std::cout << "Program initialization completed!\n";
 	while (1)
 	{
-
 		if (flag)
 		{
 			//string workingPathString = virtualDisk.GetWorkingPathString();
@@ -90,7 +85,6 @@ void VirtualDiskSystem::RunSystem()
 
 			//NEW
 			std::cout << virtualDiskInside->workingPath_CD.str() << "> ";
-
 			flag = false;
 		}
 
@@ -100,16 +94,12 @@ void VirtualDiskSystem::RunSystem()
 
 		if (cmd == "exit")
 			break;
-
 		//判断是否是退出系统的指令
 			//如果是退出系统，则break跳出当前循环接收
 
 		//不是退出系统，开始构建命令并执行
 		if (cmd[0] != '\0')
 		{
-			//临时保存用户的输入
-			//userInput.wholeCmd = cmd;
-
 			//使用命令工厂创建任务
 			string cmdtemp = cmd;
 			if (cmdtemp == "cd..")
@@ -133,7 +123,6 @@ void VirtualDiskSystem::RunSystem()
 			}
 			flag = true;
 		}
-
 	}
 	return;
 

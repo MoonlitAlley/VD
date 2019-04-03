@@ -20,9 +20,6 @@ public:
 
 	//文件系统初始化
 	bool InitSystem();
-
-private:
 	//系统运行
 	void RunSystem();
-
 };
