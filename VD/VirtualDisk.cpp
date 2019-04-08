@@ -6,6 +6,7 @@
 VirtualDisk::VirtualDisk()
 {
 	virtualDiskInside = new VirtualDiskInside();
+	command = NULL;
 }
 
 VirtualDisk::~VirtualDisk()
