@@ -46,18 +46,14 @@ Command * CommandFactory::CreatCommand(const string& cmd)
 	}
 
 	//特殊命令预处理
-	vector<string> items;
+	
 	string tempStr = cmd;
 	if (cmd == "cd..")
 	{
 		tempStr = "cd ..";
-		items = StrProcess::SplitNoEmpty(tempStr, ' ');
 	}
-	else
-	{
-		items = StrProcess::SplitNoEmpty(cmd, ' ');
-	}
-	
+	vector<string> items = StrProcess::SplitNoEmpty(tempStr, ' ');
+
 	if (items.empty())
 	{
 		return NULL;
@@ -126,7 +122,7 @@ Command * CommandFactory::CreatCommand(const string& cmd)
 	//设置命令所支持的路径数量
 	SetCmdPathCount();
 	//解析用户输入，将得到的参数及路径放入到命令参数集合中
-	if (!command->cmdParaCollection.SplitUserInput(cmd))
+	if (!command->cmdParaCollection.SplitUserInput(tempStr))
 	{
 		cout << "命令参数或路径错误 " << endl;
 		return NULL;
