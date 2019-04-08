@@ -10,8 +10,11 @@ VirtualDisk::VirtualDisk()
 
 VirtualDisk::~VirtualDisk()
 {
-	delete virtualDiskInside;
-	virtualDiskInside = NULL;
+	if (virtualDiskInside != NULL)
+	{
+		delete virtualDiskInside;
+		virtualDiskInside = NULL;
+	}
 	command = NULL;
 }
 
@@ -22,7 +25,7 @@ bool VirtualDisk::formatDisk()
 }
 
 //执行相应的命令 - bool 对象是否创建成功（或者执行成功）
-bool VirtualDisk::executeCmd(string cmdStr)
+bool VirtualDisk::executeCmd(const string& cmdStr)
 {
 	virtualDiskInside->LogMsgToConsole("iserInput+:+" + cmdStr);
 	virtualDiskInside->LogMsgToConsole("workingPath_CD+:+" + virtualDiskInside->workingPath_CD.str());
@@ -53,7 +56,7 @@ string VirtualDisk::getCurPath()
 }
  
 //如果path路径（绝对路径）的节点存在，则返回true，否则返回false。如果存在，size表示该节点的大小，type表示该节点的类型（1表示文件夹， 2表示文件， 3表示符号链接）；如果不存在，size为 - 1，type为0。
-bool VirtualDisk::containNode(string pathstr, int & size, int & type)
+bool VirtualDisk::containNode(const string& pathstr, int & size, int & type)
 {
 	virtualDiskInside->LogMsgToConsole("bool VirtualDisk::containNode : " + pathstr);
 	Path path(pathstr);
@@ -170,7 +173,7 @@ bool VirtualDisk::containNode(string pathstr, int & size, int & type)
 }
 
 //根据路径所指向的符号链接，返回该符号链接所链接的节点的路径（如果链接的节点不存在，返回空字符串）。
-string VirtualDisk::getLinkNode(string path)
+string VirtualDisk::getLinkNode(const string& path)
 {
 	CellNode* tempNode = virtualDiskInside->GetNodeByPath(path);
 	if (!tempNode)

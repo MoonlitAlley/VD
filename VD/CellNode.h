@@ -19,19 +19,18 @@ public:
 	CellNode* GetParent();
 	void SetParent(CellNode* pre);
 
-	void SetNodeType(FileNodeType type);
+	void SetNodeType(const FileNodeType type);
 	FileNodeType GetNodeType();
 	
 	string GetCellName();
-	void SetCellName(string name);
+	void SetCellName(const string& name);
 
 	void UpdateLastModifyTime();
 	time_t GetlastModifyTime();
-	void SetLastModifyTime(time_t value);
+	void SetLastModifyTime(const time_t& value);
 
 	Path GetNodePath();
 	bool IsRootNode();
-	string Target();
 
 	//一个双目运算符重载应该在类外，所以要声明为友元函数
 	friend istream& operator>>(istream& input, CellNode& self);
@@ -43,14 +42,14 @@ public:
 	virtual bool AddSubNode(CellNode* node);
 	virtual bool RemoveSubNode(CellNode* node, bool release);
 
-	virtual list<CellNode*> FilterSubNode(string whildcard);
+	virtual list<CellNode*> FilterSubNode(const string& whildcard);
 
 	//FileNode
 	virtual vector<char>& Content();
 
 	//LinkNode
-	virtual vector<char> GetTargetNodePath();
-	virtual void SetTargetNodePath(string TargetPath);
+	virtual string GetTargetNodePath();
+	virtual void SetTargetNodePath(const string& TargetPath);
 
 protected:
 	list<CellNode*> subCellNodeList;

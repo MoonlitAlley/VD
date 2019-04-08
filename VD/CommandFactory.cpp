@@ -128,7 +128,7 @@ Command * CommandFactory::CreatCommand(string& cmd)
 }
 
 //根据cmdElent中的命令字符串，分析出命令ID
-void CommandFactory::CmdTypeAnalyse(string cmdName)
+void CommandFactory::CmdTypeAnalyse(const string& cmdName)
 {
 	string CommandCollection[13] = { "cls" ,"cd","save","load", "dir","touch","rd","del","md","ren","copy" ,"move" ,"mklink" };
 

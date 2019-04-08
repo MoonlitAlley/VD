@@ -22,7 +22,7 @@ public:
 	CellNode* LookingForTaget(CellNode * node);
 
 	//用户交互
-	void LogMsgToConsole(string msg);
+	void LogMsgToConsole(const string& msg);
 	string AskForUserInput(const string& output);
 
 
@@ -37,7 +37,7 @@ public:
 	//得到当前工作节点
 	Path GetWorkingPath();
 	//得到当前工作路径的字符表示
-	string GetWorkingPathString();
+	const string GetWorkingPathString();
 
 	bool IfNodeBeUsing(CellNode* node);
 	

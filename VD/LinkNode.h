@@ -4,7 +4,7 @@
 class LinkNode :public CellNode
 {
 public:
-	virtual vector<char> GetTargetNodePath() override;
-	virtual void SetTargetNodePath(string TargetPath) override;
+	virtual string GetTargetNodePath() override;
+	virtual void SetTargetNodePath(const string& TargetPath) override;
 	virtual string GetNodeTypeStr() override;
 };

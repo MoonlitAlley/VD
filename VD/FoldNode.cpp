@@ -40,7 +40,7 @@ bool FoldNode::RemoveSubNode(CellNode * node, bool release)
 	return true;
 }
 
-list<CellNode*> FoldNode::FilterSubNode(string whildcard)
+list<CellNode*> FoldNode::FilterSubNode(const string& whildcard)
 {
 	list<CellNode*> res;
 	copy_if(subCellNodeList.begin(), subCellNodeList.end(), back_inserter(res), [&](CellNode* node) {return Tools::IsWildcardMatch(whildcard, node->GetCellName()); });

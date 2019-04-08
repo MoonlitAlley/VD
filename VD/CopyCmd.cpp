@@ -375,7 +375,7 @@ void CopyCmd::Copy(Path & src, Path & dst, bool first)
 			//得到最终节点 ，最终节点若不存在，则说明其父节点是文件节点，执行拷贝
 			if (!tempNode)
 			{
-				Path tempdstpath = prelink->Target();
+				Path tempdstpath = prelink->GetTargetNodePath();
 				Copy(src, tempdstpath, first);
 			}
 			else if (m_VirtualDisk->LookingForTaget(m_VirtualDisk->GetNodeByPath(src)) == tempNode)

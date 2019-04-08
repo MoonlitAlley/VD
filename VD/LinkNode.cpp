@@ -1,11 +1,11 @@
 #include "LinkNode.h"
 
-vector<char> LinkNode::GetTargetNodePath()
+string LinkNode::GetTargetNodePath()
 {
-	return content;
+	return string(content.begin(), content.end());
 }
 
-void LinkNode::SetTargetNodePath(string TargetPath)
+void LinkNode::SetTargetNodePath(const string& TargetPath)
 {
 	content.assign(TargetPath.begin(), TargetPath.end());
 }

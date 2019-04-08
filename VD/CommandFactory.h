@@ -11,7 +11,7 @@ private:
 	int commandType;
 
 private:
-	void CmdTypeAnalyse(string name);
+	void CmdTypeAnalyse(const string& cmdName);
 	void SetCmdPathCount();
 public:
 	CommandFactory();

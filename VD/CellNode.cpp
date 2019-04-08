@@ -46,7 +46,7 @@ bool CellNode::RemoveSubNode(CellNode * node, bool release)
 }
 
 
-list<CellNode*> CellNode::FilterSubNode(string whildcard)
+list<CellNode*> CellNode::FilterSubNode(const string& whildcard)
 {
 	list<CellNode*> res;
 	copy_if(subCellNodeList.begin(), subCellNodeList.end(), back_inserter(res), [&](CellNode* node) {return Tools::IsWildcardMatch(whildcard, node->GetCellName()); });
@@ -97,7 +97,7 @@ CellNode * CellNode::GetNode(const Path & path)
 	return curNode;
 }
 
-void CellNode::SetNodeType(FileNodeType type)
+void CellNode::SetNodeType(const FileNodeType type)
 {
 	nodeType = type;
 }
@@ -112,7 +112,7 @@ string CellNode::GetNodeTypeStr()
 	return "";
 }
 
-void CellNode::SetCellName(string name)
+void CellNode::SetCellName(const string& name)
 {
 	cellName = name;
 }
@@ -127,7 +127,7 @@ time_t CellNode::GetlastModifyTime()
 	return lastModifyTime;
 }
 
-void CellNode::SetLastModifyTime(time_t value)
+void CellNode::SetLastModifyTime(const time_t& value)
 {
 	lastModifyTime = value;
 }
@@ -155,15 +155,6 @@ bool CellNode::IsRootNode()
 	return preLink == NULL && (cellName == "/" || cellName =="C:" || cellName == "c:");
 }
 
-string CellNode::Target()
-{
-	if (nodeType&LINK)
-	{
-		return string(content.begin(), content.end());
-	}
-	return "";
-}
-
 vector<char>& CellNode::Content()
 {
 	assert(false);
@@ -172,12 +163,12 @@ vector<char>& CellNode::Content()
 	// TODO: 在此处插入 return 语句
 }
 
-vector<char> CellNode::GetTargetNodePath()
+string CellNode::GetTargetNodePath()
 {
-	return vector<char>();
+	return string();
 }
 
-void CellNode::SetTargetNodePath(string TargetPath)
+void CellNode::SetTargetNodePath(const string& TargetPath)
 {
 }
 

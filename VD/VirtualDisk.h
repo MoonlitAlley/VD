@@ -14,13 +14,13 @@ public:
 
 	bool formatDisk();
 
-	bool executeCmd(string cmdStr);
+	bool executeCmd(const string& cmdStr);
 
 	string getCurPath();
 
-	bool containNode(string Path, int& size, int &type);
+	bool containNode(const string& Path, int& size, int &type);
 
-	string getLinkNode(string path);
+	string getLinkNode(const string& path);
 
 
 private:

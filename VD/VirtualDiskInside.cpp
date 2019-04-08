@@ -64,8 +64,8 @@ CellNode * VirtualDiskInside::LookingTarget(CellNode * node)
 	}
 	if(node->GetNodeType() & LINK)
 	{
-		vector<char> temp = node->GetTargetNodePath();
-		string tempStrPath = string(temp.begin(), temp.end());
+		 
+		string tempStrPath = node->GetTargetNodePath();
 		Path targetPath(tempStrPath);
 		CellNode* target = GetNodeByPath(targetPath);
 		if (!target)
@@ -103,7 +103,7 @@ CellNode * VirtualDiskInside::LookingForTaget(CellNode * node)
 
 
 //”√ªßΩªª•
-void VirtualDiskInside::LogMsgToConsole(string msg)
+void VirtualDiskInside::LogMsgToConsole(const string& msg)
 {
 	cout << msg << endl;
 }
@@ -156,7 +156,7 @@ Path VirtualDiskInside::GetWorkingPath()
 	}
 	return ret;
 }
-string VirtualDiskInside::GetWorkingPathString()
+const string VirtualDiskInside::GetWorkingPathString()
 {
 	workingPath.clear();
 	CellNode* cur = workingNode;
