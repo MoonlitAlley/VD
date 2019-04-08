@@ -35,7 +35,7 @@ CommandFactory::~CommandFactory()
 	}
 }
 
-Command * CommandFactory::CreatCommand(string& cmd)
+Command * CommandFactory::CreatCommand(const string& cmd)
 {
 	
 	//先将命令置空，方便下面判断返回
@@ -46,11 +46,18 @@ Command * CommandFactory::CreatCommand(string& cmd)
 	}
 
 	//特殊命令预处理
+	vector<string> items;
+	string tempStr = cmd;
 	if (cmd == "cd..")
 	{
-		cmd = "cd ..";
+		tempStr = "cd ..";
+		items = StrProcess::SplitNoEmpty(tempStr, ' ');
 	}
-	vector<string> items = StrProcess::SplitNoEmpty(cmd, ' ');
+	else
+	{
+		items = StrProcess::SplitNoEmpty(cmd, ' ');
+	}
+	
 	if (items.empty())
 	{
 		return NULL;

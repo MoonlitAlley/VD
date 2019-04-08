@@ -31,8 +31,7 @@ bool VirtualDisk::executeCmd(const string& cmdStr)
 	virtualDiskInside->LogMsgToConsole("iserInput+:+" + cmdStr);
 	virtualDiskInside->LogMsgToConsole("workingPath_CD+:+" + virtualDiskInside->workingPath_CD.str());
 	virtualDiskInside->LogMsgToConsole("GetWorkingPathString+:+" + virtualDiskInside->GetWorkingPathString());
-	string cmdtemp = cmdStr;
-	command = commandFactory.CreatCommand(cmdtemp);
+	command = commandFactory.CreatCommand(cmdStr);
 	if (command != NULL)
 	{
 		//命令创建成功，开始执行

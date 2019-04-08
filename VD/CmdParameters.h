@@ -9,10 +9,10 @@ class CmdParameters
 public:
 	void SetPathCount(int min, int max);
 
-	bool SplitUserInput(string & userInput);
+	bool SplitUserInput(const string & userInput);
 
 private:
-	vector < pair<string, bool>> SplitToWordBySpace(string &input);
+	vector < pair<string, bool>> SplitToWordBySpace(const string &input);
 
 public:
 	vector<string> m_pathItems;

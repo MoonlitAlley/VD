@@ -4,7 +4,7 @@ using namespace std;
 
 
 
-vector<string> StrProcess::split(string & str, char separa)
+vector<string> StrProcess::split(const string & str, char separa)
 {
 	vector<string> ret;
 
@@ -30,7 +30,7 @@ vector<string> StrProcess::split(string & str, char separa)
 	return ret;
 }
 
-vector<string> StrProcess::SplitNoEmpty(string & str, char separa)
+vector<string> StrProcess::SplitNoEmpty(const string & str, char separa)
 {
 	auto ret = split(str, separa);
 

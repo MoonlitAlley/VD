@@ -9,9 +9,9 @@ namespace StrProcess
 {
 	using namespace std;
 
-	vector<string> split(string &str, char separa);
+	vector<string> split(const string &str, char separa);
 
-	vector<string> SplitNoEmpty(string &str, char separa);
+	vector<string> SplitNoEmpty(const string &str, char separa);
 
 	void replace(string &str, string from, string to);
 

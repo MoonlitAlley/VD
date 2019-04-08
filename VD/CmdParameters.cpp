@@ -10,7 +10,7 @@ void CmdParameters::SetPathCount(int min, int max)
 }
 
 //将用户输入分解为命令参数和命令路径
-bool CmdParameters::SplitUserInput(string & userInput)
+bool CmdParameters::SplitUserInput(const string & userInput)
 {
 	vector < pair<string, bool>> items = SplitToWordBySpace(userInput);
 	//不再处理命令名
@@ -61,7 +61,7 @@ bool CmdParameters::SplitUserInput(string & userInput)
 	return true;
 }
 
-vector<pair<string, bool>> CmdParameters::SplitToWordBySpace(string & input)
+vector<pair<string, bool>> CmdParameters::SplitToWordBySpace(const string & input)
 {
 	vector<pair<string, bool>> ret;
 	string word;
