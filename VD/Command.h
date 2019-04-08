@@ -8,6 +8,8 @@ class VirtualDiskInside;
 class Command
 {
 public:
+	Command();
+	~Command();
 	CmdParameters cmdParaCollection;
 public:
 	virtual bool Execute(VirtualDiskInside* virtualdiskInside);

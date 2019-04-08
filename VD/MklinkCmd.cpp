@@ -1,6 +1,7 @@
 #include "MklinkCmd.h"
 #include "VirtualDiskInside.h"
 #include "Path.h"
+#include "LinkNode.h"
 bool MklinkCmd::Execute(VirtualDiskInside * virtualdisk)
 {
 	m_VirtualDisk = virtualdisk;
@@ -61,16 +62,27 @@ bool MklinkCmd::Execute(VirtualDiskInside * virtualdisk)
 		return false;
 	}
 
-	//创建该节点
-	CellNode* node = new CellNode();
+	////创建该节点
+	//CellNode* node = new CellNode();
+	//node->SetCellName(filename);
+	//prelink->AddSubNode(node);
+
+	//node->SetNodeType(FileNodeType(LINK |targetNode->GetNodeType()));
+
+	////将目标节点的信息放到该节点的content中
+	//const string tempPathString = targetNode->GetNodePath().str();
+	//node->Content().assign(tempPathString.begin(), tempPathString.end());
+
+
+	//创建符号链接节点
+	LinkNode* node = new LinkNode();
 	node->SetCellName(filename);
+	node->SetNodeType((FileNodeType)(LINK | targetNode->GetNodeType()));
 	prelink->AddSubNode(node);
 
-	node->SetNodeType(FileNodeType(LINK |targetNode->GetNodeType()));
-
-	//将目标节点的信息放到该节点的content中
+	//将目标节点信息放到该节点中
 	const string tempPathString = targetNode->GetNodePath().str();
-	node->Content().assign(tempPathString.begin(), tempPathString.end());
+	node->SetTargetNodePath(tempPathString);
 
 	return true;
 }

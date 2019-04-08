@@ -13,21 +13,15 @@ public:
 	CellNode();
 	~CellNode();
 
-	bool AddSubNode(CellNode* node);
-	bool RemoveSubNode(CellNode* node, bool release);
-
-	void RemoveFromPreSubList(bool release);
-	list<CellNode*> FilterSubNode(string whildcard);
-
 	CellNode* GetNode(const Path &path);
-	CellNode* GetParent();
+	void RemoveFromPreSubList(bool release);
 
-	vector<char>& Content();
+	CellNode* GetParent();
+	void SetParent(CellNode* pre);
 
 	void SetNodeType(FileNodeType type);
 	FileNodeType GetNodeType();
-	string GetNodeTypeStr();
-
+	
 	string GetCellName();
 	void SetCellName(string name);
 
@@ -43,8 +37,22 @@ public:
 	friend istream& operator>>(istream& input, CellNode& self);
 	friend ostream& operator<<(ostream& output, CellNode& self);
 
+	virtual string GetNodeTypeStr();
 
-private:
+	//FoldNode
+	virtual bool AddSubNode(CellNode* node);
+	virtual bool RemoveSubNode(CellNode* node, bool release);
+
+	virtual list<CellNode*> FilterSubNode(string whildcard);
+
+	//FileNode
+	virtual vector<char>& Content();
+
+	//LinkNode
+	virtual vector<char> GetTargetNodePath();
+	virtual void SetTargetNodePath(string TargetPath);
+
+protected:
 	list<CellNode*> subCellNodeList;
 
 	vector<char> content;

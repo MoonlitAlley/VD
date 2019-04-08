@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Command.h"
-
+#include "FileNode.h"
 class CopyCmd : public Command
 {
 public:

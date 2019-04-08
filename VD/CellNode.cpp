@@ -1,5 +1,8 @@
 #include "CellNode.h"
-
+#include "FoldNode.h"
+#include "LinkNode.h"
+#include "FileNode.h"
+#include <assert.h>
 CellNode::CellNode()
 {
 	nodeType = FOLD;
@@ -22,20 +25,6 @@ CellNode::~CellNode()
 //向当前节点的子节点链表中插入元素
 bool CellNode::AddSubNode(CellNode* node)
 {
-	//如果是符号链接，，不允许有子项，只能有target;
-	if (nodeType == LINK)
-	{
-		return false;
-	}
-
-	if (&node != NULL)
-	{
-		node->preLink = this;
-		subCellNodeList.push_back(node);
-		//更新当前节点的修改时间
-		UpdateLastModifyTime();
-		return true;
-	}
 	return false;
 }
 
@@ -47,24 +36,13 @@ void CellNode::RemoveFromPreSubList(bool release)
 		return;
 	}
 	preLink->RemoveSubNode(this, release);
+
+
 }
 //从当前结点的子节点中移除特定节点，可以选择是否释放此节点
 bool CellNode::RemoveSubNode(CellNode * node, bool release)
 {
-	auto new_end = remove(subCellNodeList.begin(), subCellNodeList.end(), node);
-
-	if (new_end == subCellNodeList.end())
-	{
-		return true;
-	}
-	node->preLink = NULL;
-	subCellNodeList.erase(new_end, subCellNodeList.end());
-	if (release)
-	{
-		delete node;
-	}
-	UpdateLastModifyTime();
-	return true;
+	return false;
 }
 
 
@@ -80,10 +58,12 @@ CellNode * CellNode::GetParent()
 	return preLink;
 }
 
-vector<char>& CellNode::Content()
+void CellNode::SetParent(CellNode* pre)
 {
-	return content;
+	preLink = pre;
 }
+
+
 
 //找到指定节点
 CellNode * CellNode::GetNode(const Path & path)
@@ -129,18 +109,7 @@ FileNodeType CellNode::GetNodeType()
 
 string CellNode::GetNodeTypeStr()
 {
-	if (nodeType == LINK)
-	{
-		return "<LINK>";
-	}
-	else if (nodeType == FOLD)
-	{
-		return "<FOLD>";
-	}
-	else
-	{
-		return "";
-	}
+	return "";
 }
 
 void CellNode::SetCellName(string name)
@@ -195,6 +164,23 @@ string CellNode::Target()
 	return "";
 }
 
+vector<char>& CellNode::Content()
+{
+	assert(false);
+	vector<char> a;
+	return a;
+	// TODO: 在此处插入 return 语句
+}
+
+vector<char> CellNode::GetTargetNodePath()
+{
+	return vector<char>();
+}
+
+void CellNode::SetTargetNodePath(string TargetPath)
+{
+}
+
 string CellNode::GetCellName()
 {
 	return cellName;
@@ -204,16 +190,16 @@ string CellNode::GetCellName()
 ostream & operator<<(ostream & output, CellNode & self)
 {
 	//在每一条有效数据前设置关卡
+	//节点类型信息
+	int guard = 0;
+	output.write((char*)&guard, sizeof(guard));
+	output.write((char*)&self.nodeType, sizeof(FileNodeType));
 
 	//修改时间信息
-	int guard = 0;
+	guard = 0;
 	output.write((char*)&guard, sizeof(guard));
 	output.write((char*)&self.lastModifyTime, sizeof(time_t));
 
-	//节点类型信息
-	guard = 0;
-	output.write((char*)&guard, sizeof(guard));
-	output.write((char*)&self.nodeType, sizeof(FileNodeType));
 
 	//文件内容信息
 	guard = 0;
@@ -255,20 +241,20 @@ istream & operator>>(istream & input, CellNode & self)
 
 	//修改时间信息
 	int guard;
+	//节点类型信息 调整读取顺序，为了能根据类型创建相应的节点
+	/*input.read((char*)&guard, sizeof(guard));
+	if (guard == 0)
+	{
+		input.read((char*)&self.nodeType, sizeof(FileNodeType));
+	}
+*/
+
 	input.read((char*)&guard, sizeof(guard));
 	if (guard == 0)
 	{
 		input.read((char*)&self.lastModifyTime, sizeof(time_t));
 	}
 
-
-	//节点类型信息
-	input.read((char*)&guard, sizeof(guard));
-	if (guard == 0)
-	{
-		input.read((char*)&self.nodeType, sizeof(FileNodeType));
-	}
-	
 	size_t count =0;
 	//读取节点内容信息
 	input.read((char*)&guard, sizeof(guard));
@@ -281,7 +267,6 @@ istream & operator>>(istream & input, CellNode & self)
 		self.content.resize(count);
 		input.read(&self.content.front(), count);
 	}
-
 
 	//节点名称信息
 	count = 0;
@@ -305,14 +290,44 @@ istream & operator>>(istream & input, CellNode & self)
 	}
 	for (size_t i = 0; i < count; i++)
 	{
-		CellNode* node = new CellNode();
-		input >> *node;
-		if (node->cellName.empty())
+		
+		//节点类型信息
+		int tempnodetype =0;
+		CellNode* node1 = NULL;
+		input.read((char*)&guard, sizeof(guard));
+
+		if (guard == 0)
 		{
-			return input;
+			input.read((char*)&tempnodetype, sizeof(FileNodeType));
+			if (tempnodetype != 0)
+			{
+				if (tempnodetype == FOLD)
+				{
+					node1 = new FoldNode();
+				}
+				else if (tempnodetype == FILE_CUSTOM)
+				{
+					node1 = new FileNode();
+				}
+				else if (tempnodetype& LINK)
+				{
+					node1 = new LinkNode();
+					node1->SetNodeType((FileNodeType)tempnodetype);
+				}
+				else
+				{
+					node1 = new CellNode();
+				}
+			}
+			input >> *node1;
+			if (node1->cellName.empty())
+			{
+				return input;
+			}
+			//将读取到的子节点添加到当前结点的孩子列表中
+			self.AddSubNode(node1);
 		}
-		//将读取到的子节点添加到当前结点的孩子列表中
-		self.AddSubNode(node);
+		
 	}
 	//循环读取
 	return input;

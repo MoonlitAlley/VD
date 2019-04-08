@@ -16,5 +16,5 @@ private:
 public:
 	CommandFactory();
 	~CommandFactory();
-	Command* CreatCommand(string cmd);
+	Command* CreatCommand(string& cmd);
 };

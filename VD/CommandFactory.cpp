@@ -22,23 +22,41 @@
 #include "LoadCmd.h"
 CommandFactory::CommandFactory()
 {
+	command = NULL;
 }
 
 CommandFactory::~CommandFactory()
 {
-	delete command;
+	//系统最后执行的一条命令，置空
+	if (command != NULL)
+	{
+		delete command;
+		command = NULL;
+	}
 }
 
-Command * CommandFactory::CreatCommand(string cmd)
+Command * CommandFactory::CreatCommand(string& cmd)
 {
+	
 	//先将命令置空，方便下面判断返回
-	command = NULL;
+	if (command != NULL)
+	{
+		delete command;
+		command = NULL;
+	}
+
+	//特殊命令预处理
+	if (cmd == "cd..")
+	{
+		cmd = "cd ..";
+	}
 	vector<string> items = StrProcess::SplitNoEmpty(cmd, ' ');
 	if (items.empty())
 	{
 		return NULL;
 	}
 	CmdTypeAnalyse(items[0]);
+
 	switch (commandType)
 	{
 	case clsCmd:

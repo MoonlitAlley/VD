@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Command.h"
+#include "FoldNode.h"
+#include "CellNode.h"
 
 class VirtualDiskInside
 {
@@ -27,7 +29,7 @@ public:
 	//GET-SET
 	//得到根节点
 	CellNode* GetRootNode();
-	void SetRootNode(CellNode*);
+	void SetRootNode(FoldNode*);
 
 	CellNode* GetWorkingNode();
 	void SetWorkingNode(CellNode*);
@@ -45,7 +47,7 @@ public:
 	Path workingPath_CD = Path("c:/");
 private:
 
-	CellNode* rootNode;
+	FoldNode* rootNode;
 	CellNode* workingNode;
 	list<CellNode*> workingPath;
 	string workingPathString;

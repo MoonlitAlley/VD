@@ -32,8 +32,19 @@ bool LoadCmd::Execute(VirtualDiskInside * virtualdisk)
 		return false;
 	}
 
-	CellNode* rootNode = new CellNode();
+	
 
+	//修改时间信息
+	int guard;
+	int tempnodetype;
+	//节点类型信息
+	fin.read((char*)&guard, sizeof(guard));
+	if (guard == 0)
+	{
+		fin.read((char*)&tempnodetype, sizeof(FileNodeType));
+	}
+
+	FoldNode* rootNode = new FoldNode();
 	fin >> *rootNode;
 
 	fin.close();

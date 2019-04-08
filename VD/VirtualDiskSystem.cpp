@@ -8,8 +8,11 @@ VirtualDiskSystem::VirtualDiskSystem()
 
 VirtualDiskSystem::~VirtualDiskSystem()
 {
-	delete virtualDiskInside;
-	virtualDiskInside = NULL;
+	if (virtualDiskInside != NULL)
+	{
+		delete virtualDiskInside;
+		virtualDiskInside = NULL;
+	}
 	command = NULL;
 }
 
@@ -101,11 +104,7 @@ void VirtualDiskSystem::RunSystem()
 		if (cmd[0] != '\0')
 		{
 			//使用命令工厂创建任务
-			string cmdtemp = cmd;
-			if (cmdtemp == "cd..")
-			{
-				cmdtemp = "cd ..";
-			}
+			string cmdtemp = cmd;		
 			command = commandFactory.CreatCommand(cmdtemp);
 			if (command != NULL)
 			{

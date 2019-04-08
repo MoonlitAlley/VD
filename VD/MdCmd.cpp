@@ -45,7 +45,7 @@ bool MdCmd::Execute(VirtualDiskInside* virtualdisk)
 			CellNode* child = curNode->GetNode(items[i]);
 			if (!child)
 			{
-				child = new CellNode();
+				child = new FoldNode();
 				child->SetCellName(items[i]);
 				child->SetNodeType(FOLD);
 				curNode->AddSubNode(child);

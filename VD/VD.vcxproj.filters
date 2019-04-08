@@ -105,6 +105,15 @@
     <ClInclude Include="VirtualDisk.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="FileNode.h">
+      <Filter>头文件\DISK</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkNode.h">
+      <Filter>头文件\DISK</Filter>
+    </ClInclude>
+    <ClInclude Include="FoldNode.h">
+      <Filter>头文件\DISK</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -181,6 +190,15 @@
     </ClCompile>
     <ClCompile Include="VirtualDisk.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkNode.cpp">
+      <Filter>源文件\DISK</Filter>
+    </ClCompile>
+    <ClCompile Include="FileNode.cpp">
+      <Filter>源文件\DISK</Filter>
+    </ClCompile>
+    <ClCompile Include="FoldNode.cpp">
+      <Filter>源文件\DISK</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

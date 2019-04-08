@@ -1,5 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "VirtualDisk.h"
+#include "FileNode.h"
 #include <io.h>
 //VirtualDisk类(需要提供无参构造函数)
 VirtualDisk::VirtualDisk()
@@ -23,11 +24,10 @@ bool VirtualDisk::formatDisk()
 //执行相应的命令 - bool 对象是否创建成功（或者执行成功）
 bool VirtualDisk::executeCmd(string cmdStr)
 {
+	virtualDiskInside->LogMsgToConsole("iserInput+:+" + cmdStr);
+	virtualDiskInside->LogMsgToConsole("workingPath_CD+:+" + virtualDiskInside->workingPath_CD.str());
+	virtualDiskInside->LogMsgToConsole("GetWorkingPathString+:+" + virtualDiskInside->GetWorkingPathString());
 	string cmdtemp = cmdStr;
-	if (cmdtemp == "cd..")
-	{
-		cmdtemp = "cd ..";
-	}
 	command = commandFactory.CreatCommand(cmdtemp);
 	if (command != NULL)
 	{
@@ -41,7 +41,8 @@ bool VirtualDisk::executeCmd(string cmdStr)
 string VirtualDisk::getCurPath()
 {
 	//return virtualDiskInside->GetWorkingPathString();
-
+	virtualDiskInside->LogMsgToConsole("workingPath_CD+:+" + virtualDiskInside->workingPath_CD.str());
+	virtualDiskInside->LogMsgToConsole("GetWorkingPathString+:+" + virtualDiskInside->GetWorkingPathString());
 	if (virtualDiskInside->GetWorkingNode() == virtualDiskInside->GetRootNode())
 	{
 		virtualDiskInside->workingPath_CD = Path("c:/");
@@ -73,7 +74,7 @@ bool VirtualDisk::containNode(string pathstr, int & size, int & type)
 		{
 			//是一个正常的文件
 			//读取大小
-			CellNode* tempNode = new CellNode();
+			FileNode* tempNode = new FileNode();
 			FILE* fin = fopen(path.str().c_str(), "rb");
 			if (!fin)
 			{

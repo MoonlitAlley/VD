@@ -161,6 +161,9 @@
     <ClInclude Include="CopyCmd.h" />
     <ClInclude Include="DelCmd.h" />
     <ClInclude Include="DirCmd.h" />
+    <ClInclude Include="FileNode.h" />
+    <ClInclude Include="FoldNode.h" />
+    <ClInclude Include="LinkNode.h" />
     <ClInclude Include="LoadCmd.h" />
     <ClInclude Include="MdCmd.h" />
     <ClInclude Include="MklinkCmd.h" />
@@ -187,6 +190,9 @@
     <ClCompile Include="CopyCmd.cpp" />
     <ClCompile Include="DelCmd.cpp" />
     <ClCompile Include="DirCmd.cpp" />
+    <ClCompile Include="FileNode.cpp" />
+    <ClCompile Include="FoldNode.cpp" />
+    <ClCompile Include="LinkNode.cpp" />
     <ClCompile Include="LoadCmd.cpp" />
     <ClCompile Include="MdCmd.cpp" />
     <ClCompile Include="MklinkCmd.cpp" />

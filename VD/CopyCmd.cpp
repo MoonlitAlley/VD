@@ -324,9 +324,9 @@ void CopyCmd::Copy(Path & src, Path & dst, bool first)
 				m_VirtualDisk->LogMsgToConsole("路径不存在");
 				return;
 			}
-			CellNode* node = new CellNode();
+			FileNode* node = new FileNode();
 			node->SetCellName(dst.FileName());
-			node->SetNodeType(FileNodeType::FILE_CUSTOM);
+			//node->SetNodeType(FileNodeType::FILE_CUSTOM);
 			nodeprelink->AddSubNode(node);
 			if (!node)
 			{
@@ -438,7 +438,7 @@ void CopyCmd::Copy(Path & src, Path & dst, bool first)
 
 
 
-void CopyCmd::CopyNodeToReal(Path&src, Path& dst)
+void CopyCmd::CopyNodeToReal(Path& src, Path& dst)
 {
 	//已经对srcnode经过判断，此处可直接使用
 	CellNode* nodesrc = m_VirtualDisk->GetNodeByPath(src);
@@ -459,7 +459,7 @@ void CopyCmd::CopyNodeToReal(Path&src, Path& dst)
 	fclose(fout);
 }
 
-void CopyCmd::CopyRealToNode(Path&src, CellNode* dstNode)
+void CopyCmd::CopyRealToNode(Path& src, CellNode* dstNode)
 {
 	if (!dstNode) { return; }
 	//读取文件流写入到虚拟节点的content中

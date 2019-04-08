@@ -1,5 +1,6 @@
 #include "TouchCmd.h"
 #include "VirtualDiskInside.h"
+#include "FileNode.h"
 bool TouchCmd::Execute(VirtualDiskInside * virtualdisk)
 {
 	m_VirtualDisk = virtualdisk;
@@ -35,10 +36,10 @@ bool TouchCmd::Execute(VirtualDiskInside * virtualdisk)
 				return false;
 			}
 
-			CellNode* fileNode = new CellNode();
+			FileNode* fileNode = new FileNode();
 			//该位置可能出错
 			fileNode->SetCellName(path.FileName());
-			fileNode->SetNodeType(FileNodeType::FILE_CUSTOM);
+			//fileNode->SetNodeType(FileNodeType::FILE_CUSTOM);
 			prelink->AddSubNode(fileNode);
 
 			//设置文件内容；**********************************可能不方便测试

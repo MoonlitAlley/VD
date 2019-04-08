@@ -10,8 +10,11 @@ VirtualDiskInside::VirtualDiskInside()
 
 VirtualDiskInside::~VirtualDiskInside()
 {
-	delete rootNode;
-	rootNode = NULL;
+	if (rootNode != NULL)
+	{
+		delete rootNode;
+		rootNode = NULL;
+	}
 	workingNode = NULL;
 }
 
@@ -19,7 +22,7 @@ VirtualDiskInside::~VirtualDiskInside()
 //格式化-根节点创建
 bool VirtualDiskInside::InitFileSystem()
 {
-	rootNode = new CellNode();
+	rootNode = new FoldNode();
 	rootNode->SetCellName("/");
 	rootNode->SetNodeType(FOLD);
 	workingNode = rootNode;
@@ -61,7 +64,7 @@ CellNode * VirtualDiskInside::LookingTarget(CellNode * node)
 	}
 	if(node->GetNodeType() & LINK)
 	{
-		vector<char> temp = node->Content();
+		vector<char> temp = node->GetTargetNodePath();
 		string tempStrPath = string(temp.begin(), temp.end());
 		Path targetPath(tempStrPath);
 		CellNode* target = GetNodeByPath(targetPath);
@@ -118,7 +121,7 @@ CellNode * VirtualDiskInside::GetRootNode()
 {
 	return rootNode;
 }
-void VirtualDiskInside::SetRootNode(CellNode* rootNodeSet)
+void VirtualDiskInside::SetRootNode(FoldNode* rootNodeSet)
 {
 	rootNode = rootNodeSet;
 }

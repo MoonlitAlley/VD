@@ -246,7 +246,9 @@ string DirCmd::MakeOneOutput(CellNode * node, const string & name)
 	string res = buff;
 	if ((node->GetNodeType()& FILE_CUSTOM) && !(node->GetNodeType()& LINK))
 	{
-		res += NumberToString(node->Content().size(), 14);
+		//放到一行写会出错
+		vector<char> a = node->Content();
+		res += NumberToString(a.size(), 14);
 	}
 	else
 	{
